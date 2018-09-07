@@ -6,9 +6,28 @@
     <description>Recent content on Cyber MOOC</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <lastBuildDate>Thu, 06 Sep 2018 13:04:45 +0200</lastBuildDate>
     
 	<atom:link href="https://studentcybermooc.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Introduction_go</title>
+      <link>https://studentcybermooc.com/courses/dev/go/introduction_go/</link>
+      <pubDate>Thu, 06 Sep 2018 13:04:45 +0200</pubDate>
+      
+      <guid>https://studentcybermooc.com/courses/dev/go/introduction_go/</guid>
+      <description> Introduction to go test </description>
+    </item>
+    
+    <item>
+      <title>Flask_rest_api</title>
+      <link>https://studentcybermooc.com/courses/dev/python/flask_rest_api/</link>
+      <pubDate>Thu, 06 Sep 2018 12:52:55 +0200</pubDate>
+      
+      <guid>https://studentcybermooc.com/courses/dev/python/flask_rest_api/</guid>
+      <description> flask rest api print(&amp;quot;hello&amp;quot;)  </description>
+    </item>
     
   </channel>
 </rss>

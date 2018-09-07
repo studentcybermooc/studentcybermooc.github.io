@@ -6,9 +6,19 @@
     <description>Recent content in go on Cyber MOOC</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <lastBuildDate>Thu, 06 Sep 2018 13:04:45 +0200</lastBuildDate>
     
 	<atom:link href="https://studentcybermooc.com/courses/dev/go/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Introduction_go</title>
+      <link>https://studentcybermooc.com/courses/dev/go/introduction_go/</link>
+      <pubDate>Thu, 06 Sep 2018 13:04:45 +0200</pubDate>
+      
+      <guid>https://studentcybermooc.com/courses/dev/go/introduction_go/</guid>
+      <description> Introduction to go test </description>
+    </item>
     
   </channel>
 </rss>

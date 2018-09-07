@@ -10,6 +10,7 @@ googleAnalytics = ""
     author = "Calin Tataru"
     description = "ENSIBS Student Cyber MOOC"
     githubUsername = "studentscybermooc"
+    repoName = "studentcybermooc/cybermooc"
     accent = "red"
     showBorder = false
     backgroundColor = "white"

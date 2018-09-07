@@ -1,5 +1,5 @@
 publishDir = "docs"
-baseURL = "http://example.com/"
+baseURL = "https://studentcybermooc.com/"
 languageCode = "en-us"
 title = "Cyber MOOC"
 theme = "minimal"

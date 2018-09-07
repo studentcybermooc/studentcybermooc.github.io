@@ -16,7 +16,7 @@ about: Template de proposition de cours pour le MOOC
 
 * **Le cours sera prêt pour :**
     - [ ] septembre 2018
-    - [ ] octobre 2018
+    - [x] octobre 2018
     - [ ] novembre 2018
     - [ ] décembre 2018
     - [ ] janvier 2019

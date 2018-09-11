@@ -1,0 +1,19 @@
+publishDir = "docs"
+baseURL = "https://studentcybermooc.com/"
+languageCode = "en-us"
+title = "Example MOOC"
+theme = "mooc"
+
+[params]
+    description = "ENSIBS Student Cyber MOOC"
+    githubRepo = "studentcybermooc/cybermooc"
+
+[[menu.icon]]
+    url = "mailto:me@example.com"
+    name = "envelope-o"
+    weight = 1
+
+[[menu.icon]]
+    url = "https://github.com/studentscybermooc/cybermooc"
+    name = "github"
+    weight = 2

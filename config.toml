@@ -3,8 +3,6 @@ baseURL = "https://studentcybermooc.com/"
 languageCode = "en-us"
 title = "Cyber MOOC"
 theme = "minimal"
-disqusShortname = "username" # delete this to disable disqus comments
-googleAnalytics = ""
 
 [params]
     author = "Calin Tataru"
@@ -29,11 +27,6 @@ googleAnalytics = ""
 # The list of available icons can be found at http://fontawesome.io/icons/
 
 [[menu.icon]]
-    url = "mailto:me@example.com"
-    name = "envelope-o"
-    weight = 1
-
-[[menu.icon]]
     url = "https://github.com/studentscybermooc/cybermooc"
     name = "github"
-    weight = 2
+    weight = 1

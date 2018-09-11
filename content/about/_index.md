@@ -5,4 +5,19 @@ draft: false
 weight: 4
 ---
 
-This is us.
+## Why ?
+
+We wanted to share some knowledge we acquired on our own or through our work.
+
+## Who ?
+
+We are a group of four students in our last year of cyberdefense studies. 
+
+- Grégoire MOLVEAU
+- Alan MARREC
+- Maxime DAYBER
+- Pol KRAMARENKO
+
+## Where ?
+
+This project takes place at ENSIBS, Vannes, France. 

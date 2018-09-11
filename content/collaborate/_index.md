@@ -5,6 +5,8 @@ draft: false
 weight: 3
 ---
 
+If you want to submit a course, please feel free to click the button below :)
+
 <div class="text-center">
-<a href='https://github.com/studentcybermooc/cybermooc/issues/new?template=proposition-de-cours.md' rel='nofollow' target='_new' class='btngithub'>Submit a course :)</a>
+<a href='https://github.com/studentcybermooc/cybermooc/issues/new?template=proposition-de-cours.md' rel='nofollow' target='_new' class='btngithub'>Submit a course</a>
 </div>

@@ -13,7 +13,7 @@ draft: false
 
 ---
 
-What should I read ? Who should I follow ? 
+### What should I read ? Who should I follow ? 
 
 - NetSec subreddit
     - [website](http://reddit.com/r/netsec)
@@ -56,7 +56,7 @@ What should I read ? Who should I follow ?
   
  --- 
  
-How to keep track of all those rss feeds ?
+### How to keep track of all those rss feeds ?
  
  
 - RSS aggregators
@@ -69,7 +69,7 @@ How to keep track of all those rss feeds ?
 
 ---
 
-What if I want to save an article/link for later ?
+### What if I want to save an article/link for later ?
 
 - To read later
     - Pocket : https://getpocket.com/
@@ -82,7 +82,7 @@ What if I want to save an article/link for later ?
 
 ---
 
-How to effectively keep yourself informed ?
+### How to effectively keep yourself informed ?
 
 - dedicate daily (or at least weekly) a moment to sort and read the different articles
 - if you can, create a small group, each people deals with one or multiple topics, and create your own sort of newsletter

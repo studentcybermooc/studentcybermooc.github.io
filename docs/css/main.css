@@ -139,3 +139,8 @@ img {
 .gh-comment div {
     margin-bottom: 7px;
 }
+
+ul.latest {
+    list-style-type:none;
+    padding: 0;
+}

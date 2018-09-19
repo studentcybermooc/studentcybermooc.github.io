@@ -1,3 +1,4 @@
 ---
 title: "go"
+draft: true
 ---

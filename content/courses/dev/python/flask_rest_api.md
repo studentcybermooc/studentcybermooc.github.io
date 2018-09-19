@@ -1,13 +1,12 @@
 ---
-title: "Flask_rest_api"
+title: "Flask REST api"
+description: "create a REST api in Flask"
 date: 2018-09-06T12:52:55+02:00
-draft: false
+tags: ["flask", "python"]
+draft: true
 githubIssueID: 1
 ---
 
-# flask rest api
-
----
 
 ```python
 print("hello")

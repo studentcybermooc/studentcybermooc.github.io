@@ -16,16 +16,12 @@
 
         <div class="collapse navbar-collapse">
 
-            {{ if .Site.Menus.main }}
-                <ul class="nav navbar-nav">
-                    {{ range sort .Site.Menus.main }}
-                        <li><a href="{{ .URL }}">{{ .Name }}</a></li>
-                    {{ end }}
-                    {{ range sort .Site.Sections }}
-                        <li><a href="/{{ .Title | urlize }}">{{ .Title }}</a></li>
-                    {{ end }}
-                </ul>
-            {{ end }}
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                {{ range sort .Site.Sections }}
+                    <li><a href="/{{ .Title | urlize }}">{{ .Title }}</a></li>
+                {{ end }}
+            </ul>
 
             {{ if .Site.Menus.icon }}
                 <ul class="nav navbar-nav navbar-right">

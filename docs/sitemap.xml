@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://studentcybermooc.com/authors/</loc>
+    <lastmod>2018-09-07T08:58:49+02:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://studentcybermooc.com/courses/</loc>
     <lastmod>2018-09-07T08:58:49+02:00</lastmod>
   </url>
@@ -18,13 +23,13 @@
   </url>
   
   <url>
-    <loc>https://studentcybermooc.com/courses/dev/go/introduction_go/</loc>
-    <lastmod>2018-09-06T13:04:45+02:00</lastmod>
+    <loc>https://studentcybermooc.com/courses/misc/veille/</loc>
+    <lastmod>2018-09-19T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://studentcybermooc.com/courses/dev/python/flask_rest_api/</loc>
-    <lastmod>2018-09-06T12:52:55+02:00</lastmod>
+    <loc>https://studentcybermooc.com/courses/dev/go/introduction_go/</loc>
+    <lastmod>2018-09-06T13:04:45+02:00</lastmod>
   </url>
   
   <url>
@@ -34,27 +39,35 @@
   
   <url>
     <loc>https://studentcybermooc.com/</loc>
-    <lastmod>2018-09-06T13:04:45+02:00</lastmod>
+    <lastmod>2018-09-19T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://studentcybermooc.com/tags/information/</loc>
+    <lastmod>2018-09-19T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://studentcybermooc.com/tags/</loc>
+    <lastmod>2018-09-19T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://studentcybermooc.com/courses/dev/</loc>
+    <loc>https://studentcybermooc.com/tags/veille/</loc>
+    <lastmod>2018-09-19T00:00:00+00:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://studentcybermooc.com/courses/dev/go/</loc>
-    <lastmod>2018-09-06T13:04:45+02:00</lastmod>
+    <loc>https://studentcybermooc.com/authors/gmolveau/</loc>
   </url>
   
   <url>
-    <loc>https://studentcybermooc.com/courses/dev/python/</loc>
-    <lastmod>2018-09-06T12:52:55+02:00</lastmod>
+    <loc>https://studentcybermooc.com/courses/misc/</loc>
+    <lastmod>2018-09-19T00:00:00+00:00</lastmod>
   </url>
   
 </urlset>

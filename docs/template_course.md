@@ -17,6 +17,10 @@
 
 ## Introduction
 
+```python
+console.log("test")
+```
+
 ### Concepts
 
 ## Title 1

@@ -12,20 +12,12 @@
 
 	<main>
 
-	    <div class="intro">
-
-	        {{ with .Site.Params.profilePic }} <img class="profile" src="{{ . }}"> {{ end }}
-
-	        <h1>{{ .Site.Title }}</h1>
-
-	        <h2>{{ markdownify .Site.Params.Description }}</h2>
-
-	    </div>
-
+	    <h1>{{ .Title }}</h1>
+	    	
+	    {{ range .Sections.Reverse }} {{ partial "list-section" . }} {{ end }}
+	    {{ range .Pages }} {{ partial "list-item" . }} {{ end }}
 
 	</main>
-
-    {{ partial "latest_courses" . }}
 
 	{{ partial "footer" . }}
     </body>

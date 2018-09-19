@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+    <head>
+        {{ partial "head" . }}
+    </head>
+    {{ partial "scripts" . }}
+
+    <body>
+    {{ partial "navbar" . }}
+
+    {{ partial "body" . }}
+
+    <main>
+
+        <h1 class="text-center">{{ .Title }}</h1>
+        <hr>
+        <div class="text-justify">{{ .Content }}</div>
+
+        <hr>
+        
+        {{ partial "comments.html" . }}
+
+    </main>
+
+    {{ partial "footer" . }}
+    </body>
+
+</html>

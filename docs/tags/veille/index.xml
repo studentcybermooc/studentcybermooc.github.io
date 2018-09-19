@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Veille on Cyber MOOC</title>
+    <link>https://studentcybermooc.com/tags/veille/</link>
+    <description>Recent content in Veille on Cyber MOOC</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 19 Sep 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://studentcybermooc.com/tags/veille/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Staying informed</title>
+      <link>https://studentcybermooc.com/courses/misc/veille/</link>
+      <pubDate>Wed, 19 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://studentcybermooc.com/courses/misc/veille/</guid>
+      <description>What should I read ? Who should I follow ?
+ NetSec subreddit  website rss json  MISC magazine  buy  Hacker News YCombinator  website rss  Daniel MIESSLER  blog newsletter old newsletters  TheHackerNews  website + newsletter rss  Krebs On Security  blog rss  OSS-Security  rss mailing-list  Troy Hunt  blog rss  Security Affairs  blog  Twitter  Troy HUNT - @troyhunt @whitequark Jek HYDE - @HydeNS33k Chris EVANS - @scarybeasts @hasherezade @x0rz Binni SHAH - @binitamshah Rob FULLER - @mubix @0xmitsurugi Tavis Ormandy - @taviso    How to keep track of all those rss feeds ?</description>
+    </item>
+    
+  </channel>
+</rss>

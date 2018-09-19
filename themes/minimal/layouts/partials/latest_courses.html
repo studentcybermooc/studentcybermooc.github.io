@@ -3,8 +3,7 @@
 
         <ul class="latest">
 			{{ range first 3 (where .Data.Pages "Type" "courses") }}
-				{{ $.Scratch.Set "link" .RelPermalink }}
-            	<li><a href="{{ .Scratch.Get "link" }}">{{ .Title }}</a></li>
+            	<li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
         	{{ end }}
         </ul>
 </div>

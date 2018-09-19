@@ -1,7 +1,7 @@
 ---
 title: "Introduction_go"
 date: 2018-09-06T13:04:45+02:00
-draft: false
+draft: true
 ---
 
 # Introduction to go
@@ -13,38 +13,3 @@ draft: false
 const rep = "oui";
 ```
 </details>
-
-## Authors
-
-- X YZ
-	- mail@me.com
-	- @twitter_handler
-	- working @ XCompany
-
-## Table of content
-
-- [Introduction](#introduction)
-	- [Concepts](#concepts)
-- [Title 1](#title-1)
-- [Title 2](#title-2)
-- [Conclusion](#conclusion)
-	- [Going further](#going-further)
-	- [Resources](#resources)
-
-## Introduction
-
-### Concepts
-
-## Title 1
-
-### Sub-Title 1
-
-## Title 2
-
-### Sub-Title 1
-
-## Conclusion
-
-### Going further
-
-### Resources

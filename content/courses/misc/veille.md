@@ -7,6 +7,11 @@ tags: ["information", "veille"]
 draft: false
 ---
 
+## Authors
+
+- [Grégoire MOLVEAU](/authors/gmolveau/)
+
+---
 
 What should I read ? Who should I follow ? 
 

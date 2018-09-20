@@ -29,7 +29,7 @@ draft: false
   * [Versioning](#versioning)
 - [Choosing your IDE](#choosing-your-ide)
 - [Conclusion](#conclusion)
-  * [TLDR](#tl-dr)
+  * [Summary](#summary)
   * [Going further](#going-further)
 
 ---
@@ -51,23 +51,80 @@ This course will teach you how to set-up a clean python environment for all your
 ### Installing Python3
 
 Make sure you've got `python3` and `pip3` installed on your system.
-To check if you have it installed try typing `python3 -v` in your terminal. You should see some lines with `/usr/lib/python3.6`. 
+To check if you have it installed try running :
 
-Same thing for `pip` with `pip --version`. You should see `(python 3.XXX)` at the end of the line. If the command `pip` does not exist, try with `pip3 --version`.
+```bash
+python3 -v
+```
+
+You should see some lines with `/usr/lib/python3.XXX`
+
+```bash
+import 'atexit' # <class '_frozen_importlib.BuiltinImporter'>
+# /usr/lib/python3.XXX/__pycache__/rlcompleter.cpython-36.pyc matches /usr/lib/python3.XXX/rlcompleter.py
+# code object from '/usr/lib/python3.6/__pycache__/rlcompleter.cpython-36.pyc'
+import 'rlcompleter' # <_frozen_importlib_external.SourceFileLoader object at 0x7f053e35d5c0>
+>>> 
+```
+
+Same thing for `pip` with :
+
+```bash
+pip --version
+```
+
+You should see `(python 3.XXX)` at the end of the line. If the command `pip` does not exist, try with `pip3 --version`.
+
+```bash
+pip 18.0 from /home/gmolveau/.local/lib/python3.XXX/site-packages/pip (python 3.6)
+```
 
 If you don't have python3 installed:
+
 - for windows, [download this executable](https://www.python.org/downloads/) and make sure to check "Add python to PATH ".
-- for mac, use `brew install python3` (if you don't have brew installed, [go there](https://brew.sh/index_fr))
-- for linux, use `sudo apt-get isntall python3-pip python3-dev`
+
+- for mac, run :
+	```bash
+	brew install python3
+	```
+	(if you don't have brew installed, [go there](https://brew.sh/index_fr))
+
+- for linux, run :
+	```bash
+	sudo apt-get isntall python3-pip python3-dev
+	```
 
 ---
 
 ### Using pip
 
-Pip is the dependency manager for python (like npm for nodejs, cargo for rust, composer for php [...]). It allows you to download framework and libraries. When you install a dependency with `pip install ...`, it installs it globaly for the user.
+Pip is the dependency manager for python (like npm for nodejs, cargo for rust, composer for php [...]). It allows you to download framework and libraries. When you install a dependency with `pip install XXX --user`, it installs it only for the current user.
+
+```bash
+$ pip3 install gimgurpython --user
+Collecting gimgurpython
+  Using cached https://files.pythonhosted.org/packages/7a/e9/7bf364691f3a16de4b161765282c8cde4ac9924542bddea7d0c2a8aa0351/gimgurpython-0.0.4-py2.py3-none-any.whl
+Requirement already satisfied: requests in /usr/lib/python3/dist-packages (from gimgurpython) (2.18.4)
+Installing collected packages: gimgurpython
+Successfully installed gimgurpython-0.0.4
+```
 
 To see where a certain dependency is installed, try `pip show ...` and look at the Location line.
 For example : `Location: /home/gmolveau/.local/lib/python3.6/site-packages`.
+
+```bash
+$ pip3 show gimgurpython          
+Name: gimgurpython
+Version: 0.0.4
+Summary: A fork of Official Imgur python library with OAuth2 and samples, modified as it seems not maintained anymore
+Home-page: https://github.com/gmolveau/imgurpython
+Author: Imgur Inc. (+ gmolveau)
+Author-email: api@imgur.com
+License: MIT
+Location: /home/gmolveau/.local/lib/python3.XXX/site-packages
+Requires: requests
+Required-by: 
+```
 
 But sometimes for a project, you will have to download a specific version of a dependency, and if this dependency is already installed for another project in another version, you gonna have a bad time.
 
@@ -81,7 +138,13 @@ Virtualenv is a tool to create isolated Python environments. (if you want to lea
 
 This tool will allow us to create a virtual environment for each project. It means no more dependency correlation. This also means that you will be able to share your project with every dependencies easily via a file called `requirements.txt` (more on this later).
 
-To install virtualenv, simply type `pip install virtualenv`. You can now create virtual environments, called a `venv`.
+To install virtualenv, simply run :
+
+```bash
+pip install virtualenv
+```
+
+You can now create virtual environments, called a `venv`.
 
 ---
 
@@ -95,21 +158,21 @@ Now that we have everything we need :
 
 	- linux/osx
 
-		```
+		```bash
 		mkdir /tmp/project
 		cd /tmp/project
 		```
 
 	- windows
 
-		```
+		```bash
 		mkdir %TMP%\project
 		cd %TMP%\project
 		```
 
 - create a venv
 
-	```
+	```bash
 	virtualenv venv -p python3
 	```
 
@@ -118,12 +181,12 @@ Now that we have everything we need :
 - now that the venv is created, we need to enter into this venv
 	
 	- linux/osx
-		```
+		```bash
 		source venv/bin/activate
 		```
 
 	- windows
-		```
+		```bash
 		venv\Scripts\activate
 		```
 
@@ -137,7 +200,7 @@ Now that we have everything we need :
 
 Let's now install a library
 
-```
+```bash
 (venv) pip install flask
 ```
 
@@ -147,20 +210,23 @@ now if you look at where flask was installed with `pip show flask` you'll see th
 
 Now let's try to run : 
 
-```
+```bash
 (venv) flask --version
 ```
 
 It should return `Flask 1.x.x [...]`.
 
 Now open another terminal and try to run :
-```
+
+```bash
 flask --version
 ```
+
 You should have a `command not found` in return. Flask is available **only** inside your venv. No more pollution of your entire machine now :-)
 
 If you wan't to quit your venv, simply run :
-```
+
+```bash
 (venv) deactivate
 ```
 
@@ -172,7 +238,7 @@ If you want to share your project, and list all the dependencies necessary to bu
 
 In your venv, run :
 
-```
+```bash
 (venv) pip freeze
 ```
 
@@ -182,7 +248,7 @@ You should see all the dependencies and versions.
 
 Now if you want to export this list, simply run
 
-```
+```bash
 (venv) pip freeze > requirements.txt
 ```
 
@@ -365,7 +431,9 @@ We've seen how pip and virtualenv works and how to make a clean place when worki
 
 ---
 
-### TL;DR
+### Summary
+
+[TL;DR](https://en.wikipedia.org/wiki/TL;DR) ?
 
 So a quick workflow for every new project is :
 

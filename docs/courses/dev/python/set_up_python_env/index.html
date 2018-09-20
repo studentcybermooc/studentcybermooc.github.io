@@ -167,7 +167,7 @@
 <li><a href="#conclusion">Conclusion</a>
 
 <ul>
-<li><a href="#tl-dr">TLDR</a></li>
+<li><a href="#summary">Summary</a></li>
 <li><a href="#going-further">Going further</a></li>
 </ul></li>
 </ul>
@@ -193,23 +193,77 @@
 <h3 id="installing-python3">Installing Python3</h3>
 
 <p>Make sure you&rsquo;ve got <code>python3</code> and <code>pip3</code> installed on your system.
-To check if you have it installed try typing <code>python3 -v</code> in your terminal. You should see some lines with <code>/usr/lib/python3.6</code>.</p>
+To check if you have it installed try running :</p>
 
-<p>Same thing for <code>pip</code> with <code>pip --version</code>. You should see <code>(python 3.XXX)</code> at the end of the line. If the command <code>pip</code> does not exist, try with <code>pip3 --version</code>.</p>
+<pre><code class="language-bash">python3 -v
+</code></pre>
 
-<p>If you don&rsquo;t have python3 installed:
-- for windows, <a href="https://www.python.org/downloads/">download this executable</a> and make sure to check &ldquo;Add python to PATH &ldquo;.
-- for mac, use <code>brew install python3</code> (if you don&rsquo;t have brew installed, <a href="https://brew.sh/index_fr">go there</a>)
-- for linux, use <code>sudo apt-get isntall python3-pip python3-dev</code></p>
+<p>You should see some lines with <code>/usr/lib/python3.XXX</code></p>
+
+<pre><code class="language-bash">import 'atexit' # &lt;class '_frozen_importlib.BuiltinImporter'&gt;
+# /usr/lib/python3.XXX/__pycache__/rlcompleter.cpython-36.pyc matches /usr/lib/python3.XXX/rlcompleter.py
+# code object from '/usr/lib/python3.6/__pycache__/rlcompleter.cpython-36.pyc'
+import 'rlcompleter' # &lt;_frozen_importlib_external.SourceFileLoader object at 0x7f053e35d5c0&gt;
+&gt;&gt;&gt; 
+</code></pre>
+
+<p>Same thing for <code>pip</code> with :</p>
+
+<pre><code class="language-bash">pip --version
+</code></pre>
+
+<p>You should see <code>(python 3.XXX)</code> at the end of the line. If the command <code>pip</code> does not exist, try with <code>pip3 --version</code>.</p>
+
+<pre><code class="language-bash">pip 18.0 from /home/gmolveau/.local/lib/python3.XXX/site-packages/pip (python 3.6)
+</code></pre>
+
+<p>If you don&rsquo;t have python3 installed:</p>
+
+<ul>
+<li><p>for windows, <a href="https://www.python.org/downloads/">download this executable</a> and make sure to check &ldquo;Add python to PATH &ldquo;.</p></li>
+
+<li><p>for mac, run :</p>
+
+<pre><code class="language-bash">brew install python3
+</code></pre>
+
+<p>(if you don&rsquo;t have brew installed, <a href="https://brew.sh/index_fr">go there</a>)</p></li>
+
+<li><p>for linux, run :</p>
+
+<pre><code class="language-bash">sudo apt-get isntall python3-pip python3-dev
+</code></pre></li>
+</ul>
 
 <hr />
 
 <h3 id="using-pip">Using pip</h3>
 
-<p>Pip is the dependency manager for python (like npm for nodejs, cargo for rust, composer for php [&hellip;]). It allows you to download framework and libraries. When you install a dependency with <code>pip install ...</code>, it installs it globaly for the user.</p>
+<p>Pip is the dependency manager for python (like npm for nodejs, cargo for rust, composer for php [&hellip;]). It allows you to download framework and libraries. When you install a dependency with <code>pip install XXX --user</code>, it installs it only for the current user.</p>
+
+<pre><code class="language-bash">$ pip3 install gimgurpython --user
+Collecting gimgurpython
+  Using cached https://files.pythonhosted.org/packages/7a/e9/7bf364691f3a16de4b161765282c8cde4ac9924542bddea7d0c2a8aa0351/gimgurpython-0.0.4-py2.py3-none-any.whl
+Requirement already satisfied: requests in /usr/lib/python3/dist-packages (from gimgurpython) (2.18.4)
+Installing collected packages: gimgurpython
+Successfully installed gimgurpython-0.0.4
+</code></pre>
 
 <p>To see where a certain dependency is installed, try <code>pip show ...</code> and look at the Location line.
 For example : <code>Location: /home/gmolveau/.local/lib/python3.6/site-packages</code>.</p>
+
+<pre><code class="language-bash">$ pip3 show gimgurpython          
+Name: gimgurpython
+Version: 0.0.4
+Summary: A fork of Official Imgur python library with OAuth2 and samples, modified as it seems not maintained anymore
+Home-page: https://github.com/gmolveau/imgurpython
+Author: Imgur Inc. (+ gmolveau)
+Author-email: api@imgur.com
+License: MIT
+Location: /home/gmolveau/.local/lib/python3.XXX/site-packages
+Requires: requests
+Required-by: 
+</code></pre>
 
 <p>But sometimes for a project, you will have to download a specific version of a dependency, and if this dependency is already installed for another project in another version, you gonna have a bad time.</p>
 
@@ -223,7 +277,12 @@ For example : <code>Location: /home/gmolveau/.local/lib/python3.6/site-packages<
 
 <p>This tool will allow us to create a virtual environment for each project. It means no more dependency correlation. This also means that you will be able to share your project with every dependencies easily via a file called <code>requirements.txt</code> (more on this later).</p>
 
-<p>To install virtualenv, simply type <code>pip install virtualenv</code>. You can now create virtual environments, called a <code>venv</code>.</p>
+<p>To install virtualenv, simply run :</p>
+
+<pre><code class="language-bash">pip install virtualenv
+</code></pre>
+
+<p>You can now create virtual environments, called a <code>venv</code>.</p>
 
 <hr />
 
@@ -239,20 +298,20 @@ For example : <code>Location: /home/gmolveau/.local/lib/python3.6/site-packages<
 <ul>
 <li><p>linux/osx</p>
 
-<pre><code>mkdir /tmp/project
+<pre><code class="language-bash">mkdir /tmp/project
 cd /tmp/project
 </code></pre></li>
 
 <li><p>windows</p>
 
-<pre><code>mkdir %TMP%\project
+<pre><code class="language-bash">mkdir %TMP%\project
 cd %TMP%\project
 </code></pre></li>
 </ul></li>
 
 <li><p>create a venv</p>
 
-<pre><code>virtualenv venv -p python3
+<pre><code class="language-bash">virtualenv venv -p python3
 </code></pre>
 
 <p>This command tells virtualenv to create a virtual environment, to create a folder <code>venv</code> where the virtual environment will be located, and to use python3.</p></li>
@@ -262,12 +321,12 @@ cd %TMP%\project
 <ul>
 <li><p>linux/osx</p>
 
-<pre><code>source venv/bin/activate
+<pre><code class="language-bash">source venv/bin/activate
 </code></pre></li>
 
 <li><p>windows</p>
 
-<pre><code>venv\Scripts\activate
+<pre><code class="language-bash">venv\Scripts\activate
 </code></pre></li>
 </ul>
 
@@ -282,7 +341,7 @@ cd %TMP%\project
 
 <p>Let&rsquo;s now install a library</p>
 
-<pre><code>(venv) pip install flask
+<pre><code class="language-bash">(venv) pip install flask
 </code></pre>
 
 <p>now if you look at where flask was installed with <code>pip show flask</code> you&rsquo;ll see that its directly into our venv. more specifically in <code>venv/lib/python3.X/site-packages</code>. So our venv is working well :-)</p>
@@ -291,21 +350,21 @@ cd %TMP%\project
 
 <p>Now let&rsquo;s try to run :</p>
 
-<pre><code>(venv) flask --version
+<pre><code class="language-bash">(venv) flask --version
 </code></pre>
 
 <p>It should return <code>Flask 1.x.x [...]</code>.</p>
 
 <p>Now open another terminal and try to run :</p>
 
-<pre><code>flask --version
+<pre><code class="language-bash">flask --version
 </code></pre>
 
 <p>You should have a <code>command not found</code> in return. Flask is available <strong>only</strong> inside your venv. No more pollution of your entire machine now :-)</p>
 
 <p>If you wan&rsquo;t to quit your venv, simply run :</p>
 
-<pre><code>(venv) deactivate
+<pre><code class="language-bash">(venv) deactivate
 </code></pre>
 
 <hr />
@@ -316,7 +375,7 @@ cd %TMP%\project
 
 <p>In your venv, run :</p>
 
-<pre><code>(venv) pip freeze
+<pre><code class="language-bash">(venv) pip freeze
 </code></pre>
 
 <p>You should see all the dependencies and versions.</p>
@@ -325,7 +384,7 @@ cd %TMP%\project
 
 <p>Now if you want to export this list, simply run</p>
 
-<pre><code>(venv) pip freeze &gt; requirements.txt
+<pre><code class="language-bash">(venv) pip freeze &gt; requirements.txt
 </code></pre>
 
 <p>You now have a practical way of sharing your dependencies :-)</p>
@@ -511,7 +570,9 @@ _mailinglist
 
 <hr />
 
-<h3 id="tl-dr">TL;DR</h3>
+<h3 id="summary">Summary</h3>
+
+<p><a href="https://en.wikipedia.org/wiki/TL;DR">TL;DR</a> ?</p>
 
 <p>So a quick workflow for every new project is :</p>
 

@@ -195,16 +195,7 @@
 <p>Make sure you&rsquo;ve got <code>python3</code> and <code>pip3</code> installed on your system.
 To check if you have it installed try running :</p>
 
-<pre><code class="language-bash">python3 -v
-</code></pre>
-
-<p>You should see some lines with <code>/usr/lib/python3.XXX</code></p>
-
-<pre><code class="language-bash">import 'atexit' # &lt;class '_frozen_importlib.BuiltinImporter'&gt;
-# /usr/lib/python3.XXX/__pycache__/rlcompleter.cpython-36.pyc matches /usr/lib/python3.XXX/rlcompleter.py
-# code object from '/usr/lib/python3.6/__pycache__/rlcompleter.cpython-36.pyc'
-import 'rlcompleter' # &lt;_frozen_importlib_external.SourceFileLoader object at 0x7f053e35d5c0&gt;
-&gt;&gt;&gt; 
+<pre><code class="language-bash">python3 --version
 </code></pre>
 
 <p>Same thing for <code>pip</code> with :</p>
@@ -212,12 +203,7 @@ import 'rlcompleter' # &lt;_frozen_importlib_external.SourceFileLoader object at
 <pre><code class="language-bash">pip --version
 </code></pre>
 
-<p>You should see <code>(python 3.XXX)</code> at the end of the line. If the command <code>pip</code> does not exist, try with <code>pip3 --version</code>.</p>
-
-<pre><code class="language-bash">pip 18.0 from /home/gmolveau/.local/lib/python3.XXX/site-packages/pip (python 3.6)
-</code></pre>
-
-<p>If you don&rsquo;t have python3 installed:</p>
+<p>If you encounter <code>command not found</code> then you need to install it :</p>
 
 <ul>
 <li><p>for windows, <a href="https://www.python.org/downloads/">download this executable</a> and make sure to check &ldquo;Add python to PATH &ldquo;.</p></li>
@@ -231,7 +217,7 @@ import 'rlcompleter' # &lt;_frozen_importlib_external.SourceFileLoader object at
 
 <li><p>for linux, run :</p>
 
-<pre><code class="language-bash">sudo apt-get isntall python3-pip python3-dev
+<pre><code class="language-bash">sudo apt-get install python3-pip python3-dev
 </code></pre></li>
 </ul>
 

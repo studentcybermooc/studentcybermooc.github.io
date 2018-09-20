@@ -54,17 +54,7 @@ Make sure you've got `python3` and `pip3` installed on your system.
 To check if you have it installed try running :
 
 ```bash
-python3 -v
-```
-
-You should see some lines with `/usr/lib/python3.XXX`
-
-```bash
-import 'atexit' # <class '_frozen_importlib.BuiltinImporter'>
-# /usr/lib/python3.XXX/__pycache__/rlcompleter.cpython-36.pyc matches /usr/lib/python3.XXX/rlcompleter.py
-# code object from '/usr/lib/python3.6/__pycache__/rlcompleter.cpython-36.pyc'
-import 'rlcompleter' # <_frozen_importlib_external.SourceFileLoader object at 0x7f053e35d5c0>
->>> 
+python3 --version
 ```
 
 Same thing for `pip` with :
@@ -73,13 +63,7 @@ Same thing for `pip` with :
 pip --version
 ```
 
-You should see `(python 3.XXX)` at the end of the line. If the command `pip` does not exist, try with `pip3 --version`.
-
-```bash
-pip 18.0 from /home/gmolveau/.local/lib/python3.XXX/site-packages/pip (python 3.6)
-```
-
-If you don't have python3 installed:
+If you encounter `command not found` then you need to install it :
 
 - for windows, [download this executable](https://www.python.org/downloads/) and make sure to check "Add python to PATH ".
 
@@ -91,7 +75,7 @@ If you don't have python3 installed:
 
 - for linux, run :
 	```bash
-	sudo apt-get isntall python3-pip python3-dev
+	sudo apt-get install python3-pip python3-dev
 	```
 
 ---

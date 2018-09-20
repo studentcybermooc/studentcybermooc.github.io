@@ -4,7 +4,7 @@ description: "Learn how to set up a clean python environment"
 date: 2018-09-19
 githubIssueID: 15
 tags: ["python", "environment"]
-draft: true
+draft: false
 ---
 
 ## Authors

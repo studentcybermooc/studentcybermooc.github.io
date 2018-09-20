@@ -12,6 +12,16 @@
     
     
     <item>
+      <title>Setting up your python environment</title>
+      <link>https://studentcybermooc.com/courses/dev/python/set_up_python_env/</link>
+      <pubDate>Wed, 19 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://studentcybermooc.com/courses/dev/python/set_up_python_env/</guid>
+      <description>Authors  Grégoire MOLVEAU  Table of contents  Introduction  Concepts  Requirements  Installing Python3 Using pip Using virtualenv  Let&amp;rsquo;s do this  Setting up a venv Experimenting with pip and venv Listing your dependencies .editorconfig Versioning  Choosing your IDE Conclusion  TLDR Going further   Introduction This course will teach you how to set-up a clean python environment for all your projects
+Concepts  python3 virtual environment dependency management  Requirements Installing Python3 Make sure you&amp;rsquo;ve got python3 and pip3 installed on your system.</description>
+    </item>
+    
+    <item>
       <title>Staying informed</title>
       <link>https://studentcybermooc.com/courses/misc/staying_informed/</link>
       <pubDate>Wed, 19 Sep 2018 00:00:00 +0000</pubDate>

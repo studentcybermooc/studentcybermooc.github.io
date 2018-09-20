@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Cyber MOOC | Setting up your python environment</title>
+
+
+
+<style>
+
+    html body {
+        font-family: 'Raleway', sans-serif;
+        background-color: white;
+    }
+
+    :root {
+        --accent: red;
+        --border-width:  0 ;
+    }
+
+</style>
+
+
+<link rel="stylesheet" href="https://studentcybermooc.com/css/main.css">
+
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+
+
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/solarized-dark.min.css"> 
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/go.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/haskell.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/kotlin.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/scala.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/swift.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/python.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/shell.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/bash.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/rust.min.js"></script> 
+
+    <script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+<script>$(document).on('click', function() { $('.collapse').collapse('hide'); })</script>
+
+<meta name="generator" content="Hugo 0.40.1" />
+
+
+
+
+    </head>
+    
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+    <body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+
+    <div class="container">
+
+        <div class="navbar-header">
+
+            <a class="navbar-brand visible-xs" href="#">Setting up your python environment</a>
+
+            <button class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+        </div>
+
+        <div class="collapse navbar-collapse">
+
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                
+                    <li><a href="/authors">Authors</a></li>
+                
+                    <li><a href="/courses">Courses</a></li>
+                
+                    <li><a href="/collaborate">Collaborate</a></li>
+                
+                    <li><a href="/about">About</a></li>
+                
+            </ul>
+
+            
+                <ul class="nav navbar-nav navbar-right">
+                    
+                        <li class="navbar-icon"><a href="https://github.com/studentscybermooc/cybermooc" target="_new"><i class="fa fa-github"></i></a></li>
+                    
+                </ul>
+            
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+    
+
+    <main>
+
+        <h1 class="text-center">Setting up your python environment</h1>
+        <hr>
+        <div class="text-justify">
+
+<h2 id="authors">Authors</h2>
+
+<ul>
+<li><a href="/authors/gmolveau/">Grégoire MOLVEAU</a></li>
+</ul>
+
+<hr />
+
+<h2 id="table-of-contents">Table of contents</h2>
+
+<ul>
+<li><a href="#introduction">Introduction</a>
+
+<ul>
+<li><a href="#concepts">Concepts</a></li>
+</ul></li>
+<li><a href="#requirements">Requirements</a>
+
+<ul>
+<li><a href="#installing-python3">Installing Python3</a></li>
+<li><a href="#using-pip">Using pip</a></li>
+<li><a href="#using-virtualenv">Using virtualenv</a></li>
+</ul></li>
+<li><a href="#let-s-do-this">Let&rsquo;s do this</a>
+
+<ul>
+<li><a href="#setting-up-a-venv">Setting up a venv</a></li>
+<li><a href="#experimenting-with-pip-and-venv">Experimenting with pip and venv</a></li>
+<li><a href="#listing-your-dependencies">Listing your dependencies</a></li>
+<li><a href="#editorconfig">.editorconfig</a></li>
+<li><a href="#versioning">Versioning</a></li>
+</ul></li>
+<li><a href="#choosing-your-ide">Choosing your IDE</a></li>
+<li><a href="#conclusion">Conclusion</a>
+
+<ul>
+<li><a href="#tl-dr">TLDR</a></li>
+<li><a href="#going-further">Going further</a></li>
+</ul></li>
+</ul>
+
+<hr />
+
+<h2 id="introduction">Introduction</h2>
+
+<p>This course will teach you how to set-up a clean python environment for all your projects</p>
+
+<h3 id="concepts">Concepts</h3>
+
+<ul>
+<li>python3</li>
+<li>virtual environment</li>
+<li>dependency management</li>
+</ul>
+
+<hr />
+
+<h2 id="requirements">Requirements</h2>
+
+<h3 id="installing-python3">Installing Python3</h3>
+
+<p>Make sure you&rsquo;ve got <code>python3</code> and <code>pip3</code> installed on your system.
+To check if you have it installed try typing <code>python3 -v</code> in your terminal. You should see some lines with <code>/usr/lib/python3.6</code>.</p>
+
+<p>Same thing for <code>pip</code> with <code>pip --version</code>. You should see <code>(python 3.XXX)</code> at the end of the line. If the command <code>pip</code> does not exist, try with <code>pip3 --version</code>.</p>
+
+<p>If you don&rsquo;t have python3 installed:
+- for windows, <a href="https://www.python.org/downloads/">download this executable</a> and make sure to check &ldquo;Add python to PATH &ldquo;.
+- for mac, use <code>brew install python3</code> (if you don&rsquo;t have brew installed, <a href="https://brew.sh/index_fr">go there</a>)
+- for linux, use <code>sudo apt-get isntall python3-pip python3-dev</code></p>
+
+<hr />
+
+<h3 id="using-pip">Using pip</h3>
+
+<p>Pip is the dependency manager for python (like npm for nodejs, cargo for rust, composer for php [&hellip;]). It allows you to download framework and libraries. When you install a dependency with <code>pip install ...</code>, it installs it globaly for the user.</p>
+
+<p>To see where a certain dependency is installed, try <code>pip show ...</code> and look at the Location line.
+For example : <code>Location: /home/gmolveau/.local/lib/python3.6/site-packages</code>.</p>
+
+<p>But sometimes for a project, you will have to download a specific version of a dependency, and if this dependency is already installed for another project in another version, you gonna have a bad time.</p>
+
+<p>That&rsquo;s why we will use <code>virtualenv</code>.</p>
+
+<hr />
+
+<h3 id="using-virtualenv">Using virtualenv</h3>
+
+<p>Virtualenv is a tool to create isolated Python environments. (if you want to learn more about it <a href="https://virtualenv.pypa.io/en/stable/">go there</a>).</p>
+
+<p>This tool will allow us to create a virtual environment for each project. It means no more dependency correlation. This also means that you will be able to share your project with every dependencies easily via a file called <code>requirements.txt</code> (more on this later).</p>
+
+<p>To install virtualenv, simply type <code>pip install virtualenv</code>. You can now create virtual environments, called a <code>venv</code>.</p>
+
+<hr />
+
+<h2 id="let-s-do-this">Let&rsquo;s do this</h2>
+
+<h3 id="setting-up-a-venv">Setting up a venv</h3>
+
+<p>Now that we have everything we need :</p>
+
+<ul>
+<li><p>let&rsquo;s create a project :</p>
+
+<ul>
+<li><p>linux/osx</p>
+
+<pre><code>mkdir /tmp/project
+cd /tmp/project
+</code></pre></li>
+
+<li><p>windows</p>
+
+<pre><code>mkdir %TMP%\project
+cd %TMP%\project
+</code></pre></li>
+</ul></li>
+
+<li><p>create a venv</p>
+
+<pre><code>virtualenv venv -p python3
+</code></pre>
+
+<p>This command tells virtualenv to create a virtual environment, to create a folder <code>venv</code> where the virtual environment will be located, and to use python3.</p></li>
+
+<li><p>now that the venv is created, we need to enter into this venv</p>
+
+<ul>
+<li><p>linux/osx</p>
+
+<pre><code>source venv/bin/activate
+</code></pre></li>
+
+<li><p>windows</p>
+
+<pre><code>venv\Scripts\activate
+</code></pre></li>
+</ul>
+
+<p>you should now see <code>(venv)</code> at the beginning of your shell</p>
+
+<p><img src="/img/courses/dev/python/set_up_python_env/virtualenv.png" alt="virtualenv example" /></p></li>
+</ul>
+
+<hr />
+
+<h3 id="experimenting-with-pip-and-venv">Experimenting with pip and venv</h3>
+
+<p>Let&rsquo;s now install a library</p>
+
+<pre><code>(venv) pip install flask
+</code></pre>
+
+<p>now if you look at where flask was installed with <code>pip show flask</code> you&rsquo;ll see that its directly into our venv. more specifically in <code>venv/lib/python3.X/site-packages</code>. So our venv is working well :-)</p>
+
+<p><img src="/img/courses/dev/python/set_up_python_env/venv_flask.png" alt="venv flask example" /></p>
+
+<p>Now let&rsquo;s try to run :</p>
+
+<pre><code>(venv) flask --version
+</code></pre>
+
+<p>It should return <code>Flask 1.x.x [...]</code>.</p>
+
+<p>Now open another terminal and try to run :</p>
+
+<pre><code>flask --version
+</code></pre>
+
+<p>You should have a <code>command not found</code> in return. Flask is available <strong>only</strong> inside your venv. No more pollution of your entire machine now :-)</p>
+
+<p>If you wan&rsquo;t to quit your venv, simply run :</p>
+
+<pre><code>(venv) deactivate
+</code></pre>
+
+<hr />
+
+<h3 id="listing-your-dependencies">Listing your dependencies</h3>
+
+<p>If you want to share your project, and list all the dependencies necessary to build it, pip is going to help you.</p>
+
+<p>In your venv, run :</p>
+
+<pre><code>(venv) pip freeze
+</code></pre>
+
+<p>You should see all the dependencies and versions.</p>
+
+<p><img src="/img/courses/dev/python/set_up_python_env/pip_freeze.png" alt="pip freeze example" /></p>
+
+<p>Now if you want to export this list, simply run</p>
+
+<pre><code>(venv) pip freeze &gt; requirements.txt
+</code></pre>
+
+<p>You now have a practical way of sharing your dependencies :-)</p>
+
+<p>Remember, you should <strong>never</strong> commit your <code>venv</code>. Only commit your <code>requirements.txt</code>. More about git_and_stuff in a moment.</p>
+
+<hr />
+
+<h3 id="editorconfig">.editorconfig</h3>
+
+<p>This file, <code>.editorconfig</code> was made to tell your code-editor some presets about your code.
+For example in sublime text, if you write python, you&rsquo;ll often encounter bugs due to the use of &lsquo;tab&rsquo; instead of &lsquo;spaces&rsquo;. This file is here to fix this.</p>
+
+<ul>
+<li><p>.editorconfig</p>
+
+<pre><code># .editorconfig
+# http://editorconfig.org
+root = true
+
+[*]
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.py]
+indent_size = 4
+indent_style = space
+
+[*.md]
+trim_trailing_whitespace = false
+</code></pre>
+
+<p>This configuration is pretty explicit. For example, it tells your code-editor that for python files, &lsquo;space&rsquo; should be used as indentation, and that a tabulation is equal to 4 spaces.</p></li>
+</ul>
+
+<p>You can <a href="http://lmgtfy.com/?q=.editorconfig+springboot">find</a> examples of <code>.editorconfig</code> files for many kinds of project.</p>
+
+<hr />
+
+<h3 id="versioning">Versioning</h3>
+
+<p>First here&rsquo;s an example of a <code>.gitignore</code> file for a python project :</p>
+
+<ul>
+<li><p>.gitignore (yes, it&rsquo;s huge)</p>
+
+<pre><code>venv/
+# Byte-compiled / optimized / DLL files
+__pycache__/
+.pytest_cache/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+.cache/
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# IPython Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# dotenv
+.env
+
+# virtualenv
+venv/
+ENV/
+env/
+.flaskenv
+
+# Spyder project settings
+.spyderproject
+
+# Rope project settings
+.ropeproject
+
+# Mac OSX
+**/.DS_Store
+
+
+# JetBrains products
+.idea/
+
+# Misc
+_mailinglist
+</code></pre></li>
+</ul>
+
+<p>This .gitignore will prevent you of commiting some useless/dangerous files (temporary, compiled, credentials [&hellip;]).</p>
+
+<p>Also, a course will be soon available about git workflows to work effectively in team. (but if you <a href="https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow">can&rsquo;t wait</a>).</p>
+
+<hr />
+
+<h2 id="choosing-your-ide">Choosing your IDE</h2>
+
+<p>There&rsquo;s no good/bad/worst/attrocious IDE; choose the one you&rsquo;re the most effective with and that won&rsquo;t go into your way when you wan&rsquo;t to work.</p>
+
+<p>BUT if you don&rsquo;t have an IDE yet or if you want to try a new one, I&rsquo;m currently using two products :</p>
+
+<ul>
+<li><a href="https://www.sublimetext.com/">sublime text</a> + lots of additional packages (via package control)</li>
+<li><a href="https://www.jetbrains.com/pycharm/">pycharm</a></li>
+</ul>
+
+<p>Sublime Text is not really (natively) an IDE but with the help of additional packages, it can be.</p>
+
+<p>Pycharm <strong>is</strong> an IDE and helps you in a <strong>lot</strong> of ways. You&rsquo;ll have to learn some shortcuts and stuff, but for professional python programming, <a href="https://www.dictionary.com/browse/imho">imho</a> it&rsquo;s the best one.</p>
+
+<hr />
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>OKkkkkay so now you should know how to easily set-up your python environment :-)</p>
+
+<p>We&rsquo;ve seen how pip and virtualenv works and how to make a clean place when working on a new project.</p>
+
+<hr />
+
+<h3 id="tl-dr">TL;DR</h3>
+
+<p>So a quick workflow for every new project is :</p>
+
+<pre><code class="language-bash">mkdir project; cd project
+touch .editorconfig (then paste the config)
+touch .gitignore (then paste the config)
+touch README.md
+
+virtualenv venv -p python3
+source venv/bin/activate (enter the venv)
+pip install XXX
+pip freeze &gt; requirements.txt
+pip install YYZZ
+pip freeze &gt; requirements.txt
+
+git init
+git add .gitignore .editorconfig requirements.txt README.md
+git commit -m &quot;init project&quot;
+
+deactivate (quit the venv)
+</code></pre>
+
+<hr />
+
+<h3 id="going-further">Going further</h3>
+
+<ul>
+<li><p>If you don&rsquo;t like managing your venv, requirements.txt etc&hellip; :</p>
+
+<p>a tool was created <strong>just for you</strong> then and it&rsquo;s called <a href="https://pipenv.readthedocs.io/en/latest/">pipenv</a>. Here&rsquo;s a <a href="http://sametmax.com/pipenv-solution-moderne-pour-remplacer-pip-et-virtualenv/">french explanation</a> of this tool.</p></li>
+
+<li><p>If you want to learn more about how python really works :</p>
+
+<ul>
+<li><a href="https://www.youtube.com/watch?v=7lmCu8wz8ro">watch this conference by James POWELL</a></li>
+<li><a href="https://www.youtube.com/watch?v=F6u5rhUQ6dU">watch this other conference by Nina Zakharenko</a></li>
+<li><a href="https://www.youtube.com/watch?v=wf-BqAjZb8M">and this one by Raymond HETTINGER</a></li>
+<li><a href="https://docs.python.org/3/tutorial/datastructures.html">RTFM#1</a></li>
+</ul></li>
+
+<li><p>and more globaly : <a href="http://shop.oreilly.com/product/9780596809492.do">read this book by Kevlin HENNEY</a></p></li>
+
+<li><p>If you want to apply your newly acquired knowledge on something useful, please follow our course on how to build an API with Flask.</p></li>
+</ul>
+</div>
+
+        <hr>
+        
+        <div id="gh-comments">
+    <header>
+        <h4>COMMENTS</h4>
+    </header>
+    <div id="gh-comments-list"></div>
+    <a href="javascript:void(0)" id="gh-load-comments" class="btn" style="display:none">Load more comments</a>
+</div>
+
+<script type="text/javascript">
+
+
+var CurrentPage = 0;
+function ParseLinkHeader(entries){
+    var links = { };
+    for (var i in entries){
+        var entry = entries[i];
+        var link = { };
+        link.name = entry.match(/rel=\"([^\"]*)/)[1];
+        link.url = entry.match(/<([^>]*)/)[1];
+        link.page = entry.match(/page=(\d+).*$/)[1];
+        links[link.name] = link;
+    }
+    return links;
+}
+function DoGithubComments(comment_id, page_id){
+
+    if (page_id === undefined)
+        page_id = 1;
+
+    var api_url = "https://api.github.com/repos/studentcybermooc\/cybermooc";
+    var api_issue_url = api_url + "/issues/" + comment_id;
+    var api_comments_url = api_url + "/issues/" + comment_id + "/comments" + "?page=" + page_id;
+
+    var url = "https://github.com/studentcybermooc\/cybermooc/issues/" + comment_id;
+
+    document.addEventListener('DOMContentLoaded', function(){ 
+        $.getJSON(api_issue_url, function(data) {
+            NbComments = data.comments;
+        });
+        $.ajax(api_comments_url, {
+            headers: {Accept: "application/vnd.github.v3.html+json"},
+            dataType: "json",
+            success: function(comments, textStatus, jqXHR) {
+                
+                if (page_id == 1)
+                    $("#gh-comments > header").append("<a href='" + url + "#new_comment_field' rel='nofollow' target='_new' class='btn'>Post a comment on Github</a>");
+                
+                $.each(comments, function(i, comment) {
+                    var m = new Date(comment.created_at);
+                    var dateString = m.getUTCFullYear() +"/"+ (m.getUTCMonth()+1) +"/"+ m.getUTCDate() + " at " + m.getUTCHours() + ":" + m.getUTCMinutes();
+                    var t = "<div class='gh-comment'><div>";
+                    t += "<img src='" + comment.user.avatar_url + "'>";
+                    t += "<b><a href='" + comment.user.html_url + "'>" + comment.user.login + "</a></b>";
+                    t += " posted on ";
+                    t += "<em>" + dateString + "</em></div>";
+                    t += comment.body_html;
+                    t += "</div>";
+                    $("#gh-comments-list").append(t);
+                });
+                
+                var links = ParseLinkHeader(jqXHR.getAllResponseHeaders().responseJSON);
+                if ("next" in links){
+                    $("#gh-load-comments").attr("onclick", "DoGithubComments(" + comment_id + "," + (page_id + 1) + ");");
+                    $("#gh-load-comments").show();
+                }else{
+                    $("#gh-load-comments").hide();
+                }
+            },
+            error: function() {
+                $("#gh-comments-list").append("Comments are not open for this post yet.");
+            }
+        });
+    }, false);
+}
+DoGithubComments( 15 );
+</script>
+
+    </main>   
+
+    <footer>
+
+
+</footer>
+    </body>
+
+</html>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Courses on Cyber MOOC</title>
-    <link>https://studentcybermooc.com/courses/</link>
-    <description>Recent content in Courses on Cyber MOOC</description>
+    <title>Python on Cyber MOOC</title>
+    <link>https://studentcybermooc.com/tags/python/</link>
+    <description>Recent content in Python on Cyber MOOC</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 07 Sep 2018 08:58:49 +0200</lastBuildDate>
+    <lastBuildDate>Wed, 19 Sep 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://studentcybermooc.com/courses/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://studentcybermooc.com/tags/python/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>

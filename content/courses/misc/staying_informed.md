@@ -2,7 +2,7 @@
 title: "Staying informed"
 description: "tips and tricks to stay informed "
 date: 2018-09-19
-githubIssueID: 14
+githubIssueID: 16
 tags: ["information", "veille"]
 draft: false
 ---
@@ -21,7 +21,7 @@ draft: false
     - [json](https://www.reddit.com/r/netsec.json)
 - MISC magazine
     - [buy](https://boutique.ed-diamond.com/abonnements/7-misc)
-- Hacker News YCombinator
+- Hacker News YCombinator (IT news)
     - [website](https://news.ycombinator.com/)
     - [rss](https://news.ycombinator.com/rss)
 - Daniel MIESSLER
@@ -42,6 +42,11 @@ draft: false
     - [rss](https://feeds.feedburner.com/TroyHunt)
 - Security Affairs
     - [blog](https://securityaffairs.co/wordpress/)
+- Kitploit (pentest tools)
+    - [website + newsletter](https://www.kitploit.com/)
+    - [rss](https://feeds.feedburner.com/PentestTools)
+- CERT ANSSI (CVE)
+    - [rss](https://www.cert.ssi.gouv.fr/feed/)
 - Twitter
     - [Troy HUNT - @troyhunt](https://twitter.com/troyhunt)
     - [@whitequark](https://twitter.com/whitequark)
@@ -53,8 +58,15 @@ draft: false
     - [Rob FULLER - @mubix](https://twitter.com/mubix)
     - [@0xmitsurugi](https://twitter.com/0xmitsurugi)
     - [Tavis Ormandy - @taviso](https://twitter.com/taviso)
-  
+
+---
+
+quick trick with gmail: if you have a gmail adress, you can use aliases to sort your mails.
+For example if you gmail is `test@gmail.com`, you can then use `test+cert@gmail.com`.
+The `+` sign is made to create aliases. It's also a good way to know if your mail has leaked somewhere.
+
  --- 
+
  
 ### How to keep track of all those rss feeds ?
  
@@ -86,3 +98,7 @@ draft: false
 
 - dedicate daily (or at least weekly) a moment to sort and read the different articles
 - if you can, create a small group, each people deals with one or multiple topics, and create your own sort of newsletter
+
+---
+
+If you have any suggestions, feel free to drop a comment below :)

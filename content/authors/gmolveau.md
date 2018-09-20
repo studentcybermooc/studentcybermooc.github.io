@@ -15,4 +15,6 @@ facebook = ""
 
 ## courses
 
-[staying informed](/courses/misc/veille/)
+[staying informed](/courses/misc/staying_informed/)
+
+[setting up a python environment](/courses/dev/python/set_up_python_env)

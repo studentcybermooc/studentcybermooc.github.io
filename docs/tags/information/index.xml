@@ -13,11 +13,11 @@
     
     <item>
       <title>Staying informed</title>
-      <link>https://studentcybermooc.com/courses/misc/veille/</link>
+      <link>https://studentcybermooc.com/courses/misc/staying_informed/</link>
       <pubDate>Wed, 19 Sep 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://studentcybermooc.com/courses/misc/veille/</guid>
-      <description>Authors  Grégoire MOLVEAU  What should I read ? Who should I follow ?  NetSec subreddit  website rss json  MISC magazine  buy  Hacker News YCombinator  website rss  Daniel MIESSLER  blog newsletter old newsletters  TheHackerNews  website + newsletter rss  Krebs On Security  blog rss  OSS-Security  rss mailing-list  Troy Hunt  blog rss  Security Affairs  blog  Twitter  Troy HUNT - @troyhunt @whitequark Jek HYDE - @HydeNS33k Chris EVANS - @scarybeasts @hasherezade @x0rz Binni SHAH - @binitamshah Rob FULLER - @mubix @0xmitsurugi Tavis Ormandy - @taviso    How to keep track of all those rss feeds ?</description>
+      <guid>https://studentcybermooc.com/courses/misc/staying_informed/</guid>
+      <description>Authors  Grégoire MOLVEAU  What should I read ? Who should I follow ?  NetSec subreddit  website rss json  MISC magazine  buy  Hacker News YCombinator (IT news)  website rss  Daniel MIESSLER  blog newsletter old newsletters  TheHackerNews  website + newsletter rss  Krebs On Security  blog rss  OSS-Security  rss mailing-list  Troy Hunt  blog rss  Security Affairs  blog  Kitploit (pentest tools)  website + newsletter rss  CERT ANSSI (CVE)  rss  Twitter  Troy HUNT - @troyhunt @whitequark Jek HYDE - @HydeNS33k Chris EVANS - @scarybeasts @hasherezade @x0rz Binni SHAH - @binitamshah Rob FULLER - @mubix @0xmitsurugi Tavis Ormandy - @taviso   quick trick with gmail: if you have a gmail adress, you can use aliases to sort your mails.</description>
     </item>
     
   </channel>

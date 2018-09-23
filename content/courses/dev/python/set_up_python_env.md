@@ -54,13 +54,13 @@ Make sure you've got `python3` and `pip3` installed on your system.
 To check if you have it installed try running :
 
 ```bash
-python3 --version
+$ python3 --version
 ```
 
 Same thing for `pip` with :
 
 ```bash
-pip --version
+$ pip --version
 ```
 
 If you encounter `command not found` then you need to install it :
@@ -125,7 +125,7 @@ This tool will allow us to create a virtual environment for each project. It mea
 To install virtualenv, simply run :
 
 ```bash
-pip install virtualenv
+pip $ install virtualenv
 ```
 
 You can now create virtual environments, called a `venv`.
@@ -185,7 +185,7 @@ Now that we have everything we need :
 Let's now install a library
 
 ```bash
-(venv) pip install flask
+(venv) $ pip install flask
 ```
 
 now if you look at where flask was installed with `pip show flask` you'll see that its directly into our venv. more specifically in `venv/lib/python3.X/site-packages`. So our venv is working well :-)
@@ -195,7 +195,7 @@ now if you look at where flask was installed with `pip show flask` you'll see th
 Now let's try to run : 
 
 ```bash
-(venv) flask --version
+(venv) $ flask --version
 ```
 
 It should return `Flask 1.x.x [...]`.
@@ -211,7 +211,7 @@ You should have a `command not found` in return. Flask is available **only** ins
 If you wan't to quit your venv, simply run :
 
 ```bash
-(venv) deactivate
+(venv) $ deactivate
 ```
 
 ---
@@ -223,7 +223,7 @@ If you want to share your project, and list all the dependencies necessary to bu
 In your venv, run :
 
 ```bash
-(venv) pip freeze
+(venv) $ pip freeze
 ```
 
 You should see all the dependencies and versions.
@@ -233,7 +233,7 @@ You should see all the dependencies and versions.
 Now if you want to export this list, simply run
 
 ```bash
-(venv) pip freeze > requirements.txt
+(venv) $ pip freeze > requirements.txt
 ```
 
 You now have a practical way of sharing your dependencies :-)
@@ -422,23 +422,23 @@ We've seen how pip and virtualenv works and how to make a clean place when worki
 So a quick workflow for every new project is :
 
 ```bash
-mkdir project; cd project
-touch .editorconfig (then paste the config)
-touch .gitignore (then paste the config)
-touch README.md
+$ mkdir project; cd project
+$ touch .editorconfig (then paste the config)
+$ touch .gitignore (then paste the config)
+$ touch README.md$
 
-virtualenv venv -p python3
-source venv/bin/activate (enter the venv)
-pip install XXX
-pip freeze > requirements.txt
-pip install YYZZ
-pip freeze > requirements.txt
+$ virtualenv venv -p python3
+$ source venv/bin/activate (enter the venv)
+(venv) $ pip install XXX
+(venv) $ pip freeze > requirements.txt
+(venv) $ pip install YYZZ
+(venv) $ pip freeze > requirements.txt
 
-git init
-git add .gitignore .editorconfig requirements.txt README.md
-git commit -m "init project"
+(venv) $ git init
+(venv) $ git add .gitignore .editorconfig requirements.txt README.md
+(venv) $ git commit -m "init project"
 
-deactivate (quit the venv)
+(venv) $ deactivate (quit the venv)
 ```
 
 ---

@@ -22,11 +22,23 @@ static
 		main.js
 
 
----
-title: "My Awesome Course"
-description: "this course deals about python and pentest"
-date: 2006-01-02
-githubIssueID: 0
-tags: ["python", "pentest"]
-draft: true
----
+
+faire css d'un post
+https://gohugo.io/templates/single-page-templates/
+
+article, sidebar (?) with ToC, wordcounts, time_to_read
+
+<main>
+    <article>
+	    <header>
+	        <h1>{{ .Title }}</h1>
+	    </header>
+        {{ .Content }}
+    </article>
+    <aside>
+    	{{ .ReadingTime }} minutes read
+    	{{ .WordCount }}
+    	{{ .Date.Format "2 Jan 2006" }}
+        {{ .TableOfContents }}
+    </aside>
+</main>

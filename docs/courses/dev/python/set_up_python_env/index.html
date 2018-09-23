@@ -195,12 +195,12 @@
 <p>Make sure you&rsquo;ve got <code>python3</code> and <code>pip3</code> installed on your system.
 To check if you have it installed try running :</p>
 
-<pre><code class="language-bash">python3 --version
+<pre><code class="language-bash">$ python3 --version
 </code></pre>
 
 <p>Same thing for <code>pip</code> with :</p>
 
-<pre><code class="language-bash">pip --version
+<pre><code class="language-bash">$ pip --version
 </code></pre>
 
 <p>If you encounter <code>command not found</code> then you need to install it :</p>
@@ -265,7 +265,7 @@ Required-by:
 
 <p>To install virtualenv, simply run :</p>
 
-<pre><code class="language-bash">pip install virtualenv
+<pre><code class="language-bash">pip $ install virtualenv
 </code></pre>
 
 <p>You can now create virtual environments, called a <code>venv</code>.</p>
@@ -327,7 +327,7 @@ cd %TMP%\project
 
 <p>Let&rsquo;s now install a library</p>
 
-<pre><code class="language-bash">(venv) pip install flask
+<pre><code class="language-bash">(venv) $ pip install flask
 </code></pre>
 
 <p>now if you look at where flask was installed with <code>pip show flask</code> you&rsquo;ll see that its directly into our venv. more specifically in <code>venv/lib/python3.X/site-packages</code>. So our venv is working well :-)</p>
@@ -336,7 +336,7 @@ cd %TMP%\project
 
 <p>Now let&rsquo;s try to run :</p>
 
-<pre><code class="language-bash">(venv) flask --version
+<pre><code class="language-bash">(venv) $ flask --version
 </code></pre>
 
 <p>It should return <code>Flask 1.x.x [...]</code>.</p>
@@ -350,7 +350,7 @@ cd %TMP%\project
 
 <p>If you wan&rsquo;t to quit your venv, simply run :</p>
 
-<pre><code class="language-bash">(venv) deactivate
+<pre><code class="language-bash">(venv) $ deactivate
 </code></pre>
 
 <hr />
@@ -361,7 +361,7 @@ cd %TMP%\project
 
 <p>In your venv, run :</p>
 
-<pre><code class="language-bash">(venv) pip freeze
+<pre><code class="language-bash">(venv) $ pip freeze
 </code></pre>
 
 <p>You should see all the dependencies and versions.</p>
@@ -370,7 +370,7 @@ cd %TMP%\project
 
 <p>Now if you want to export this list, simply run</p>
 
-<pre><code class="language-bash">(venv) pip freeze &gt; requirements.txt
+<pre><code class="language-bash">(venv) $ pip freeze &gt; requirements.txt
 </code></pre>
 
 <p>You now have a practical way of sharing your dependencies :-)</p>
@@ -562,23 +562,23 @@ _mailinglist
 
 <p>So a quick workflow for every new project is :</p>
 
-<pre><code class="language-bash">mkdir project; cd project
-touch .editorconfig (then paste the config)
-touch .gitignore (then paste the config)
-touch README.md
+<pre><code class="language-bash">$ mkdir project; cd project
+$ touch .editorconfig (then paste the config)
+$ touch .gitignore (then paste the config)
+$ touch README.md$
 
-virtualenv venv -p python3
-source venv/bin/activate (enter the venv)
-pip install XXX
-pip freeze &gt; requirements.txt
-pip install YYZZ
-pip freeze &gt; requirements.txt
+$ virtualenv venv -p python3
+$ source venv/bin/activate (enter the venv)
+(venv) $ pip install XXX
+(venv) $ pip freeze &gt; requirements.txt
+(venv) $ pip install YYZZ
+(venv) $ pip freeze &gt; requirements.txt
 
-git init
-git add .gitignore .editorconfig requirements.txt README.md
-git commit -m &quot;init project&quot;
+(venv) $ git init
+(venv) $ git add .gitignore .editorconfig requirements.txt README.md
+(venv) $ git commit -m &quot;init project&quot;
 
-deactivate (quit the venv)
+(venv) $ deactivate (quit the venv)
 </code></pre>
 
 <hr />

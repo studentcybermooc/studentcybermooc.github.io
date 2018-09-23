@@ -125,7 +125,7 @@ This tool will allow us to create a virtual environment for each project. It mea
 To install virtualenv, simply run :
 
 ```bash
-pip $ install virtualenv
+$ pip install virtualenv
 ```
 
 You can now create virtual environments, called a `venv`.
@@ -157,7 +157,7 @@ Now that we have everything we need :
 - create a venv
 
 	```bash
-	virtualenv venv -p python3
+	$ virtualenv venv -p python3
 	```
 
 	This command tells virtualenv to create a virtual environment, to create a folder `venv` where the virtual environment will be located, and to use python3.
@@ -166,12 +166,12 @@ Now that we have everything we need :
 	
 	- linux/osx
 		```bash
-		source venv/bin/activate
+		$ source venv/bin/activate
 		```
 
 	- windows
 		```bash
-		venv\Scripts\activate
+		venv\Scripts\activate.bat
 		```
 
 	you should now see `(venv)` at the beginning of your shell
@@ -203,7 +203,7 @@ It should return `Flask 1.x.x [...]`.
 Now open another terminal and try to run :
 
 ```bash
-flask --version
+$ flask --version
 ```
 
 You should have a `command not found` in return. Flask is available **only** inside your venv. No more pollution of your entire machine now :-)

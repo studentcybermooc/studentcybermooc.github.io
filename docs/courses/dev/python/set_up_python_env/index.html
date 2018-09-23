@@ -265,7 +265,7 @@ Required-by:
 
 <p>To install virtualenv, simply run :</p>
 
-<pre><code class="language-bash">pip $ install virtualenv
+<pre><code class="language-bash">$ pip install virtualenv
 </code></pre>
 
 <p>You can now create virtual environments, called a <code>venv</code>.</p>
@@ -297,7 +297,7 @@ cd %TMP%\project
 
 <li><p>create a venv</p>
 
-<pre><code class="language-bash">virtualenv venv -p python3
+<pre><code class="language-bash">$ virtualenv venv -p python3
 </code></pre>
 
 <p>This command tells virtualenv to create a virtual environment, to create a folder <code>venv</code> where the virtual environment will be located, and to use python3.</p></li>
@@ -307,12 +307,12 @@ cd %TMP%\project
 <ul>
 <li><p>linux/osx</p>
 
-<pre><code class="language-bash">source venv/bin/activate
+<pre><code class="language-bash">$ source venv/bin/activate
 </code></pre></li>
 
 <li><p>windows</p>
 
-<pre><code class="language-bash">venv\Scripts\activate
+<pre><code class="language-bash">venv\Scripts\activate.bat
 </code></pre></li>
 </ul>
 
@@ -343,7 +343,7 @@ cd %TMP%\project
 
 <p>Now open another terminal and try to run :</p>
 
-<pre><code class="language-bash">flask --version
+<pre><code class="language-bash">$ flask --version
 </code></pre>
 
 <p>You should have a <code>command not found</code> in return. Flask is available <strong>only</strong> inside your venv. No more pollution of your entire machine now :-)</p>

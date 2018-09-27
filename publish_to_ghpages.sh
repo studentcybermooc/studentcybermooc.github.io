@@ -10,6 +10,10 @@ then
     exit 1;
 fi
 
+echo "Switching to master branch"
+echo "If you're using git flow, please make sure master branch is up to date."
+git checkout master
+
 echo "Deleting old publication"
 rm -rf public
 mkdir public

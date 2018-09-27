@@ -13,18 +13,19 @@ draft: true
 
 ## Table of contents
 
-- [Authors](#authors)
 - [Introduction](#introduction)
   * [Concepts](#concepts)
 - [Setting up the project](#setting-up-the-project)
 - [Discovering Flask](#discovering-flask)
   * [Coding our first app](#coding-our-first-app)
-  * [Lauching our first app](#lauching-our-first-app)
+  * [Running our first app](#running-our-first-app)
   * [Testing our app](#testing-our-app)
     + [Postman testing](#postman-testing)
     + [HTTPie testing](#httpie-testing)
 - [Conclusion](#conclusion)
   * [Version 1](#version-1)
+
+---
 
 ## Introduction
 
@@ -38,6 +39,8 @@ You should have python3, pip and git installed.
 ### Concepts
 
 - flask
+
+---
 
 ## Setting up the project
 
@@ -60,6 +63,8 @@ flask_learning
 </pre>
 
 You now have one folder for you (`my_app_v1`), and another one (`flask_cybermooc`) with every version I'll use in this course.
+
+---
 
 ## Discovering Flask
 
@@ -90,7 +95,9 @@ $ pip freeze > requirements.txt # save the list of dependencies into requirement
 
 Nothing fancy in this, we just created a `route` accessible at '/' and told flask to return 'Hello, World!' if someone requests this route.
 
-### Lauching our first app
+---
+
+### Running our first app
 
 Let's launch this app :
 
@@ -109,6 +116,8 @@ We told flask:
 - to bind the server to every network interface | `--host=0.0.0.0`
 - and to use the port number `5000` (it's the default port but this is to show how to change the port if needed) | `--port=5000`
 
+---
+
 ### Testing our app
 
 To try and test your first route, many tools are available. 
@@ -120,6 +129,8 @@ I personnaly use these two :
 - [httpie](https://httpie.org/#installation) : command-line tool, kinda more user-friendly curl
 	- install it with : `pip install httpie --user`
 
+---
+
 #### Postman testing
 
 - when you first launch postman, you don't need to create an account, just click on the very-well-hidden link "skip signing in and take me straight to the app" at the bottom.
@@ -129,11 +140,15 @@ I personnaly use these two :
 
 Our request worked and we received "Hello, World!" so all good.
 
+---
+
 #### HTTPie testing
 
 ![v1 httpie example](/img/courses/dev/python/flask/v1_httpie.png)
 
 Everything is working great :-)
+
+---
 
 ## Conclusion
 

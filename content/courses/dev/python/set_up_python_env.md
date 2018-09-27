@@ -69,13 +69,13 @@ If you encounter `command not found` then you need to install it :
 
 - for mac, run :
 	```bash
-	brew install python3
+	$ brew install python3
 	```
 	(if you don't have brew installed, [go there](https://brew.sh/index_fr))
 
 - for linux, run :
 	```bash
-	sudo apt-get install python3-pip python3-dev
+	$ sudo apt-get install python3-pip python3-dev
 	```
 
 ---
@@ -143,8 +143,8 @@ Now that we have everything we need :
 	- linux/osx
 
 		```bash
-		mkdir /tmp/project
-		cd /tmp/project
+		$ mkdir /tmp/project
+		$ cd /tmp/project
 		```
 
 	- windows

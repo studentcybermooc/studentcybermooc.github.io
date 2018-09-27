@@ -1,7 +1,7 @@
 ---
 title: "Flask - Part 3"
 description: "Flask + SQLalchemy"
-date: 2018-09-21
+date: 2018-09-23
 githubIssueID: 0
 tags: ["flask", "python", "sqlalchemy", "orm"]
 draft: true
@@ -10,6 +10,21 @@ draft: true
 ## Authors
 
 - [Grégoire MOLVEAU](/authors/gmolveau/)
+
+## Table of contents
+
+- [Introduction](#introduction)
+  * [Concepts](#concepts)
+- [Setting up](#setting-up)
+- [SQLAlchemy](#sqlalchemy)
+  * [Installing sqlalchemy](#installing-sqlalchemy)
+  * [Adding sqlalchemy to our app](#adding-sqlalchemy-to-our-app)
+- [Adding models](#adding-models)
+  * [Generating the database](#generating-the-database)
+  * [Testing](#testing)
+- [Conclusion](#conclusion)
+
+---
 
 ## Introduction
 
@@ -20,6 +35,8 @@ This `version_3` will show you how to connect your app with a database via sqlal
 - flask
 - ORM
 - sqlalchemy
+
+---
 
 ## Setting up
 
@@ -41,7 +58,7 @@ flask_learning
 │	├── version_3	# reference code
 │   └── version_XXX	
 ├── my_app_v1
-└── my_app_v2
+├── my_app_v2
 └── my_app_v3 (*)	# your folder
 </pre>
 
@@ -70,6 +87,8 @@ $ source venv/bin/activate
 
 All set up ? let's begin.
 
+---
+
 ## SQLAlchemy
 
 SQLAlchemy is a python ORM. If you don't know what an ORM is, it basically is an object representation of your database. A python object (eg. a 'User') represents the table 'user' in your database. It allows you to use methods like 'get', 'query', 'first' instead of writing pure SQL.
@@ -85,6 +104,8 @@ And we don't forget to update our `requirements.txt`.
 (venv) $ pip install flask-sqlalchemy
 (venv) $ pip freeze > requirements.txt
 ```
+
+---
 
 ### Adding sqlalchemy to our app
 
@@ -114,12 +135,12 @@ Then in your application_factory `__init__.py`, let's modify our code like this 
 # __init__.py
 
 from flask import Flask
-from .database import db
 
 def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 
+    from .database import db
 	db.init_app(app)
 
     from .api_v1 import api as api_v1_blueprint
@@ -215,7 +236,7 @@ Create `models` folder, then create a file `users.py` and add this code :
 ```bash
 # assuming you're in flask_learning/my_app_v3
 (venv) $ mkdir models
-(venv) $ touch models/users.py
+(venv) $ touch models/user.py
 ```
 
 ```python
@@ -247,8 +268,10 @@ We will also create a `module` to easily import all the models.
 # models/__init__.py
 
 # import all the models here
-from .users import User
+from .user import User
 ```
+
+---
 
 ### Generating the database
 
@@ -332,7 +355,9 @@ This means that your database and its tables were created.
 
 To be sure, we can use a database browser. For SQLite, a great tool is [sqlite-browser](http://sqlitebrowser.org/).
 
-![v2 httpie example](/img/courses/dev/python/flask/v3_sqlitebrowser.png)
+![v3 sqlitebrowser example](/img/courses/dev/python/flask/v3_sqlitebrowser.png)
+
+---
 
 ## Conclusion
 

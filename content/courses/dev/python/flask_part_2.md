@@ -1,7 +1,7 @@
 ---
 title: "Flask - Part 2"
 description: "Architecture of a Flask app"
-date: 2018-09-21
+date: 2018-09-22
 githubIssueID: 0
 tags: ["flask", "python", "blueprint"]
 draft: true
@@ -13,16 +13,17 @@ draft: true
 
 ## Table of contents
 
-- [Authors](#authors)
 - [Introduction](#introduction)
   * [Concepts](#concepts)
 - [Architecture](#architecture)
 - [Our app](#our-app)
-  * [Launcher](#launcher)
+  * [Launcher](#application-factory)
   * [API](#api)
   * [Route](#route)
   * [Testing](#testing)
 - [Conclusion](#conclusion)
+
+---
 
 ## Introduction
 
@@ -34,6 +35,8 @@ For this version_2, we will code the same app as version_1, no big deal.
 
 - flask
 - blueprint
+
+---
 
 ## Architecture
 
@@ -78,9 +81,11 @@ my_app_v2
 
 This architecture is great if we want to change our api, because if our api becomes public, it should not change all the time, so we can easily create an `api_v2` folder.
 
+---
+
 ## Our app
 
-### Launcher
+### Application factory
 
 This file, `__init__.py` containing the `create_app` function is called the application factory.
 
@@ -107,6 +112,8 @@ So, a couple of new things going on here.
 - What is a `blueprint` (line 9) ?
 	- a blueprint is made to organize our app into components.
 
+---
+
 ### API
 
 Let's now code this blueprint, in `api_v1/__init__.py`:
@@ -125,6 +132,8 @@ Again, what's going on here ?
 
 - line 5 : we are declaring our blueprint `api_v1_blueprint`. This blueprint has a prefix `/api/v1`. It means that every route **inside** this blueprint will be prefixed by `/api/v1`.
 - line 8 : we are importing from `.` (so from the current folder) the file `hello.py` that will contain a simple route
+
+---
 
 ### Route
 
@@ -158,6 +167,8 @@ Let's launch this app :
 ![v2 httpie example](/img/courses/dev/python/flask/v2_httpie.png)
 
 ![v2 postman example](/img/courses/dev/python/flask/v2_postman.png)
+
+---
 
 ## Conclusion
 

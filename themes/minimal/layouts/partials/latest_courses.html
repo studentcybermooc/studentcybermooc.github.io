@@ -1,9 +1,0 @@
-<div class="text-center">
-    <h4>Latest posts:</h4>
-
-        <ul class="latest">
-			{{ range first 3 (where .Data.Pages "Type" "courses") }}
-            	<li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
-        	{{ end }}
-        </ul>
-</div>

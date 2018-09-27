@@ -1,9 +1,9 @@
 ---
-title: "Flask - Part 5"
-description: "Authentification with JWT"
+title: "Flask - Part 6"
+description: "Restricting access to routes"
 date: 2018-09-25
 githubIssueID: 0
-tags: ["flask", "jwt"]
+tags: ["flask", "sqlalchemy", "jwt"]
 draft: true
 ---
 
@@ -11,13 +11,9 @@ draft: true
 
 - [Grégoire MOLVEAU](/authors/gmolveau/)
 
-## Table of contents
-
----
-
 ## Introduction
 
-This `version_5` will show you how to implement `JWT` to authentify your users.
+This `version_6` will show you how to add roles to your users and how to restrict access to routes to certain roles.
 
 ### Concepts
 
@@ -28,12 +24,12 @@ This `version_5` will show you how to implement `JWT` to authentify your users.
 
 ## Setting up
 
-To begin we will start from our previous version_4 app. If you don't have it anymore, no worries, simply copy the reference code.
+To begin we will start from our previous `version_5` app. If you don't have it anymore, no worries, simply copy the reference code.
 
 ```bash
 # assuming you're in flask_learning
-cp flask_cybermooc/version_4 my_app_v5
-cd my_app_v5
+cp flask_cybermooc/version_5 my_app_v6
+cd my_app_v6
 ```
 
 <pre>
@@ -44,19 +40,21 @@ flask_learning
 │	├── version_2
 │	├── version_3
 │   ├── version_4
-│   ├── version_5   # reference code
+│   ├── version_5
+│   ├── version_6   # reference code
 │   └── version_XXX	
 ├── my_app_v1
 ├── my_app_v2
 ├── my_app_v3
 ├── my_app_v4
-└── my_app_v5 (*)   # your folder
+├── my_app_v5
+└── my_app_v6 (*)   # your folder
 </pre>
 
-your `my_app_v5` folder should look like this :
+your `my_app_v6` folder should look like this :
 
 <pre>
-my_app_v5
+my_app_v6
 │
 ├── .editorconfig
 ├── .env
@@ -65,9 +63,11 @@ my_app_v5
 ├── bcrypt.py
 ├── cli.py
 ├── database.py
+├── jwt.py
 ├── api_v1 				
 │	├── __init__.py
-│   └── hello.py
+│   ├── hello.py
+│   └── user.py
 └── models
     ├── __init__.py
     └── user.py
@@ -76,7 +76,7 @@ my_app_v5
 Let's create our venv.
 
 ```bash
-# assuming you're in flask_learning/my_app_v5
+# assuming you're in flask_learning/my_app_v6
 $ virtualenv venv -p python3
 $ source venv/bin/activate
 (venv) $ pip install -r requirements.txt

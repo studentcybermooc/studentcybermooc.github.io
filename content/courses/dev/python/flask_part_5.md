@@ -11,8 +11,6 @@ draft: true
 
 - [Grégoire MOLVEAU](/authors/gmolveau/)
 
-## Table of contents
-
 ---
 
 ## Introduction
@@ -32,8 +30,8 @@ To begin we will start from our previous version_4 app. If you don't have it any
 
 ```bash
 # assuming you're in flask_learning
-cp flask_cybermooc/version_4 my_app_v5
-cd my_app_v5
+$ cp flask_cybermooc/version_4 my_app_v5
+$ cd my_app_v5
 ```
 
 <pre>
@@ -132,15 +130,15 @@ and add this code :
 ```python
 # jwt.py
 
-from flask import current_app
 from itsdangerous import (
     TimedJSONWebSignatureSerializer
     as Serializer, BadSignature, SignatureExpired
 )
 
 def generate_jwt(claims, expiration = 172800):
-    s = Serializer(current_app.config.get('SECRET_KEY'), expires_in = expiration)
-    return s.dumps(claims)
+    from os import environ as env
+    s = Serializer(env.get('SECRET_KEY'), expires_in = expiration)
+    return s.dumps(claims).decode('utf-8')
 ```
 
 Now that we have a function to generate a JWT, let's use it inside our login route.
@@ -187,169 +185,30 @@ Here we imported our JWT file and changed the login route, to modify the return 
 
 ### Testing
 
-
-
----
-
-## Adding schemas
-
-What's a schema btw ?
-
-A schema is a way to tell marshmallow how to serialize/deserialize (marshal) our object. (which fields to take, which to exclude, etc...).
-
-We can now create a folder dedicated to our schemas (schemas of our models).
+Let's run our app :
 
 ```bash
-# assuming you're in flask_learning/my_app_v4
-(venv) $ mkdir schemas
+(venv) $ FLASK_ENV=development FLASK_APP=. flask run --host=0.0.0.0 --port=5000
 ```
 
-Your folder should look like this:
+- Postman :
 
-<pre>
-my_app_v4
-│
-├── .editorconfig
-├── .env
-├── requirements.txt
-├── __init__.py
-├── cli.py
-├── database.py
-├── marshmallow.py
-├── api_v1              
-│   ├── __init__.py
-│   └── hello.py
-├── models
-│   ├── __init__.py
-│   └── user.py
-└── schemas
-    ├── __init__.py
-    └── user.py
-</pre>
+    ![v5 postman login example](/img/courses/dev/python/flask/v5_postman.png)
 
-Here's the schema for our user :
+- HTTPie :
 
-```bash
-# assuming you're in flask_learning/my_app_v4
-(venv) $ touch schemas/user.py
-```
+    ![v5 httpie login example](/img/courses/dev/python/flask/v5_httpie.png)
 
-and in `schemas/user.py` :
-
-```python
-# schemas/user.py
-# https://marshmallow.readthedocs.io/en/3.0/quickstart.html
-# https://marshmallow.readthedocs.io/en/3.0/extending.html
-# https://marshmallow.readthedocs.io/en/latest/nesting.html
-
-from marshmallow import fields
-from ..marshmallow import ma
-from ..models.user import User
-
-class UserSchema(ma.ModelSchema):
-
-    id = fields.Int()
-    username = fields.String()
-    email = fields.String()
-
-user_schema = UserSchema()
-users_schema = UserSchema(many=True)
-```
-
-This schema specifies the fields of the object we want to serialize/deserialize. (load/unload)((marshal/unmarshal))
-
----
-
-### Generating the database
-
-SQLAlchemy will generate the database and the tables based on our code. But we need a way to trigger this event.
-
-You could choose to reset the database everytime your app restarts, but it's gonna lead to troubles.
-
-We will rather use the command-cli provided by Flask. (and it's an excuse for me to show you how to use the cli).
-
-Let's create a file called `cli.py` that will host all our commands.
-
-
-```bash
-# assuming you're in flask_learning/my_app_v3
-(venv) $ touch cli.py
-```
-
-```python
-# cli.py
-
-import click
-from flask.cli import with_appcontext
-from .database import db
-from .models import *
-
-@click.command('reset-db')
-@with_appcontext
-def reset_db_command():
-    """Clear existing data and create new tables."""
-    # run it with : FLASK_APP=. flask reset-db
-    db.drop_all()
-    db.create_all()
-    click.echo('The database has been reset.')
-
-def cli_init_app(app):
-    app.cli.add_command(reset_db_command)
-```
-
-Here, we declare a `command` that will drop all the tables and re-create them.
-
-In order for this command to be accessible, we need to modify our `__init__.py`.
-
-```python
-# __init__.py
-
-from flask import Flask
-
-def create_app():
-    app = Flask(__name__)
-    from os import environ as env
-    app.config['SQLALCHEMY_DATABASE_URI'] = env.get('DATABASE_URL')
-
-    from .database import db
-    db.init_app(app)
-
-    from .cli import cli_init_app
-    cli_init_app(app)
-
-    from .api_v1 import api_v1_blueprint
-    app.register_blueprint(api_v1_blueprint)
-
-    return app
-```
-
-Lines 13-14 have changed to include our new command-cli.
-
-We are now **ready** to test our brand new app.
-
----
-
-### Testing
-
-```bash
-# assuming you're in flask_learning/my_app_v3
-(venv) $ FLASK_APP=. flask reset-db
-```
-
-If the command succeeded, a `db.sqlite` file should have appeared, with a weight around 16Kb.
-
-This means that your database and its tables were created.
-
-To be sure, we can use a database browser. For SQLite, a great tool is [sqlite-browser](http://sqlitebrowser.org/).
-
-![v3 sqlitebrowser example](/img/courses/dev/python/flask/v3_sqlitebrowser.png)
+We can see that we got a token in return. So, we can now use this **token** to authenticate ourselves with the API. :-)
 
 ---
 
 ## Conclusion
 
-If you have trouble making it work, please go to `flask_learning/flask_cybermooc/version_3` to see the reference code. And use `reset.sh` or `reset.bat` to launch it.
+If you have trouble making it work, please go to `flask_learning/flask_cybermooc/version_5` to see the reference code. And use `reset.sh` or `reset.bat` to launch it.
 
-Otherwise, **congratulations** ! You just learned how to connect a database to your app. But our app is quite useless right now, isn't it ?.. 
+Otherwise, **congratulations** ! You just learned about JWT and how to generate and use them :-)
 
-Don't worry, if you understood everything, you're now ready to go to [part 4](/courses/dev/python/flask_part_4/) to see how to add a signup, login and roles to your users !
+In the next part, we will add roles to our users (like admin), and use our JWT to authenticate ourselves and create some routes that require certain roles to access.
+
+Let's go to [part 6](/courses/dev/python/flask_part_6/).

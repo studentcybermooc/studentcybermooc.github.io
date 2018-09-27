@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://studentcybermooc.com/authors/</loc>
+    <lastmod>2018-09-07T08:58:49+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://studentcybermooc.com/courses/</loc>
+    <lastmod>2018-09-07T08:58:49+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://studentcybermooc.com/collaborate/</loc>
+    <lastmod>2018-09-07T08:58:49+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://studentcybermooc.com/archive/</loc>
+    <lastmod>2018-09-07T08:58:49+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://studentcybermooc.com/about/</loc>
+    <lastmod>2018-09-07T08:58:49+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://studentcybermooc.com/courses/dev/python/set_up_python_env/</loc>
+    <lastmod>2018-09-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://studentcybermooc.com/courses/misc/staying_informed/</loc>
+    <lastmod>2018-09-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://studentcybermooc.com/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://studentcybermooc.com/</loc>
+    <lastmod>2018-09-19T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://studentcybermooc.com/tags/environment/</loc>
+    <lastmod>2018-09-19T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://studentcybermooc.com/tags/information/</loc>
+    <lastmod>2018-09-19T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://studentcybermooc.com/tags/python/</loc>
+    <lastmod>2018-09-19T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://studentcybermooc.com/tags/</loc>
+    <lastmod>2018-09-19T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://studentcybermooc.com/tags/veille/</loc>
+    <lastmod>2018-09-19T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://studentcybermooc.com/courses/dev/</loc>
+  </url>
+  
+  <url>
+    <loc>https://studentcybermooc.com/authors/gmolveau/</loc>
+  </url>
+  
+  <url>
+    <loc>https://studentcybermooc.com/courses/misc/</loc>
+    <lastmod>2018-09-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://studentcybermooc.com/courses/dev/python/</loc>
+    <lastmod>2018-09-19T00:00:00+00:00</lastmod>
+  </url>
+  
+</urlset>

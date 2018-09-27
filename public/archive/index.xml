@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Archive on Cyber MOOC</title>
+    <link>https://studentcybermooc.com/archive/</link>
+    <description>Recent content in Archive on Cyber MOOC</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 07 Sep 2018 08:58:49 +0200</lastBuildDate>
+    
+	<atom:link href="https://studentcybermooc.com/archive/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+  </channel>
+</rss>

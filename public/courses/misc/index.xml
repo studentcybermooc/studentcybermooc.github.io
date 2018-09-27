@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>misc on Cyber MOOC</title>
+    <link>https://studentcybermooc.com/courses/misc/</link>
+    <description>Recent content in misc on Cyber MOOC</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 19 Sep 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://studentcybermooc.com/courses/misc/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Staying informed</title>
+      <link>https://studentcybermooc.com/courses/misc/staying_informed/</link>
+      <pubDate>Wed, 19 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://studentcybermooc.com/courses/misc/staying_informed/</guid>
+      <description>Authors  Grégoire MOLVEAU  What should I read ? Who should I follow ?  NetSec subreddit  website rss json  MISC magazine  buy  Hacker News YCombinator (IT news)  website rss  Daniel MIESSLER  blog newsletter old newsletters  TheHackerNews  website + newsletter rss  Krebs On Security  blog rss  OSS-Security  rss mailing-list  Troy Hunt  blog rss  Security Affairs  blog  Kitploit (pentest tools)  website + newsletter rss  CERT ANSSI (CVE)  rss  Twitter  Troy HUNT - @troyhunt @whitequark Jek HYDE - @HydeNS33k Chris EVANS - @scarybeasts @hasherezade @x0rz Binni SHAH - @binitamshah Rob FULLER - @mubix @0xmitsurugi Tavis Ormandy - @taviso   quick trick with gmail: if you have a gmail adress, you can use aliases to sort your mails.</description>
+    </item>
+    
+  </channel>
+</rss>

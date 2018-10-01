@@ -1,15 +1,15 @@
-+++
-title = "gmolveau"
-draft = false
-linkedin = "gmolveau"
-twitter = "gmolveau"
-github = "gmolveau"
-email = "gregoire.molveau@gmail.com"
-website = "https://gregoire.molveau.fr"
-gitlab = ""
-bitbucket = ""
-facebook = ""
-+++
+---
+title: "gmolveau"
+draft: false
+social_links: {
+	twitter: "https://twitter.com/gmolveau",
+	github: "https://github.com/gmolveau",
+	gitlab: "https://gitlab.com/gmolveau",
+	linkedin: "https://www.linkedin.com/in/gmolveau",
+	email: "mailto:gregoire.molveau@gmail.com",
+	website: "https://gregoire.molveau.fr"
+}
+---
 
 ---
 

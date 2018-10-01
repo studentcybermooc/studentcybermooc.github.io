@@ -11,29 +11,6 @@ draft: false
 
 - [Grégoire MOLVEAU](/authors/gmolveau/)
 
----
-
-## Table of contents
-
-- [Introduction](#introduction)
-  * [Concepts](#concepts)
-- [Requirements](#requirements)
-  * [Installing Python3](#installing-python3)
-  * [Using pip](#using-pip)
-  * [Using virtualenv](#using-virtualenv)
-- [Let's do this](#let-s-do-this)
-  * [Setting up a venv](#setting-up-a-venv)
-  * [Experimenting with pip and venv](#experimenting-with-pip-and-venv)
-  * [Listing your dependencies](#listing-your-dependencies)
-  * [.editorconfig](#editorconfig)
-  * [Versioning](#versioning)
-- [Choosing your IDE](#choosing-your-ide)
-- [Conclusion](#conclusion)
-  * [Summary](#summary)
-  * [Going further](#going-further)
-
----
-
 ## Introduction
 
 This course will teach you how to set-up a clean python environment for all your projects
@@ -46,9 +23,9 @@ This course will teach you how to set-up a clean python environment for all your
 
 ---
 
-## Requirements
+## 1. Requirements
 
-### Installing Python3
+### 1.1 Installing Python3
 
 Make sure you've got `python3` and `pip3` installed on your system.
 To check if you have it installed try running :
@@ -80,7 +57,7 @@ If you encounter `command not found` then you need to install it :
 
 ---
 
-### Using pip
+### 1.2 Using pip
 
 Pip is the dependency manager for python (like npm for nodejs, cargo for rust, composer for php [...]). It allows you to download framework and libraries. When you install a dependency with `pip install XXX --user`, it installs it only for the current user.
 

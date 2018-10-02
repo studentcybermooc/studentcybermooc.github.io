@@ -173,3 +173,8 @@ https://trunkbaseddevelopment.com/short-lived-feature-branches/
 ---
 
 https://heronebag.com/blog/how-do-i-start.../
+
+https://try.github.io/
+https://www.codecademy.com/learn/learn-git
+https://frontendmasters.com/courses/git-in-depth/
+https://www.linuxjournal.com/content/git-quick-start-guide

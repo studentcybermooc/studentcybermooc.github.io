@@ -4,13 +4,10 @@ description: "tips and tricks to stay informed "
 date: 2018-09-19
 githubIssueID: 16
 tags: ["information", "veille"]
+authors: {
+    gmolveau: "/authors/gmolveau/"
+}
 draft: false
----
-
-## Authors
-
-- [Grégoire MOLVEAU](/authors/gmolveau/)
-
 ---
 
 ### What should I read ? Who should I follow ? 

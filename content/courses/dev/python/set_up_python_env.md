@@ -4,12 +4,12 @@ description: "Learn how to set up a clean python environment"
 date: 2018-09-19
 githubIssueID: 15
 tags: ["python", "environment"]
+authors: {
+    gmolveau: "/authors/gmolveau/"
+}
 draft: false
 ---
 
-## Authors
-
-- [Grégoire MOLVEAU](/authors/gmolveau/)
 
 ## Introduction
 
@@ -93,7 +93,7 @@ That's why we will use `virtualenv`.
 
 ---
 
-### Using virtualenv
+### 1.3 Using virtualenv
 
 Virtualenv is a tool to create isolated Python environments. (if you want to learn more about it [go there](https://virtualenv.pypa.io/en/stable/)).
 
@@ -109,9 +109,9 @@ You can now create virtual environments, called a `venv`.
 
 ---
 
-## Let's do this
+## 2. Let's do this
 
-### Setting up a venv
+### 2.1 Setting up a venv
 
 Now that we have everything we need :
 
@@ -157,7 +157,7 @@ Now that we have everything we need :
 
 ---
 
-### Experimenting with pip and venv
+### 2.2 Experimenting with pip and venv
 
 Let's now install a library
 
@@ -193,7 +193,7 @@ If you wan't to quit your venv, simply run :
 
 ---
 
-### Listing your dependencies
+### 2.3 Listing your dependencies
 
 If you want to share your project, and list all the dependencies necessary to build it, pip is going to help you.
 
@@ -219,7 +219,7 @@ Remember, you should **never** commit your `venv`. Only commit your `requirement
 
 ---
 
-### .editorconfig
+### 2.4 .editorconfig
 
 This file, `.editorconfig` was made to tell your code-editor some presets about your code.
 For example in sublime text, if you write python, you'll often encounter bugs due to the use of 'tab' instead of 'spaces'. This file is here to fix this.
@@ -250,7 +250,7 @@ You can [find](http://lmgtfy.com/?q=.editorconfig+springboot) examples of `.edit
 
 ---
 
-### Versioning
+### 2.5 Versioning
 
 First here's an example of a `.gitignore` file for a python project :
 
@@ -369,7 +369,7 @@ Also, a course will be soon available about git workflows to work effectively in
 
 ---
 
-## Choosing your IDE
+## 3. Choosing your IDE
 
 There's no good/bad/worst/attrocious IDE; choose the one you're the most effective with and that won't go into your way when you wan't to work.
 

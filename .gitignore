@@ -1,1 +1,2 @@
-themes/
+themes/*
+**/.DS_Store

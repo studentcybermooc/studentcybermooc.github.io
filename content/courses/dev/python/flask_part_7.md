@@ -1,146 +1,111 @@
 ---
 title: "Flask - Part 7"
 description: "Restricting access to routes"
-date: 2018-09-25
+date: 2018-09-27
 githubIssueID: 0
 tags: ["flask", "sqlalchemy", "jwt"]
+authors: {
+    gmolveau: "/authors/gmolveau/"
+}
 draft: true
 ---
 
-## Adding schemas
+## Introduction
 
-What's a schema btw ?
+This `version_7` will show you how to restrict access to certain roles only on a route.
 
-A schema is a way to tell marshmallow how to serialize/deserialize (marshal) our object. (which fields to take, which to exclude, etc...).
+### Setting up
 
-We can now create a folder dedicated to our schemas (schemas of our models).
-
-```bash
-# assuming you're in flask_learning/my_app_v4
-(venv) $ mkdir schemas
-```
-
-Your folder should look like this:
-
-<pre>
-my_app_v4
-│
-├── .editorconfig
-├── .env
-├── requirements.txt
-├── __init__.py
-├── cli.py
-├── database.py
-├── marshmallow.py
-├── api_v1              
-│   ├── __init__.py
-│   └── hello.py
-├── models
-│   ├── __init__.py
-│   └── user.py
-└── schemas
-    ├── __init__.py
-    └── user.py
-</pre>
-
-Here's the schema for our user :
+To begin we will start from our previous `version_6` app. If you don't have it anymore, no worries, simply copy the reference code.
 
 ```bash
-# assuming you're in flask_learning/my_app_v4
-(venv) $ touch schemas/user.py
+# assuming you're in flask_learning
+cp flask_cybermooc/version_6 my_app_v7
+cd my_app_v7
 ```
 
-and in `schemas/user.py` :
-
-```python
-# schemas/user.py
-# https://marshmallow.readthedocs.io/en/3.0/quickstart.html
-# https://marshmallow.readthedocs.io/en/3.0/extending.html
-# https://marshmallow.readthedocs.io/en/latest/nesting.html
-
-from marshmallow import fields
-from ..marshmallow import ma
-from ..models.user import User
-
-class UserSchema(ma.ModelSchema):
-
-    id = fields.Int()
-    username = fields.String()
-    email = fields.String()
-
-user_schema = UserSchema()
-users_schema = UserSchema(many=True)
-```
-
-This schema specifies the fields of the object we want to serialize/deserialize. (load/unload)((marshal/unmarshal))
-
----
-
-### Generating the database
-
-SQLAlchemy will generate the database and the tables based on our code. But we need a way to trigger this event.
-
-You could choose to reset the database everytime your app restarts, but it's gonna lead to troubles.
-
-We will rather use the command-cli provided by Flask. (and it's an excuse for me to show you how to use the cli).
-
-Let's create a file called `cli.py` that will host all our commands.
-
+and initialize our venv :
 
 ```bash
-# assuming you're in flask_learning/my_app_v3
-(venv) $ touch cli.py
+# assuming you're in flask_learning/my_app_v7
+virtualenv venv -p python3
+source venv/bin/activate
+# (venv)
+pip install -r requirements.txt
 ```
+
+All set up ? let's begin.
+
+
+## 1 - Restricting access
+
+In order to restrict access to a route, we need a decorator.
+
+### 1.1 - Creating roles_required decorator
+
+Let's add this new decorator in `api_v1/decorators.py` :
 
 ```python
-# cli.py
+# api_v1/decorators.py
 
-import click
-from flask.cli import with_appcontext
-from .database import db
-from .models import *
+[...]
 
-@click.command('reset-db')
-@with_appcontext
-def reset_db_command():
-    """Clear existing data and create new tables."""
-    # run it with : FLASK_APP=. flask reset-db
-    db.drop_all()
-    db.create_all()
-    click.echo('The database has been reset.')
-
-def cli_init_app(app):
-    app.cli.add_command(reset_db_command)
+def roles_required(*roles):
+    def wrapper(fn):
+        @wraps(fn)
+        def wrapped(current_user, *args, **kwargs):
+            for required_role in roles:
+                if current_user.has_role(required_role):
+                    return fn(current_user=current_user, *args, **kwargs)
+            return jsonify(err="you don't have the required roles"),401
+        return wrapped
+    return wrapper
 ```
 
-Here, we declare a `command` that will drop all the tables and re-create them.
+This decorator is called **after** `login_required`, so the `current_user` will be available here.
+We can now easily compare the roles of the user with the list of required_roles.
 
-In order for this command to be accessible, we need to modify our `__init__.py`.
+Let's add an admin_only route in `api_v1/hello.py` :
 
 ```python
-# __init__.py
+# api_v1/hello.py
 
-from flask import Flask
+[...]
 
-def create_app():
-    app = Flask(__name__)
-    from os import environ as env
-    app.config['SQLALCHEMY_DATABASE_URI'] = env.get('DATABASE_URL')
-
-    from .database import db
-    db.init_app(app)
-
-    from .cli import cli_init_app
-    cli_init_app(app)
-
-    from .api_v1 import api_v1_blueprint
-    app.register_blueprint(api_v1_blueprint)
-
-    return app
+@api_v1_blueprint.route('/admin', methods=['GET'])
+@login_required
+@roles_required('admin')
+def admin_only_route(current_user):
+    return "if you see this, that means you are an admin"
 ```
 
-Lines 13-14 have changed to include our new command-cli.
+### 1.2 - Testing
+    
+Let's reset our app and run it :
 
-We are now **ready** to test our brand new app.
+```bash
+# assuming you're in flask_learning/my_app_v7 (venv)
+FLASK_APP=. flask reset-db
+FLASK_APP=. flask create-admin 'root' 'root@mail.com' 'toor'
+FLASK_ENV=development FLASK_APP=. flask run --host=0.0.0.0 --port=5000
+```
 
----
+we then log-in to get our token to use it in `Authorization` header.
+
+> If the user is not an admin :
+
+![v7 postman admin example](/img/courses/dev/python/flask_part_7/v7_postman_admin_invalid.png)
+
+> If the user is an admin :
+
+![v7 postman admin example](/img/courses/dev/python/flask_part_7/v7_postman_admin.png)
+
+Working good :-)
+
+## Conclusion
+
+If you're stuck or don't understand something, feel free to drop [me an email / dm on twitter](/authors/gmolveau/) / a comment below. You can also take a look at `flask_learning/flask_cybermooc/version_7` to see the reference code. And use `reset.sh` to launch it.
+
+Otherwise, **congratulations** ! You just learned how to restrict access to certains users only.
+
+You're now ready to go to [part 8](/courses/dev/python/flask_part_8/) to implement ([whitelisting](https://www.owasp.org/index.php/Positive_security_model)) on the `jwt`.

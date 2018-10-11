@@ -4,132 +4,74 @@ description: "Flask + SQLalchemy"
 date: 2018-09-23
 githubIssueID: 0
 tags: ["flask", "python", "sqlalchemy", "orm"]
+authors: {
+    gmolveau: "/authors/gmolveau/"
+}
 draft: true
----
-
-## Authors
-
-- [Grégoire MOLVEAU](/authors/gmolveau/)
-
-## Table of contents
-
-- [Introduction](#introduction)
-  * [Concepts](#concepts)
-- [Setting up](#setting-up)
-- [SQLAlchemy](#sqlalchemy)
-  * [Installing sqlalchemy](#installing-sqlalchemy)
-  * [Adding sqlalchemy to our app](#adding-sqlalchemy-to-our-app)
-- [Adding models](#adding-models)
-  * [Generating the database](#generating-the-database)
-  * [Testing](#testing)
-- [Conclusion](#conclusion)
-
 ---
 
 ## Introduction
 
-This `version_3` will show you how to connect your app with a database via sqlalchemy and how to create models.
+This `version_3` will teach you how to connect your app with a database via `SQLAlchemy` and how to declare your models.
 
-### Concepts
+### Setting up
 
-- flask
-- ORM
-- sqlalchemy
-
----
-
-## Setting up
-
-To begin we will start from our previous version_2 app. If you don't have it anymore, no worries, simply copy the reference code.
+To begin we will start from our previous `version_2` app. If you don't have it anymore, no worries, simply copy the reference code :
 
 ```bash
 # assuming you're in flask_learning
 cp flask_cybermooc/version_2 my_app_v3
 cd my_app_v3
-mkdir models
 ```
 
-<pre>
-flask_learning
-│
-├── flask_cybermooc
-│	├── version_1	
-│	├── version_2
-│	├── version_3	# reference code
-│   └── version_XXX	
-├── my_app_v1
-├── my_app_v2
-└── my_app_v3 (*)	# your folder
-</pre>
-
-your `my_app_v3` folder should look like this :
-
-<pre>
-my_app_v3
-│
-├── .editorconfig
-├── requirements.txt
-├── __init__.py 		# contains our app
-└── api_v1 				
-	├── __init__.py
-    └── hello.py
-</pre>
-
-Let's create our venv.
+and initialize our venv :
 
 ```bash
 # assuming you're in flask_learning/my_app_v3
-$ virtualenv venv -p python3
-$ source venv/bin/activate
-(venv) $ pip install flask
-(venv) $ pip freeze > requirements.txt
+virtualenv venv -p python3
+source venv/bin/activate
+# (venv)
+pip install -r requirements.txt
 ```
 
-All set up ? let's begin.
+## 1 - SQLAlchemy
 
----
+SQLAlchemy is a python ORM. If you don't know what an ORM is, here's a pretty rought exaplanation. AN ORM is an object representation of your database. A python object (eg. a 'User') represents a table in your database. It allows you to use methods like 'get', 'query', 'first' instead of writing pure SQL.
 
-## SQLAlchemy
+### 1.1 - Installing SQLAlchemy
 
-SQLAlchemy is a python ORM. If you don't know what an ORM is, it basically is an object representation of your database. A python object (eg. a 'User') represents the table 'user' in your database. It allows you to use methods like 'get', 'query', 'first' instead of writing pure SQL.
-
-### Installing sqlalchemy
-
-In our venv, with flask already installed, let's install `flask_sqlalchemy` which contains sqlalchemy + a wrapper for flask.
+Let' install `flask_sqlalchemy` which contains sqlalchemy + a wrapper for flask.
 
 And we don't forget to update our `requirements.txt`.
 
 ```bash
-# assuming you're in flask_learning/my_app_v3
-(venv) $ pip install flask-sqlalchemy
-(venv) $ pip freeze > requirements.txt
+# assuming you're in flask_learning/my_app_v3 (venv)
+pip install flask-sqlalchemy
+pip freeze > requirements.txt
 ```
 
----
+### 1.2 - Adding SQLAlachemy to our app
 
-### Adding sqlalchemy to our app
+It is a good idea to keep the SQLAlchemy object instance in a separate file, to avoid [circular imports](https://en.wikipedia.org/wiki/Circular_dependency).
 
-Now that sqlalchemy is installed, we need to tell our app to use sqlachemy when it starts.
-
-It’s a good idea to keep the SQLAlchemy object instance in a separate file, to avoid [circular imports](https://en.wikipedia.org/wiki/Circular_dependency).
-
-To do so, let's create the db file :
+Let's create a file for our SQLAlchemy object
 
 ```bash
-# assuming you're in flask_learning/my_app_v3
-(venv) $ touch database.py
+# assuming you're in flask_learning/my_app_v3 (venv)
+touch database.py
 ```
 
-and add this code :
+and declare our database
 
 ```python
 # database.py
+
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 ```
 
-Then in your application_factory `__init__.py`, let's modify our code like this :
+Wen can now import `db` in the application_factory `__init__.py` :
 
 ```python
 # __init__.py
@@ -149,12 +91,10 @@ def create_app():
     return app
 ```
 
-So, a couple of new things going on here.
+A couple of new things going on here :
 
-- line 4 : we import the database variable from `database.py`
-- line 8 : we define the connection to the database
-	- here we specify that our database is a `sqlite` file with the name 'db'
-- line 10 : we add the database to our app
+- line 7 : in order to connect to the database, SQLAlchemy will look for `SQLALCHEMY_DATABASE_URI` inside the configuration of the app. Here we hard-code the url and choose to use a `sqlite` database with the name `db.sqlite` (more about hard-coding this kind of information in a minute)
+- line 9 : we import our SQLALchemy instance and initialize our app with it.
 
 [_nota bene_](https://fr.wikipedia.org/wiki/Nota_bene): you should never [hard-code](https://forum.wordreference.com/threads/hard-coded.105554/?hl=fr) the URL of the database in your code, this is a **bad** practice.
 
@@ -165,39 +105,42 @@ So, a couple of new things going on here.
 	4. because.
 - so, what should I do ?
 	* you should use an environment variable, it could be a file loaded when the app starts (`.env`) or a config file (`config.py`) that **won't** be commited.
-	* when you deploy an app on [heroku](https://www.heroku.com/), heroku gives you the URL of the database via an environment variable
+	* when you deploy an app on [heroku](https://www.heroku.com/) for example, heroku gives you the URL of the database via through an environment variable.
 
-Let's change our code then :
+
+### 1.3 - Fixing hard-coded information
+
+Let's update our structure.
 
 ```bash
-# assuming you're in flask_learning/my_app_v3
-(venv) $ touch .env
-(venv) $ pip install python-dotenv
-(venv) $ pip freeze > requirements.txt
+# assuming you're in flask_learning/my_app_v3 (venv)
+touch .env
+pip install python-dotenv
+pip freeze > requirements.txt
 ```
 
-- why do we have to install `python-dotenv`?
-	- because flask needs it when you call `flask run` to automaticaly load `.env` files
+We install `python-dotenv` because flask needs it to automaticaly load `.env` files.
 
-in `.env` add those lines : 
+Speaking about `.env`, let's create it :
 
 ```bash
+# .env
 DATABASE_URL=sqlite:///db.sqlite
 ```
 
-and change the code in `__init__.py` (line 8-9) :
+and update our application factory `__init__.py` :
 
 ```python
 # __init__.py
 
 from flask import Flask
-from .database import db
 
 def create_app():
     app = Flask(__name__)
     from os import environ as env
     app.config['SQLALCHEMY_DATABASE_URI'] = env.get('DATABASE_URL')
 
+    from .database import db
 	db.init_app(app)
 
     from .api_v1 import api as api_v1_blueprint
@@ -206,74 +149,80 @@ def create_app():
     return app
 ```
 
-Your folder should look like this:
+**Much** better :-)
 
-<pre>
-my_app_v3
-│
-├── .editorconfig
-├── .env 				# **never** commit this file
-├── requirements.txt
-├── __init__.py 		# contains our application factory
-├── database.py 		# contains our database (duh.)
-└── api_v1 				
-	├── __init__.py
-    └── hello.py
-</pre>
+## 2 - Adding models
 
-There. **Much** better :-)
+Now that SQLAlchemy is imported, let's add our models (tables).
 
----
+For this flask course, I would like to create a bootstrap application that you can re-use each time you start a new flask project. 99% (* number made up by me) your app will need users, login/signup etc...
 
-## Adding models
-
-Now that our database is connected, we need to add some real models (tables).
-
-Most of the time, your app will need users. So let's add that.
-
-Create `models` folder, then create a file `users.py` and add this code :
+Let's create a `models` folder
 
 ```bash
-# assuming you're in flask_learning/my_app_v3
-(venv) $ mkdir models
-(venv) $ touch models/user.py
+# assuming you're in flask_learning/my_app_v3 (venv)
+mkdir models
 ```
+
+Thank's to python [multiple inheritance](https://en.wikipedia.org/wiki/Multiple_inheritance), we can declare a `Base` model that we will import everytime we need the same fields in a Model. Creating a `Base` model allows us to write [DRY code](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself).
+
+Create a file for our `Base` model :
+
+```bash
+# assuming you're in flask_learning/my_app_v3 (venv)
+touch models/base.py
+```
+
+and declare it :
+
+```python
+# models/base.py
+
+from ..database import db
+
+
+class Base(db.Model):
+
+    __abstract__ = True
+
+    id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime,
+                    default=db.func.current_timestamp(),
+                    onupdate=db.func.current_timestamp())
+```
+
+and now we create a file for our `User` model :
+
+```bash
+# assuming you're in flask_learning/my_app_v3 (venv)
+touch models/user.py
+```
+and we declare it :
 
 ```python
 # models/user.py
 # http://docs.sqlalchemy.org/en/latest/orm/extensions/declarative/basic_use.html
 
+from .base import Base
 from ..database import db
 
-class User(db.Model):
 
-	__tablename__ = 'users'
+class User(Base):
 
-    id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'users'
+
     username = db.Column(db.String, nullable=False, unique=True)
     email = db.Column(db.String, nullable=False, unique=True)
     encrypted_password = db.Column(db.String, nullable=False)
 ```
 
-Pretty basic user, with an integer as primary key, a username, an email and an encrypted_password.
+`User` model will inherit from `Base` (and `db.Model` via `Base`) so it will have `id, created_at, updated_at` fields.
 
-We will also create a `module` to easily import all the models.
+`__tablename` is optional but I strongly recommend setting it because with weird class names it's quite hard to know the final table name.
 
-```bash
-# assuming you're in flask_learning/my_app_v3
-(venv) $ touch models/__init__.py
-```
 
-```python
-# models/__init__.py
-
-# import all the models here
-from .user import User
-```
-
----
-
-### Generating the database
+## 3 - Generating the database
 
 SQLAlchemy will generate the database and the tables based on our code. But we need a way to trigger this event.
 
@@ -283,10 +232,9 @@ We will rather use the command-cli provided by Flask. (and it's an excuse for me
 
 Let's create a file called `cli.py` that will host all our commands.
 
-
 ```bash
-# assuming you're in flask_learning/my_app_v3
-(venv) $ touch cli.py
+# assuming you're in flask_learning/my_app_v3 (venv)
+touch cli.py
 ```
 
 ```python
@@ -295,24 +243,27 @@ Let's create a file called `cli.py` that will host all our commands.
 import click
 from flask.cli import with_appcontext
 from .database import db
-from .models import *
+
 
 @click.command('reset-db')
 @with_appcontext
 def reset_db_command():
     """Clear existing data and create new tables."""
     # run it with : FLASK_APP=. flask reset-db
+    # import every model here to be created
+    from .models.user import User
     db.drop_all()
     db.create_all()
     click.echo('The database has been reset.')
+
 
 def cli_init_app(app):
     app.cli.add_command(reset_db_command)
 ```
 
-Here, we declare a `command` that will drop all the tables and re-create them.
+Here, we declare a `click.command` that will drop-then-create all the tables. That's why we need to import every model.
 
-In order for this command to be accessible, we need to modify our `__init__.py`.
+Now that we declared our command, we need to import it into our `application factory` aka `__init__.py` via `cli_init_app`.
 
 ```python
 # __init__.py
@@ -336,32 +287,27 @@ def create_app():
     return app
 ```
 
-Lines 13-14 have changed to include our new command-cli.
-
 We are now **ready** to test our brand new app.
 
----
-
-### Testing
+## 4 - Testing
 
 ```bash
-# assuming you're in flask_learning/my_app_v3
-(venv) $ FLASK_APP=. flask reset-db
+# assuming you're in flask_learning/my_app_v3 (venv)
+FLASK_APP=. flask reset-db
 ```
 
-If the command succeeded, a `db.sqlite` file should have appeared, with a weight around 16Kb.
+If the command succeeds, a `db.sqlite` file should appear.
 
-This means that your database and its tables were created.
+To make sure that our databse was correctly created, we can inspect it via a database browser. 
 
-To be sure, we can use a database browser. For SQLite, a great tool is [sqlite-browser](http://sqlitebrowser.org/).
+For SQLite, a great tool is [sqlite-browser](http://sqlitebrowser.org/).
 
-![v3 sqlitebrowser example](/img/courses/dev/python/flask/v3_sqlitebrowser.png)
+![v3 sqlitebrowser example](/img/courses/dev/python/flask_part_3/v3_sqlitebrowser.png)
 
----
 
 ## Conclusion
 
-If you have trouble making it work, please go to `flask_learning/flask_cybermooc/version_3` to see the reference code. And use `reset.sh` or `reset.bat` to launch it.
+If you're stuck or don't understand something, feel free to drop [me an email / dm on twitter](/authors/gmolveau/) / a comment below. You can also take a look at `flask_learning/flask_cybermooc/version_3` to see the reference code. And use `reset.sh` to launch it.
 
 Otherwise, **congratulations** ! You just learned how to connect a database to your app. But our app is quite useless right now, isn't it ?.. 
 

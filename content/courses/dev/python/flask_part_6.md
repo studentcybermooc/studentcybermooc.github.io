@@ -21,7 +21,7 @@ To begin we will start from our previous `version_5` app. If you don't have it a
 
 ```bash
 # assuming you're in flask_learning
-cp flask_cybermooc/version_5 my_app_v6
+cp -R flask_cybermooc/version_5 my_app_v6
 cd my_app_v6
 ```
 

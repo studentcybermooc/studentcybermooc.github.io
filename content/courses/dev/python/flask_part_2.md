@@ -150,6 +150,13 @@ Testing may seem difficult or boring but if you adopt unit-tests early, it will 
 
 First we need to create a client that will be injected in all our tests. Let's create a file named `conftest.py` :
 
+```bash
+# assuming you're in flask_learning/my_app_v2 (venv)
+touch tests/conftest.py
+```
+
+and add :
+
 ```python
 # tests/conftest.py
 
@@ -192,6 +199,11 @@ and some useful links :
 ---
 
 Then we create `tests/test_root.py` file. Every file need to be named `test_*.py` to be automaticaly discovered.
+
+```bash
+# assuming you're in flask_learning/my_app_v2 (venv)
+touch tests/test_root.py
+```
 
 In this file we add our test :
 

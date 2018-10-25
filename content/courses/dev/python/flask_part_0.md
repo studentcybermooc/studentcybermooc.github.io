@@ -2,12 +2,12 @@
 title: "Flask - Part 0 - Intro"
 description: "Introduction to Flask"
 date: 2018-09-20
-githubIssueID: 0
+githubIssueID: 18
 tags: ["flask", "python"]
 authors: {
     gmolveau: "/authors/gmolveau/"
 }
-draft: true
+draft: false
 ---
 
 ## Welcome
@@ -63,7 +63,7 @@ sh run.sh run
 sh run.sh test
 ```
 
-## 3 - Every parts
+## 3 - Every part
 
 Here's the list of every part of this course :
 

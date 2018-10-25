@@ -2,12 +2,12 @@
 title: "Flask - Part 8"
 description: "Implementing JWT whitelisting"
 date: 2018-09-28
-githubIssueID: 0
+githubIssueID: 26
 tags: ["flask", "jwt"]
 authors: {
     gmolveau: "/authors/gmolveau/"
 }
-draft: true
+draft: false
 ---
 
 ## Introduction

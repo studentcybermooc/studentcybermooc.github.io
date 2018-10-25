@@ -2,12 +2,12 @@
 title: "Flask - Part 7"
 description: "Restricting access with role verification"
 date: 2018-09-27
-githubIssueID: 0
+githubIssueID: 25
 tags: ["flask", "sqlalchemy", "jwt"]
 authors: {
     gmolveau: "/authors/gmolveau/"
 }
-draft: true
+draft: false
 ---
 
 ## Introduction

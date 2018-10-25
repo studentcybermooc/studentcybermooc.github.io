@@ -2,12 +2,12 @@
 title: "Flask - Part 9"
 description: "Revoking JWT"
 date: 2018-09-29
-githubIssueID: 0
+githubIssueID: 27
 tags: ["flask", "jwt"]
 authors: {
     gmolveau: "/authors/gmolveau/"
 }
-draft: true
+draft: false
 ---
 
 

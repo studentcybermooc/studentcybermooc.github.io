@@ -2,12 +2,12 @@
 title: "Flask - Part 1"
 description: "Super Basic Flask app"
 date: 2018-09-21
-githubIssueID: 0
+githubIssueID: 19
 tags: ["flask", "python"]
 authors: {
     gmolveau: "/authors/gmolveau/"
 }
-draft: true
+draft: false
 ---
 
 ## Introduction

@@ -2,12 +2,12 @@
 title: "Flask - Part 5"
 description: "User authentication with Json Web Token"
 date: 2018-09-25
-githubIssueID: 0
+githubIssueID: 23
 tags: ["flask", "jwt"]
 authors: {
     gmolveau: "/authors/gmolveau/"
 }
-draft: true
+draft: false
 ---
 
 

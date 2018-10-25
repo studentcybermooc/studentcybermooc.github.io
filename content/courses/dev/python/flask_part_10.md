@@ -2,12 +2,12 @@
 title: "Flask - Part 10"
 description: "Example of a (complete) Flask app + Docker"
 date: 2018-10-22
-githubIssueID: 0
+githubIssueID: 28
 tags: ["flask"]
 authors: {
     gmolveau: "/authors/gmolveau/"
 }
-draft: true
+draft: false
 ---
 
 

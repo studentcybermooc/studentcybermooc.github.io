@@ -2,12 +2,12 @@
 title: "Flask - Part 6"
 description: "Roles management"
 date: 2018-09-26
-githubIssueID: 0
+githubIssueID: 24
 tags: ["flask", "sqlalchemy", "jwt"]
 authors: {
     gmolveau: "/authors/gmolveau/"
 }
-draft: true
+draft: false
 ---
 
 ## Introduction

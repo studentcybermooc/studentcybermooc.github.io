@@ -2,12 +2,12 @@
 title: "Flask - Part 3"
 description: "Connecting Flask with a database"
 date: 2018-09-23
-githubIssueID: 0
+githubIssueID: 20
 tags: ["flask", "python", "sqlalchemy", "orm"]
 authors: {
     gmolveau: "/authors/gmolveau/"
 }
-draft: true
+draft: false
 ---
 
 ## Introduction

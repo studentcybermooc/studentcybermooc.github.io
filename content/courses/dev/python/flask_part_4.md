@@ -2,7 +2,7 @@
 title: "Flask - Part 4"
 description: "Adding users and login/signup routes"
 date: 2018-09-24
-githubIssueID: 21
+githubIssueID: 22
 tags: ["flask", "sqlalchemy"]
 authors: {
     gmolveau: "/authors/gmolveau/"

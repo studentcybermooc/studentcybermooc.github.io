@@ -2,7 +2,7 @@
 title: "Flask - Part 2"
 description: "Architecture of a Flask app"
 date: 2018-09-22
-githubIssueID: 0
+githubIssueID: 20
 tags: ["flask", "python", "blueprint"]
 authors: {
     gmolveau: "/authors/gmolveau/"

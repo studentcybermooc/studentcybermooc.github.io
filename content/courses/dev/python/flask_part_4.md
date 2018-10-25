@@ -1,6 +1,6 @@
 ---
 title: "Flask - Part 4"
-description: "Flask Users routes + roles"
+description: "Adding users and login/signup routes"
 date: 2018-09-24
 githubIssueID: 0
 tags: ["flask", "sqlalchemy"]
@@ -63,7 +63,7 @@ To do so, let's create the marshmallow file :
 
 ```bash
 # assuming you're in flask_learning/my_app_v4 (venv)
-touch bcrypt.py
+touch app/bcrypt.py
 ```
 
 and add this code :
@@ -79,7 +79,7 @@ bc = Bcrypt()
 In the application_factory `__init__.py`, let's update our code :
 
 ```python
-# __init__.py
+# app/__init__.py
 
 from flask import Flask
 
@@ -88,6 +88,7 @@ def create_app():
     
     from os import environ as env
     app.config['SQLALCHEMY_DATABASE_URI'] = env.get('DATABASE_URL')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     from .database import db
     db.init_app(app)
@@ -109,7 +110,7 @@ def create_app():
 
 ## 2 - Updating our model
 
-In `models/user.py` we can now add some methods to use bcrypt.
+In `app/models/user.py` we can now add some methods to use bcrypt.
 
 ```python
 # models/user.py
@@ -135,72 +136,23 @@ class User(Base):
         return bc.check_password_hash(self.encrypted_password, password)
 ```
 
-## 3 - Creating our controller
-
-A controller contains the logic that will manipulate the model.
-
-Let's create a `controllers` folder :
-
-```bash
-# assuming you're in flask_learning/my_app_v4 (venv)
-mkdir controllers
-```
-
-And add the controller of the user :
-
-```bash
-# assuming you're in flask_learning/my_app_v4 (venv)
-touch controllers/user.py
-```
-
-Then we code :
-
-```python
-# controllers/user.py
-
-from ..database import db
-from ..models.user import User
-
-
-def user_signup(username, email, password):
-    if User.query.filter(User.username == username).first() is not None:
-        raise Exception("username already taken")
-    if User.query.filter(User.email == email).first() is not None:
-        raise Exception("email already signed-up")
-    new_user = User()
-    new_user.username = username
-    new_user.email = email
-    new_user.set_password(password)
-    db.session.add(new_user)
-    db.session.commit()
-    return new_user
-
-
-def user_login(username, password):
-    user = User.query.filter(User.username == username).first()
-    if user is not None:
-        if user.verify_password(password):
-            return user
-        raise Exception("password incorrect")
-    raise Exception("username incorrect")
-```
-
 ## 4 - Creating our routes
 
-In `api_v1`, let's create a file `user.py` for the routes of the user :
+In `app/api_v1`, let's create a file `user.py` for the routes of the user :
 
 ```bash
 # assuming you're in flask_learning/my_app_v4 (venv)
-touch api_v1/user.py
+touch app/api_v1/user.py
 ```
 
-We import those routes in our module `api_v1/__init__.py`.
+We import those routes in our module `app/api_v1/__init__.py`.
 
 ```python
-# api_v1/__init__.py
+# app/api_v1/__init__.py
 
 from flask import Blueprint
 
+root_blueprint = Blueprint('api_v1', __name__)
 api_v1_blueprint = Blueprint('api_v1', __name__, url_prefix='/api/v1')
 
 # Import any endpoints here to make them available
@@ -212,37 +164,43 @@ from . import user
 
 To signup, the route will receive a username, an email and a password.
 
-In `api_v1/user.py`
+In `app/api_v1/user.py`
 
 ```python
-# api_v1/user.py
+# app/api_v1/user.py
 
 from flask import (
     jsonify, request
 )
 from . import api_v1_blueprint
-from ..controllers.user import user_signup, user_login
 from ..database import db
+from ..models.user import User
 
-@api_v1_blueprint.route('/users/signup', methods=['POST'])
+
+@api_v1_blueprint.route('/signup', methods=['POST'])
 def signup():
     datas = request.get_json()
     username = datas.get('username','')
     if username is '':
-        return jsonify(error="username is empty"),400
-    # we could add some filters to our username
+        return jsonify(error="username is empty"),422
     email = datas.get('email','')
     if email is '':
-        return jsonify(error="email is empty"),400
+        return jsonify(error="email is empty"),422
     # we could verify that this email is valid
     password = datas.get('password','')
     if password is '':
-        return jsonify(error="password is empty"),400
-    try:
-        new_user = user_signup(username, email, password)
-        return jsonify(msg="welcome :-)"),200
-    except Exception as err:
-        return jsonify(err=str(err)),401
+        return jsonify(error="password is empty"),422
+    if User.query.filter(User.username == username).first() is not None:
+        return jsonify(err="username already taken"), 409
+    if User.query.filter(User.email == email).first() is not None:
+        return jsonify(err="email already signed-up"), 409
+    new_user = User()
+    new_user.username = username
+    new_user.email = email
+    new_user.set_password(password)
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify(msg="welcome :-)"), 200
 ```
 
 Explaining :
@@ -252,14 +210,62 @@ Explaining :
 - line 29 : if the controller does not raise any exception, we can proceed
 - lines 30-31 : return the error
 
-#### 4.1.1 - Testing this signup route
+#### 4.1.1 - Adding the unit test
+
+In our folder `tests`, let's add a file `test_2_signup_route.py` : (we add a number to order the tests)
+
+```python
+# tests/test_2_signup_route.py
+
+
+def test_signup_empty_password(client):
+    # testing errors
+    empty_password = client.post("/api/v1/signup", json={
+        'username': 'testuser', 'password': '', 'email': 'test_user@mail.com'
+    })
+    assert empty_password.status_code == 422
+
+def test_signup_empty_username(client):
+    empty_username = client.post("/api/v1/signup", json={
+        'username': '', 'password': 'test_user', 'email': 'test_user@mail.com'
+    })
+    assert empty_username.status_code == 422
+
+def test_signup_empty_email(client):
+    empty_email = client.post("/api/v1/signup", json={
+        'username': 'testuser', 'password': 'test_user', 'email': ''
+    })
+    assert empty_email.status_code == 422
+
+def test_signup_correct(client):
+    correct = client.post("/api/v1/signup", json={
+        'username': 'testuser', 'password': 'test_user', 'email': 'test_user@mail.com'
+    })
+    assert correct.status_code == 200
+
+def test_signup_username_taken(client):
+    username_taken = client.post("/api/v1/signup", json={
+        'username': 'testuser', 'password': 'test_user', 'email': 'test_user@mail.com'
+    })
+    assert username_taken.status_code == 409
+
+def test_signup_email_taken(client):
+    email_taken = client.post("/api/v1/signup", json={
+        'username': 'testuser', 'password': 'test_user', 'email': 'test_user@mail.com'
+    })
+    assert email_taken.status_code == 409
+```
+
+![v4 unittest](/img/courses/dev/python/flask_part_4/v4_unittest_signup.png)
+
+#### 4.1.2 - Testing this signup route
 
 Let's run our app, initiate the database and test this route :-)
 
 ```bash
 # assuming you're in flask_learning/my_app_v4 (venv)
-FLASK_APP=. flask reset-db
-FLASK_ENV=development FLASK_APP=. flask run --host=0.0.0.0 --port=5000
+flask reset-db
+flask run
 ```
 
 - Postman :
@@ -297,29 +303,70 @@ The password is encrypted and our user is there, no problem !
 
 ### 4.2 - Login
 
-In `api_v1/user.py`, at the end of the file, let's add our login route :
+In `app/api_v1/user.py`, at the end of the file, let's add our login route :
 
 ```python
-# api_v1/user.py
+# app/api_v1/user.py
 
 [...]
 
-
-@api_v1_blueprint.route('/users/login', methods=['POST'])
+@api_v1_blueprint.route('/login', methods=['POST'])
 def login():
     datas = request.get_json()
     username = datas.get('username','')
     if username is '':
-        return jsonify(error="username is empty"),400
+        return jsonify(error="username is empty"),422
     password = datas.get('password','')
     if password is '':
-        return jsonify(error="password is empty"),400
-    try:
-        with user_login(username, password) as connected_user:
-            return jsonify(msg="welcome :-)"),200
-    except Exception as err:
-        return jsonify(err=str(err)),401
+        return jsonify(error="password is empty"),422
+    user = User.query.filter(User.username == username).first()
+    if user is not None:
+        if user.verify_password(password):
+            return jsonify(msg="welcome"), 200
+        return jsonify(err="password incorrect"), 401
+    return jsonify(err="username incorrect"), 404
 ```
+
+#### 4.2.1 - Adding the unit test
+
+In our folder `tests`, let's add a file `test_3_login_route.py` : (we add a number to order the tests)
+
+```python
+# tests/test_3_login_route.py
+
+def test_empty_password(client):
+    # testing errors
+    empty_password = client.post("/api/v1/login", json={
+        'username': 'testuser', 'password': ''
+    })
+    assert empty_password.status_code == 422
+
+def test_empty_username(client):
+    empty_username = client.post("/api/v1/login", json={
+        'username': '', 'password': 'test_user'
+    })
+    assert empty_username.status_code == 422
+
+def test_correct(client):
+    correct = client.post("/api/v1/login", json={
+        'username': 'testuser', 'password': 'test_user'
+    })
+    assert correct.status_code == 200
+
+def test_wrong_username(client):
+    wrong_username = client.post("/api/v1/login", json={
+        'username': 'testusernot', 'password': 'test_user'
+    })
+    assert wrong_username.status_code == 404
+
+def test_wrong_password(client):
+    wrong_password = client.post("/api/v1/login", json={
+        'username': 'testuser', 'password': 'test_user_wrong'
+    })
+    assert wrong_password.status_code == 401
+```
+
+![v4 unittest](/img/courses/dev/python/flask_part_4/v4_unittest_login.png)
 
 #### 4.2.1 - Testing this login route
 
@@ -327,7 +374,7 @@ Let's run our app :
 
 ```bash
 # assuming you're in flask_learning/my_app_v4 (venv )
-FLASK_ENV=development FLASK_APP=. flask run --host=0.0.0.0 --port=5000
+flask run 
 ```
 
 - `Postman` :
@@ -352,8 +399,8 @@ Fail :
 
 ## Conclusion
 
-If you're stuck or don't understand something, feel free to drop [me an email / dm on twitter](/authors/gmolveau/) / a comment below. You can also take a look at `flask_learning/flask_cybermooc/version_4` to see the reference code. And use `reset.sh` to launch it.
+If you're stuck or don't understand something, feel free to drop [me an email / dm on twitter](/authors/gmolveau/) / a comment below. You can also take a look at `flask_learning/flask_cybermooc/version_4` to see the reference code. And use `run.sh` to launch it.
 
-Otherwise, **congratulations** ! You just learned how to create two main routes "login" and "signup". (well your users aren't technically signed-up but still)
+Otherwise, **congratulations** ! You just learned how to create two main routes "login" and "signup". (well your users aren't technically logged-in but still)
 
 If you understood everything, in [part 5](/courses/dev/python/flask_part_5/) you will see how to use [JSON Web Tokens](https://jwt.io/introduction/), a cool way to authentify your users.

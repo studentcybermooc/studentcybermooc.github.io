@@ -248,6 +248,19 @@ For example in sublime text, if you write python, you'll often encounter bugs du
 
 You can [find](http://lmgtfy.com/?q=.editorconfig+springboot) examples of `.editorconfig` files for many kinds of project.
 
+If you use `sublime text` as an IDE, you will need ton install a plugin. If you never installed a plugin before on `sublime text` here's a quick walkthrough.
+
+With sublime text open, press `Control + Shift + P` (or `Command + Shift + P` on mac) : a window will popup. Type `install` and a field called `Install Package Control` will appear. Select it with the arrow keys of your keyboard and hit `Enter`.  
+You might need to restart `sublime text` after the installation is finished. You can now easily manage your plugins ! 
+
+To install `editorconfig` plugin, press `Control + Shift + P` (or `Command + Shift + P` on mac) then type `install` and select `Package Control: Install Package`. 
+
+Sublime will then download the list of available packages.  
+Then type `editorconfig`, select the package and hit `enter`. The plugin is now installed.
+
+Now every time you open a folder in sublime text, it will search for a `.editorconfig` file to automaticaly adapt itself. Handy :-)
+
+
 ---
 
 ### 2.5 Versioning

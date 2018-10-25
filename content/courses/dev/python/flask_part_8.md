@@ -1,6 +1,6 @@
 ---
 title: "Flask - Part 8"
-description: "Token whitelisting"
+description: "Implementing JWT whitelisting"
 date: 2018-09-28
 githubIssueID: 0
 tags: ["flask", "jwt"]
@@ -12,7 +12,7 @@ draft: true
 
 ## Introduction
 
-This `version_8` will show you how to implement whitelisting. 
+This `version_8` will show you how to implement [whitelisting](https://www.owasp.org/index.php/Positive_security_model). 
 
 Whitelisting is defining what is allowed, and rejecting everything else. In our case, we will store the user's tokens in DB so the user can manage them (that's how facebook does it, with one token per device [lol](https://thehackernews.com/2018/09/facebook-account-hacked.html)).
 
@@ -51,10 +51,10 @@ Here's an example by whatsapp where they store if the token is active, the OS, l
 
 ### 1.1 - Creating the token model
 
-So let's create our model in `models/token.py`.
+So let's create our model in `app/models/token.py`.
 
 ```python
-# models/token.py
+# app/models/token.py
 
 from .base import Base
 from ..database import db
@@ -75,26 +75,16 @@ Pretty straight forward, inheriting from Base, + more fields like the hash of th
 Let's import this model in the cli :
 
 ```python
-# cli.py
+# app/cli.py
 
 import click
 from flask.cli import with_appcontext
 from .controllers.user import user_signup
 from .database import db
-
-
-@click.command('reset-db')
-@with_appcontext
-def reset_db_command():
-    """Clear existing data and create new tables."""
-    # run it with : FLASK_APP=. flask reset-db
-    from .models.association import user_roles
-    from .models.user import User
-    from .models.role import Role
-    from .models.token import Token
-    db.drop_all()
-    db.create_all()
-    click.echo('The database has been reset.')
+from .models.association import user_roles
+from .models.user import User
+from .models.role import Role
+from .models.token import Token
 
 [...]
 ```
@@ -102,13 +92,13 @@ def reset_db_command():
 Now let's update our User model.
 
 ```python
-# models/user.py
+# app/models/user.py
 # http://docs.sqlalchemy.org/en/latest/orm/extensions/declarative/basic_use.html
 
 from .association import user_roles
+from .base import Base
 from .role import Role
 from .token import Token
-from .base import Base
 from ..bcrypt import bc
 from ..database import db
 
@@ -141,13 +131,28 @@ class User(Base):
 
 - Line 16 : we declared a `tokens` field to get the user's tokens.
 
-### 1.1 - Testing
+### 1.2 - Unit test
+
+Let's update our database unit test in `test_1_database.py` :
+
+```python
+# tests/test_basic.py
+
+from app.database import db
+
+def test_db_tables(client):
+    assert len(db.metadata.sorted_tables) > 0
+    tables = set("users", "roles", "users_roles", "tokens")
+    assert tables.issubset(db.metadata.sorted_tables)
+```
+
+### 1.3 - Testing with DB SQLite browser
 
 Let's reset our database to make sure the tables and associations are created.
 
 ```bash
-# assuming you're in flask_learning/my_app_v8
-(venv) $ FLASK_APP=. flask reset-db
+# assuming you're in flask_learning/my_app_v8 (venv)
+flask reset-db
 ```
 
 ![v8 sqlite browser](/img/courses/dev/python/flask_part_8/v8_sqlite_browser.png)
@@ -158,34 +163,7 @@ Looks good :-) Let's add the logic now.
 
 ### 2.1 - Creating a new token
 
-Let's add a new function in our `user` controller.
-
-```python
-# controllers/user.py
-
-from ..database import db
-from ..jwt import generate_jwt
-from ..models import (
-    User, Token
-)
-
-[...]
-
-def user_get_auth_token(current_user):
-    claims = {'user_id' : current_user.id}
-    jwt = generate_jwt(claims)
-    token = Token()
-    token.hash = jwt
-    token.description = "could be location or something idk"
-    token.user_id = current_user.id
-    db.session.add(token)
-    db.session.commit()
-    return jwt
-```
-
-This function simply generate a token, and add it to the user's tokens list.
-
-We will call this function in our `login` route.
+A token is created when a user is logging in, so we need to update the login route in `app/api_v1/user.py` : (and we don't forget to import the Token model)
 
 ```python
 # api_v1/user.py
@@ -195,39 +173,43 @@ from flask import (
 )
 from . import api_v1_blueprint
 from ..bcrypt import bc
-from ..controllers.user import (
-    user_signup, user_login
-)
 from ..database import db
+from ..jwt import generate_jwt
+from ..models.token import Token
+from ..models.user import User
 
 [...]
 
-@api_v1_blueprint.route('/users/login', methods=['POST'])
+@api_v1_blueprint.route('/login', methods=['POST'])
 def login():
     datas = request.get_json()
     username = datas.get('username','')
     if username is '':
-        return jsonify(error="username is empty"),400
+        return jsonify(error="username is empty"),422
     password = datas.get('password','')
     if password is '':
-        return jsonify(error="password is empty"),400
-    try:
-        current_user = user_login(username, password)
-        jwt = user_get_auth_token(current_user)
-        return jsonify(token=jwt),200
-    except Exception as err:
-        return jsonify(err=str(err)),401
-
-[...]
+        return jsonify(error="password is empty"),422
+    current_user = User.query.filter(User.username == username).first()
+    if current_user is not None:
+        if current_user.verify_password(password):
+            claims = {'user_id' : current_user.id}
+            jwt = generate_jwt(claims)
+            token = Token()
+            token.hash = jwt
+            token.description = "could be location or something idk from request"
+            token.user_id = current_user.id
+            db.session.add(token)
+            db.session.commit()
+            return jsonify(token=jwt),200
+        return jsonify(err="password incorrect"), 401
+    return jsonify(err="username incorrect"), 404
 ```
 
-Here we simply replaced our previous `jwt = connected_user.get_auth_token()` by `jwt = user_get_auth_token(connected_user)`.
-
-Now everytime a user log-in, the newly created token is added to the whitelist. 
+Now everytime a user log-in, a new token is added to the whitelist. 
 
 ### 2.2 - Verify the token
 
-Let's now implement the verification. For that we need to update our `valid_token_required` decorator.
+Let's now implement the verification. For that we need to update our `login_required` decorator.
 
 ```python
 # api_v1/decorators.py
@@ -264,15 +246,68 @@ def login_required(fn):
 [...]
 ```
 
-The decorator now checks if the token is in the user's tokens list. If not, it fails.
+The decorator now checks if the token is in the user tokens whitelist. If not, it fails.
 
-### 2.3 - Testing
+## 3 - Logging out
+
+This route will delete the token currently used.
+
+### 3.1 - Adding the route
+
+Let's add this route in `app/api_v1/user.py`
+
+```python
+# app/api_v1/user.py
+
+[...]
+
+@api_v1_blueprint.route('/logout', methods=['POST'])
+@login_required
+def logout(current_user):
+    for user_token in current_user.tokens:
+        if user_token.hash == request.headers['Authorization']:
+            db.session.delete(user_token)
+            db.session.commit()
+            return jsonify(msg="logged out"), 200
+    return jsonify(msg="logged out"), 200
+```
+
+### 3.2 - Unit test
+
+We add our unit test in a new file `tests/test_4_logout.py` :
+
+```python
+# tests/test_4_logout.py
+
+def test_login_before_logout(client, global_data):
+    correct = client.post("/api/v1/login", json={
+        'username': 'testuser', 'password': 'test_user'
+    })
+    json_data = correct.get_json()
+    global_data['old_token'] = json_data['token']
+
+
+def test_logout(client, global_data):
+    rv = client.get('/api/v1/logout', headers={'Authorization': global_data['old_token']})
+    assert rv.status_code == 200
+
+
+def test_login_required_invalid_token(client, global_data):
+    rv = client.post('/need_login', headers={'Authorization': global_data['old_token']})
+    assert rv.status_code == 401
+```
+
+Here we simply login then logout, so we got an invalid token to use later for the updated `login_required` decorator.
+
+![v8 unittest](/img/courses/dev/python/flask_part_8/v8_unittest.png)
+
+### 2.3 - Testing with Postman
 
 ```bash
 # assuming you're in flask_learning/my_app_v8 (venv)
-FLASK_APP=. flask reset-db
-FLASK_APP=. flask create-admin 'root' 'root@mail.com' 'toor'
-FLASK_ENV=development FLASK_APP=. flask run --host=0.0.0.0 --port=5000
+flask reset-db
+flask create-admin 'root' 'root@mail.com' 'toor'
+flask run 
 ```
 
 - with a non-whitelisted token :
@@ -285,11 +320,10 @@ FLASK_ENV=development FLASK_APP=. flask run --host=0.0.0.0 --port=5000
 
 Working great :-)
 
-
 ## Conclusion
 
-If you're stuck or don't understand something, feel free to drop [me an email / dm on twitter](/authors/gmolveau/) / a comment below. You can also take a look at `flask_learning/flask_cybermooc/version_8` to see the reference code. And use `reset.sh` to launch it.
+If you're stuck or don't understand something, feel free to drop [me an email / dm on twitter](/authors/gmolveau/) / a comment below. You can also take a look at `flask_learning/flask_cybermooc/version_8` to see the reference code. And use `run.sh` to launch it.
 
-Otherwise, **congratulations** ! You just learned how to implement token whitelisting.
+Otherwise, **congratulations** ! You just learned how to implement token whitelisting :-)
 
 You're now ready to go to [part 9](/courses/dev/python/flask_part_9/) to learn how a user can revoke some of its tokens.

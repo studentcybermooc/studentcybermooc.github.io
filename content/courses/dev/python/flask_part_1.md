@@ -1,6 +1,6 @@
 ---
 title: "Flask - Part 1"
-description: "Introduction to Flask"
+description: "Super Basic Flask app"
 date: 2018-09-21
 githubIssueID: 0
 tags: ["flask", "python"]
@@ -10,60 +10,38 @@ authors: {
 draft: true
 ---
 
-## Authors
-
-- [Grégoire MOLVEAU](/authors/gmolveau/)
-
 ## Introduction
-
-**WELCOME** ! 
 
 Welcome to the first part of my _flask_ course.
 
-This (quite big) flask course will teach you how to build a REST api using flask micro-framework.
-
-Before we continue, I'll assume that, you have followed my previous course : [setting up your python environment](/courses/dev/python/set_up_python_env/) and that you know how to code in python3 (object oriented too).
-
-You should have python3, pip and git installed.
+In this part we'll build a super simple flask app.
 
 ## 1 - Creating our environment
 
-In order to easily manage every parti of this course, let's create a dedicated folder.
-
-```bash
-mkdir flask_learning
-cd flask_learning
-```
-
-`flask_learning` will be your main folder.
-
-Let's now grab a copy of every part of this course.
+Let's create a dedicated folder for our app.
 
 ```bash
 # assuming you are in flask_learning
-git clone https://github.com/gmolveau/flask_cybermooc
 mkdir my_app_v1
 cd my_app_v1
 ```
 
-You now have one folder for you (`my_app_v1`), and another one (`flask_cybermooc`) with every version I'll use in this course.
-
 <pre>
-flask_learning
+$ flask_learning
 │
 ├── flask_cybermooc
-│   └── every version 
+│   └── version_1 
 └── my_app_v1           (*)   # your folder
 </pre>
 
 
 ## 2 - Discovering Flask
 
-Flask is a python web micro-framework. What can Flask help you with ? Quickly building a web-app.
+[Flask](http://flask.pocoo.org/) is a python web micro-framework. What can Flask help you with ? Quickly building a web-app.
 
 ### 2.1 - Coding our first app
 
-Let's try a dead-simple flask app.
+Let's build this dead-simple flask app.
 
 ```bash
 # assuming you are in flask_learning/my_app_v1
@@ -75,7 +53,7 @@ pip freeze > requirements.txt # save the list of dependencies into requirements.
 touch app.py
 ```
 
-Let's code our first app, in app.py - copy this code :
+Let's code in app.py :
 
 ```python
 # app.py
@@ -89,7 +67,7 @@ def hello_world():
     return 'Hello, World!'
 ```
 
-Nothing fancy in this, we just created a `route` accessible at '/' and told flask to return 'Hello, World!' if someone requests this route.
+Nothing fancy here, we just created a `route` accessible at '/' and told flask to return 'Hello, World!' if someone requests this route.
 
 
 ### 2.2 - Running our first app
@@ -107,6 +85,7 @@ FLASK_ENV=development FLASK_APP=app.py flask run --host=0.0.0.0 --port=5000
 So what's going on here ?
 
 We told flask:
+
 - to run our app in development mode &rarr; `FLASK_ENV=development`
 	- development mode enables auto-reload if you modify your source code, you also have access to the flask debugger
 - that our app was located in `app.py` &rarr; `FLASK_APP=app.py`
@@ -144,6 +123,6 @@ Everything is working great :-)
 
 We just saw how to create a route, how to launch our server and how to test this route with postman and httpie. 
 
-If you're stuck or don't understand something, feel free to drop [me an email / dm on twitter](/authors/gmolveau/) / a comment below. You can also take a look at `flask_learning/flask_cybermooc/version_1` to see the reference code. And use `reset.sh` to launch it.
+If you're stuck or don't understand something, feel free to drop [me an email / dm on twitter](/authors/gmolveau/) / a comment below. You can also take a look at `flask_learning/flask_cybermooc/version_1` to see the reference code. And use `run.sh` to launch it.
 
 If you understood everything, you're now ready to go to [part 2](/courses/dev/python/flask_part_2/) where you will learn how to connect a database to your app.

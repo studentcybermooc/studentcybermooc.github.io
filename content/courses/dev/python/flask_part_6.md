@@ -1,6 +1,6 @@
 ---
 title: "Flask - Part 6"
-description: "Restricting access to routes"
+description: "Roles management"
 date: 2018-09-26
 githubIssueID: 0
 tags: ["flask", "sqlalchemy", "jwt"]
@@ -43,17 +43,17 @@ Roles are a crucial part in an application. You can apply [the principle of leas
 
 ### 1.1 - Declaring the role model
 
-Let's define our model in `models/role.py`.
+Let's define our model in `app/models/role.py`.
 
 ```bash
 # assuming you're in flask_learning/my_app_v6 (venv)
-touch models/role.py
+touch app/models/role.py
 ```
 
 and code our role model :
 
 ```python
-# models/role.py
+# app/models/role.py
 
 from .base import Base
 from ..database import db
@@ -80,7 +80,7 @@ Here we declare a model Role, that will create the `roles` table in the DB. A ro
 Now that our Role model is declared, we can create our association table, for the relationship many-to-many between users and roles : `models/association.py` :
 
 ```python
-# models/association.py
+# app/models/association.py
 # http://docs.sqlalchemy.org/en/latest/orm/extensions/declarative/basic_use.html
 
 from ..database import db
@@ -93,7 +93,7 @@ user_roles = db.Table('user_roles',
 And then add a field in our User model to easily manage its roles :
 
 ```python
-# models/user.py
+# app/models/user.py
 # http://docs.sqlalchemy.org/en/latest/orm/extensions/declarative/basic_use.html
 
 from .association import user_roles
@@ -136,11 +136,14 @@ It gives us a `list` of Roles, handy to `.append` etc... `backref` (meaning 'bac
 As we created new models, we need to import them in our `cli` :
 
 ```python
-# cli.py
+# app/cli.py
 
 import click
 from flask.cli import with_appcontext
 from .database import db
+from .models.association import user_roles
+from .models.user import User
+from .models.role import Role
 
 
 @click.command('reset-db')
@@ -148,23 +151,34 @@ from .database import db
 def reset_db_command():
     """Clear existing data and create new tables."""
     # run it with : FLASK_APP=. flask reset-db
-    from .models.association import user_roles
-    from .models.user import User
-    from .models.role import Role
-    db.drop_all()
-    db.create_all()
+    reset_db()
     click.echo('The database has been reset.')
 ```
 
+### 1.3 - Update unit test
 
-### 1.3 - Testing
+Let's update our database unit test in `test_1_database.py` :
+
+```python
+# tests/test_1_database.py
+
+from app.database import db
+
+def test_db_tables(client):
+    assert len(db.metadata.sorted_tables) == 3
+    tables = ["users", "roles", "user_roles"]
+    assert all(table in [t.name for t in db.metadata.sorted_tables] for table in tables)
+```
+
+
+### 1.4 - Testing
 
 Let's see if the tables roles, users and user_roles are created.
 
 ```bash
 # assuming you're in flask_learning/my_app_v6 (venv)
-FLASK_APP=. flask reset-db
-FLASK_ENV=development FLASK_APP=. flask run --host=0.0.0.0 --port=5000
+flask reset-db
+flask run
 ```
 
 ![v6 sqlite check](/img/courses/dev/python/flask_part_6/v6_sqlite_check.png)
@@ -182,13 +196,13 @@ To do so, we will create a command (just like `reset-db`).
 So let's add this command to `cli.py` :
 
 ```python
-# cli.py
+# app/cli.py
 
 import click
 from flask.cli import with_appcontext
-from .controllers.user import user_signup
 from .database import db
 from .models.role import Role
+from .models.user import User
 
 [...]
 
@@ -198,22 +212,25 @@ from .models.role import Role
 @click.argument('password')
 @with_appcontext
 def create_admin_command(username, email, password):
-    # run it with : FLASK_APP=. flask create-admin 'XXX' 'YYY' 'ZZZ'
+    # run it with : flask create-admin 'XXX' 'YYY' 'ZZZ'
     admin_role = Role.query.filter(Role.name == "admin").first()
     if admin_role is None:
         admin_role = Role()
         admin_role.name = "admin"
         admin_role.description = "the admin role duh."
         db.session.add(admin_role)
-        db.session.commit()
-    try:
-        new_user = user_signup(username, email, password)
-        new_user.roles.append(admin_role)
-        db.session.add(new_user) # update the user roles
-        db.session.commit()
-        click.echo(username + " was created with admin role.")
-    except Exception as err:
-        return click.echo(str(err))
+    if User.query.filter(User.username == username).first() is not None:
+        return click.echo("username already taken")
+    if User.query.filter(User.email == email).first() is not None:
+        raise click.echo("email already signed-up")
+    new_user = User()
+    new_user.username = username
+    new_user.email = email
+    new_user.set_password(password)
+    new_user.roles.append(admin_role)
+    db.session.add(new_user) # update the user roles
+    db.session.commit()
+    return click.echo(username + " was created with admin role.")
 
 
 def cli_init_app(app):
@@ -221,8 +238,89 @@ def cli_init_app(app):
     app.cli.add_command(create_admin_command)
 ```
 
+### 2.2 - Updating our unit test
 
-### 2.2 - Testing
+In `tests/conftest.py` we will add a function to create an admin to use later in our tests.
+
+```python
+# tests/conftest.py
+
+import pytest
+from dotenv import load_dotenv
+load_dotenv()
+
+from app import create_app
+from app.database import db
+from app.cli import reset_db
+
+
+@pytest.fixture(scope="session")
+def global_data():
+    return dict()
+
+
+@pytest.fixture(scope="session")
+def client():
+    # setup
+    test_app = create_app()
+
+    from os import environ as env
+    test_app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///test.sqlite"
+    test_app.config['TESTING'] = True
+    client = test_app.test_client()
+
+    with test_app.app_context():
+        reset_db()
+        create_admin("testadmin", "testadmin@mail.com", "testadmin")
+
+    yield client
+
+    # teardown
+    with test_app.app_context():
+        pass
+        #drop_db()
+
+def create_admin(username, email, password):
+    from app.models.role import Role
+    from app.models.user import User
+    admin_role = Role()
+    admin_role.name = "admin"
+    admin_role.description = "the admin role duh."
+    db.session.add(admin_role)
+    new_user = User()
+    new_user.username = username
+    new_user.email = email
+    new_user.set_password(password)
+    new_user.roles.append(admin_role)
+    db.session.add(new_user) # update the user roles
+    db.session.commit()
+```
+
+And we also add a test to login as an admin, to get the token back in `tests/test_3_login_route.py` :
+
+```python
+# tests/test_3_login_route.py
+
+[...]
+
+def test_login_admin(client, global_data):
+    correct = client.post("/api/v1/login", json={
+        'username': 'testadmin', 'password': 'testadmin'
+    })
+    assert correct.status_code == 200
+    json_data = correct.get_json()
+    assert "token" in json_data
+    global_data['token_admin'] = json_data['token']
+```
+
+### 2.3 - Testing this command
+
+Let's run our app :
+
+```bash
+# assuming you're in flask_learning/my_app_v6 (venv )
+flask create-admin 'root' 'root@mail.com' 'toor'
+```
 
 ![v6 create admin example](/img/courses/dev/python/flask_part_6/v6_create_admin.png)
 
@@ -234,7 +332,7 @@ All good :-)
 
 ## Conclusion
 
-If you're stuck or don't understand something, feel free to drop [me an email / dm on twitter](/authors/gmolveau/) / a comment below. You can also take a look at `flask_learning/flask_cybermooc/version_6` to see the reference code. And use `reset.sh` to launch it.
+If you're stuck or don't understand something, feel free to drop [me an email / dm on twitter](/authors/gmolveau/) / a comment below. You can also take a look at `flask_learning/flask_cybermooc/version_6` to see the reference code. And use `run.sh` to launch it.
 
 Otherwise, **congratulations** ! You just learned how to create roles, adding them to the users and to create a cli command to add a user.
 

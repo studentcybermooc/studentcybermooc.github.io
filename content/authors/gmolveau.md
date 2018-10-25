@@ -19,4 +19,4 @@ social_links: {
 
 [setting up a python environment](/courses/dev/python/set_up_python_env)
 
-[flask course part 1](/courses/dev/python/flask_part_1)
+[flask mega course](/courses/dev/python/flask_part_0)

@@ -248,7 +248,7 @@ For example in sublime text, if you write python, you'll often encounter bugs du
 
 You can [find](http://lmgtfy.com/?q=.editorconfig+springboot) examples of `.editorconfig` files for many kinds of project.
 
-If you use `sublime text` as an IDE, you will need ton install a plugin. If you never installed a plugin before on `sublime text` here's a quick walkthrough.
+If you use `sublime text` as an IDE, you will need to install a plugin. If you never installed a plugin before on `sublime text` here's a quick walkthrough.
 
 With sublime text open, press `Control + Shift + P` (or `Command + Shift + P` on mac) : a window will popup. Type `install` and a field called `Install Package Control` will appear. Select it with the arrow keys of your keyboard and hit `Enter`.  
 You might need to restart `sublime text` after the installation is finished. You can now easily manage your plugins ! 

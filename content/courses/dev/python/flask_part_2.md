@@ -7,7 +7,7 @@ tags: ["flask", "python", "blueprint"]
 authors: {
     gmolveau: "/authors/gmolveau/"
 }
-draft: true
+draft: false
 ---
 
 ### Introduction

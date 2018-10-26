@@ -153,6 +153,9 @@ def reset_db_command():
     # run it with : FLASK_APP=. flask reset-db
     reset_db()
     click.echo('The database has been reset.')
+
+[...]
+
 ```
 
 ### 1.3 - Update unit test

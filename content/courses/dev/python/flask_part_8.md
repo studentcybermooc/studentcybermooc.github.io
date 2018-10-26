@@ -79,7 +79,6 @@ Let's import this model in the cli :
 
 import click
 from flask.cli import with_appcontext
-from .controllers.user import user_signup
 from .database import db
 from .models.association import user_roles
 from .models.user import User
@@ -142,8 +141,8 @@ from app.database import db
 
 def test_db_tables(client):
     assert len(db.metadata.sorted_tables) > 0
-    tables = set("users", "roles", "users_roles", "tokens")
-    assert tables.issubset(db.metadata.sorted_tables)
+    tables = ["users", "roles", "user_roles", "tokens"]
+    assert all(table in [t.name for t in db.metadata.sorted_tables] for table in tables)
 ```
 
 ### 1.3 - Testing with DB SQLite browser
@@ -259,6 +258,17 @@ Let's add this route in `app/api_v1/user.py`
 ```python
 # app/api_v1/user.py
 
+from flask import (
+    jsonify, request
+)
+from . import api_v1_blueprint
+from .decorators import login_required
+from ..bcrypt import bc
+from ..database import db
+from ..jwt import generate_jwt
+from ..models.token import Token
+from ..models.user import User
+
 [...]
 
 @api_v1_blueprint.route('/logout', methods=['POST'])
@@ -288,12 +298,12 @@ def test_login_before_logout(client, global_data):
 
 
 def test_logout(client, global_data):
-    rv = client.get('/api/v1/logout', headers={'Authorization': global_data['old_token']})
+    rv = client.post('/api/v1/logout', headers={'Authorization': global_data['old_token']})
     assert rv.status_code == 200
 
 
 def test_login_required_invalid_token(client, global_data):
-    rv = client.post('/need_login', headers={'Authorization': global_data['old_token']})
+    rv = client.get('/need_login', headers={'Authorization': global_data['old_token']})
     assert rv.status_code == 401
 ```
 

@@ -70,6 +70,9 @@ Let's add an admin_only route in `api_v1/hello.py` :
 ```python
 # app/api_v1/hello.py
 
+from . import root_blueprint
+from .decorators import login_required, roles_required
+
 [...]
 
 @root_blueprint.route('/admin', methods=['GET'])
@@ -98,7 +101,7 @@ def test_roles_required(client, global_data):
 
 ![v7 unittest](/img/courses/dev/python/flask_part_7/v7_unittest.png)
 
-### 1.3 - Testing with Postman and HTTPie
+### 1.3 - Testing with Postman
     
 Let's reset our app and run it :
 

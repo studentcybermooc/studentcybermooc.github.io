@@ -170,8 +170,11 @@ Let's run our app :
 
 ```bash
 # assuming you're in flask_learning/my_app_v5 (venv)
+flask reset-db
 flask run 
 ```
+
+Don't forget to signup again then we test our fresh new login route.
 
 - `Postman` :
 

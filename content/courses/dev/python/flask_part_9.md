@@ -223,7 +223,7 @@ and we declare it :
 
 from marshmallow import fields
 from ..marshmallow import ma
-from ..models import Token
+from ..models.token import Token
 
 
 class TokenSchema(ma.ModelSchema):
@@ -283,7 +283,7 @@ Now what if we want to exclude the hash (because the user does not need it) ?
 # https://marshmallow.readthedocs.io/en/latest/nesting.html
 
 from ..marshmallow import ma
-from ..models import Token
+from ..models.token import Token
 
 
 class TokenSchema(ma.ModelSchema):

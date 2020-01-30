@@ -1,4 +1,4 @@
-baseURL = "https://studentcybermooc.com/"
+baseURL = "https://studentcybermooc.github.io/cybermooc/"
 title = "Cyber MOOC"
 theme = "cybermooc_theme"
 

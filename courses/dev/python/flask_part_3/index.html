@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+  <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<meta property="og:title" content="Flask - Part 3">
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2018-09-23">
+    
+	<meta property="og:description" content="Connecting Flask with a database">
+    <meta property="og:url" content="https://studentcybermooc.github.io/courses/dev/python/flask_part_3/">
+	<meta property="og:site_name" content="Cyber MOOC">
+	<meta property="og:description" content="ENSIBS Student Cyber MOOC">
+	
+    <meta property="og:tags" content="flask">
+	
+    <meta property="og:tags" content="python">
+	
+    <meta property="og:tags" content="sqlalchemy">
+	
+    <meta property="og:tags" content="orm">
+	
+
+	
+	<meta property="twitter:card" content="Connecting Flask with a database">
+	<meta property="twitter:card" content="Flask - Part 3">
+	<meta property="twitter:description" content="Connecting Flask with a database">
+	<meta property="twitter:title" content="Flask - Part 3">
+
+	<meta name="generator" content="Hugo 0.89.4" />
+
+	<link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+
+	
+
+    <title>Cyber MOOC</title>
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+
+  <body>
+    <div id="top"></div>
+<nav>
+	<p>
+		<a href="/">Home</a>
+				
+		· <a href="/authors/">Authors</a>
+				
+		· <a href="/courses/">Courses</a>
+				
+		· <a href="/collaborate/">Collaborate</a>
+				
+		· <a href="/about/">About</a>
+				
+		· <a href="/index.xml">RSS</a>
+	</p>
+</nav>
+
+<img id="up" src="/img/to_the_top.png" onclick="document.getElementById('top').scrollIntoView({behavior:'smooth'});">
+
+    <main class="post">
+        <article>
+          <header>
+              <h1>Flask - Part 3</h1>
+              <p class="post_date">23 Sep 2018 · 7 min read</p>
+              
+              <p class="post_tags">
+                
+                  <a href="tags/flask">flask</a>
+                
+                  · <a href="tags/python">python</a>
+                
+                  · <a href="tags/sqlalchemy">sqlalchemy</a>
+                
+                  · <a href="tags/orm">orm</a>
+                
+              </p>
+              
+              
+              <p class="post_authors">by
+                
+                
+                  <a href="/authors/gmolveau/" target="_new" rel="nofollow">gmolveau</a> ·
+                
+              </p>
+              
+              <section class="post_toc">
+                <input id="toc-toggle" type="checkbox">
+                <label for="toc-toggle" id="toggle">
+                  <p class="toc-title">Jump to section... <span class="dropdown-icon">⚓</span></p>
+                </label>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a>
+      <ul>
+        <li><a href="#setting-up">Setting up</a></li>
+      </ul>
+    </li>
+    <li><a href="#1---sqlalchemy">1 - SQLAlchemy</a>
+      <ul>
+        <li><a href="#11---installing-sqlalchemy">1.1 - Installing SQLAlchemy</a></li>
+        <li><a href="#12---adding-sqlalachemy-to-our-app">1.2 - Adding SQLAlachemy to our app</a></li>
+        <li><a href="#13---fixing-hard-coded-information">1.3 - Fixing hard-coded information</a></li>
+      </ul>
+    </li>
+    <li><a href="#2---adding-models">2 - Adding models</a></li>
+    <li><a href="#3---generating-the-database">3 - Generating the database</a></li>
+    <li><a href="#4---testing">4 - Testing</a>
+      <ul>
+        <li><a href="#41---unit-testing">4.1 - Unit testing</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+              </section>
+          </header>
+          <hr>
+          <h2 id="introduction">Introduction</h2>
+<p>This <code>version_3</code> will teach you how to connect your app with a database via <code>SQLAlchemy</code> and how to declare your models.</p>
+<h3 id="setting-up">Setting up</h3>
+<p>To begin we will start from our previous <code>version_2</code> app. If you don&rsquo;t have it anymore, no worries, simply copy the reference code :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning</span>
+cp -R flask_cybermooc/version_2 my_app_v3
+cd my_app_v3/app
+</code></pre></div><p>and initialize our venv :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v3</span>
+virtualenv venv -p python3
+source venv/bin/activate
+<span style="color:#75715e"># (venv)</span>
+pip install -r requirements.txt
+</code></pre></div><h2 id="1---sqlalchemy">1 - SQLAlchemy</h2>
+<p>SQLAlchemy is a python ORM. If you don&rsquo;t know what an ORM is, here&rsquo;s a pretty rought exaplanation. AN ORM is an object representation of your database. A python object (eg. a &lsquo;User&rsquo;) represents a table in your database. It allows you to use methods like &lsquo;get&rsquo;, &lsquo;query&rsquo;, &lsquo;first&rsquo; instead of writing pure SQL.</p>
+<h3 id="11---installing-sqlalchemy">1.1 - Installing SQLAlchemy</h3>
+<p>Let&rsquo;s install <code>flask_sqlalchemy</code> which contains sqlalchemy + a wrapper for flask.</p>
+<p>And we don&rsquo;t forget to update our <code>requirements.txt</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v3 (venv)</span>
+pip install flask-sqlalchemy
+pip freeze &gt; requirements.txt
+</code></pre></div><h3 id="12---adding-sqlalachemy-to-our-app">1.2 - Adding SQLAlachemy to our app</h3>
+<p>It is a good idea to keep the SQLAlchemy object instance in a separate file, to avoid <a href="https://en.wikipedia.org/wiki/Circular_dependency">circular imports</a>.</p>
+<p>Let&rsquo;s create a file for our SQLAlchemy instance</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v3 (venv)</span>
+touch app/database.py
+</code></pre></div><p>and declare our database</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># app/database.py</span>
+
+<span style="color:#f92672">from</span> flask_sqlalchemy <span style="color:#f92672">import</span> SQLAlchemy
+
+db <span style="color:#f92672">=</span> SQLAlchemy()
+</code></pre></div><p>Wen can now import <code>db</code> in the application_factory <code>__init__.py</code> :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># app/__init__.py</span>
+<span style="color:#75715e"># application factory</span>
+
+<span style="color:#f92672">from</span> flask <span style="color:#f92672">import</span> Flask
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">create_app</span>():
+    app <span style="color:#f92672">=</span> Flask(__name__)
+    app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;SQLALCHEMY_DATABASE_URI&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;sqlite:///db.sqlite&#39;</span>
+    app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;SQLALCHEMY_TRACK_MODIFICATIONS&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+
+    <span style="color:#f92672">from</span> .database <span style="color:#f92672">import</span> db
+	db<span style="color:#f92672">.</span>init_app(app)
+
+    <span style="color:#f92672">from</span> .api_v1 <span style="color:#f92672">import</span> root_blueprint
+    app<span style="color:#f92672">.</span>register_blueprint(root_blueprint)
+
+    <span style="color:#66d9ef">return</span> app
+</code></pre></div><p>A couple of new things going on here :</p>
+<ul>
+<li>line 7 : in order to connect to the database, SQLAlchemy will look for <code>SQLALCHEMY_DATABASE_URI</code> inside the configuration of the app. Here we hard-code the url and choose to use a <code>sqlite</code> database with the name <code>db.sqlite</code> (more about hard-coding this kind of information in a minute)</li>
+<li>line 9 : we import our SQLALchemy instance and initialize our app with it.</li>
+</ul>
+<p><a href="https://fr.wikipedia.org/wiki/Nota_bene"><em>nota bene</em></a>: you should never <a href="https://forum.wordreference.com/threads/hard-coded.105554/?hl=fr">hard-code</a> the URL of the database in your code, this is a <strong>bad</strong> practice.</p>
+<ul>
+<li>why ? (not safe, not practical, bad pattern)
+<ol>
+<li>if you commit your code on a public repository, everyone can see it. Here it&rsquo;s a simple sqlite, but if you choose to host your database on amazon web-services, you gonna have a bad time</li>
+<li>you can&rsquo;t easily test your app. If you want to have a test database, a development database and a production database, you can&rsquo;t easily change it.</li>
+<li>you can&rsquo;t easily change your database url. you need to dive into the code and find the corresponding line.</li>
+<li>because.</li>
+</ol>
+</li>
+<li>so, what should I do ?
+<ul>
+<li>you should use an environment variable, it could be a file loaded when the app starts (<code>.env</code>) or a config file (<code>config.py</code>) that <strong>won&rsquo;t</strong> be commited.</li>
+<li>when you deploy an app on <a href="https://www.heroku.com/">heroku</a> for example, heroku gives you the URL of the database via through an environment variable.</li>
+</ul>
+</li>
+</ul>
+<h3 id="13---fixing-hard-coded-information">1.3 - Fixing hard-coded information</h3>
+<p>Let&rsquo;s update our structure.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v3 (venv)</span>
+pip install python-dotenv
+pip freeze &gt; requirements.txt
+</code></pre></div><p>We install <code>python-dotenv</code> because flask needs it to automaticaly load <code>.env</code> files.</p>
+<p>Speaking about <code>.env</code>, let&rsquo;s create it :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v3 (venv)</span>
+touch .env
+</code></pre></div><p>and add our data in it :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">DATABASE_URL<span style="color:#f92672">=</span>sqlite:///db.sqlite
+</code></pre></div><p>and update our application factory <code>app/__init__.py</code> :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># app/__init__.py</span>
+<span style="color:#75715e"># application factory</span>
+
+<span style="color:#f92672">from</span> flask <span style="color:#f92672">import</span> Flask
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">create_app</span>():
+    app <span style="color:#f92672">=</span> Flask(__name__)
+
+    <span style="color:#f92672">from</span> os <span style="color:#f92672">import</span> environ <span style="color:#66d9ef">as</span> env
+    app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;SQLALCHEMY_DATABASE_URI&#39;</span>] <span style="color:#f92672">=</span> env<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;DATABASE_URL&#39;</span>)
+    app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;SQLALCHEMY_TRACK_MODIFICATIONS&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+
+    <span style="color:#f92672">from</span> .database <span style="color:#f92672">import</span> db
+	db<span style="color:#f92672">.</span>init_app(app)
+
+    <span style="color:#f92672">from</span> .api_v1 <span style="color:#f92672">import</span> root_blueprint
+    app<span style="color:#f92672">.</span>register_blueprint(root_blueprint)
+
+    <span style="color:#66d9ef">return</span> app
+</code></pre></div><p><strong>Much</strong> better :-)</p>
+<p>We can also create a file called <code>.flaskenv</code> where we put every flask variable, so we don&rsquo;t need to write them everytime we want to run our app.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">FLASK_RUN_PORT<span style="color:#f92672">=</span><span style="color:#ae81ff">5000</span>
+FLASK_RUN_HOST<span style="color:#f92672">=</span>0.0.0.0
+FLASK_APP<span style="color:#f92672">=</span>wsgi.py
+FLASK_ENV<span style="color:#f92672">=</span>development
+</code></pre></div><h2 id="2---adding-models">2 - Adding models</h2>
+<p>Now that SQLAlchemy is imported, let&rsquo;s add our models (tables).</p>
+<p>For this flask course, I would like to create a bootstrap application that you can re-use each time you start a new flask project. 99% of the time (* number made up) your app will need users, login/signup etc&hellip;</p>
+<p>Let&rsquo;s create a <code>models</code> folder</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v3 (venv)</span>
+mkdir app/models
+</code></pre></div><p>Thank&rsquo;s to python <a href="https://en.wikipedia.org/wiki/Multiple_inheritance">multiple inheritance</a> (it has nothing to do with mutiple inheritance but I just wanted to show you), we can declare a <code>Base</code> model that we will import everytime we need the same fields in a Model. Creating a <code>Base</code> model allows us to write <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY code</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v3 (venv)</span>
+touch app/models/base.py
+</code></pre></div><p>and we declare our Model :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># app/models/base.py</span>
+
+<span style="color:#f92672">from</span> ..database <span style="color:#f92672">import</span> db
+
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Base</span>(db<span style="color:#f92672">.</span>Model):
+
+    __abstract__ <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+
+    id <span style="color:#f92672">=</span> db<span style="color:#f92672">.</span>Column(db<span style="color:#f92672">.</span>Integer, primary_key<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+    created_at <span style="color:#f92672">=</span> db<span style="color:#f92672">.</span>Column(db<span style="color:#f92672">.</span>DateTime, 
+                    default<span style="color:#f92672">=</span>db<span style="color:#f92672">.</span>func<span style="color:#f92672">.</span>current_timestamp())
+    updated_at <span style="color:#f92672">=</span> db<span style="color:#f92672">.</span>Column(db<span style="color:#f92672">.</span>DateTime,
+                    default<span style="color:#f92672">=</span>db<span style="color:#f92672">.</span>func<span style="color:#f92672">.</span>current_timestamp(),
+                    onupdate<span style="color:#f92672">=</span>db<span style="color:#f92672">.</span>func<span style="color:#f92672">.</span>current_timestamp())
+</code></pre></div><p>and now we create a file for our <code>User</code> model :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v3 (venv)</span>
+touch app/models/user.py
+</code></pre></div><p>and we declare this model :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># app/models/user.py</span>
+<span style="color:#75715e"># http://docs.sqlalchemy.org/en/latest/orm/extensions/declarative/basic_use.html</span>
+
+<span style="color:#f92672">from</span> .base <span style="color:#f92672">import</span> Base
+<span style="color:#f92672">from</span> ..database <span style="color:#f92672">import</span> db
+
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">User</span>(Base):
+
+    __tablename__ <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;users&#39;</span>
+
+    username <span style="color:#f92672">=</span> db<span style="color:#f92672">.</span>Column(db<span style="color:#f92672">.</span>String, nullable<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, unique<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+    email <span style="color:#f92672">=</span> db<span style="color:#f92672">.</span>Column(db<span style="color:#f92672">.</span>String, nullable<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, unique<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+    encrypted_password <span style="color:#f92672">=</span> db<span style="color:#f92672">.</span>Column(db<span style="color:#f92672">.</span>String, nullable<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</code></pre></div><p><code>User</code> model will inherit from <code>Base</code> (and <code>db.Model</code> via <code>Base</code>) so it will have <code>id, created_at, updated_at</code> fields.</p>
+<p><code>__tablename__</code> is optional but I strongly recommend setting it because with weird class names it&rsquo;s quite hard to know the final table name.</p>
+<h2 id="3---generating-the-database">3 - Generating the database</h2>
+<p>SQLAlchemy will generate the database and the tables based on our code. But we need a way to trigger this event.</p>
+<p>You could choose to reset the database everytime your app restarts, but it&rsquo;s gonna lead to troubles.</p>
+<p>We will rather use the command-cli provided by Flask. (and it&rsquo;s an excuse for me to show you how to use the cli).</p>
+<p>Let&rsquo;s create a file called <code>cli.py</code> that will host all our commands.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v3 (venv)</span>
+touch app/cli.py
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># app/cli.py</span>
+
+<span style="color:#f92672">import</span> click
+<span style="color:#f92672">from</span> flask.cli <span style="color:#f92672">import</span> with_appcontext
+<span style="color:#f92672">from</span> .database <span style="color:#f92672">import</span> db
+
+<span style="color:#75715e"># import every model here</span>
+<span style="color:#f92672">from</span> .models.user <span style="color:#f92672">import</span> User
+
+<span style="color:#a6e22e">@click</span><span style="color:#f92672">.</span>command(<span style="color:#e6db74">&#39;reset-db&#39;</span>)
+<span style="color:#a6e22e">@with_appcontext</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">reset_db_command</span>():
+    <span style="color:#e6db74">&#34;&#34;&#34;Clear existing data and create new tables.&#34;&#34;&#34;</span>
+    <span style="color:#75715e"># run it with : FLASK_APP=. flask reset-db</span>
+    reset_db()
+    click<span style="color:#f92672">.</span>echo(<span style="color:#e6db74">&#39;The database has been reset.&#39;</span>)
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">reset_db</span>():
+    db<span style="color:#f92672">.</span>drop_all()
+    db<span style="color:#f92672">.</span>create_all()
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">cli_init_app</span>(app):
+    app<span style="color:#f92672">.</span>cli<span style="color:#f92672">.</span>add_command(reset_db_command)
+</code></pre></div><p>Here, we declare a <code>click.command</code> that will drop-then-create all the tables. That&rsquo;s why we need to import every model.</p>
+<p>Now that we declared our command, we need to import it into our <code>application factory</code> aka <code>__init__.py</code> via <code>cli_init_app</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># app/__init__.py</span>
+<span style="color:#75715e"># application factory</span>
+
+<span style="color:#f92672">from</span> flask <span style="color:#f92672">import</span> Flask
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">create_app</span>():
+    app <span style="color:#f92672">=</span> Flask(__name__)
+
+    <span style="color:#f92672">from</span> os <span style="color:#f92672">import</span> environ <span style="color:#66d9ef">as</span> env
+    app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;SQLALCHEMY_DATABASE_URI&#39;</span>] <span style="color:#f92672">=</span> env<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;DATABASE_URL&#39;</span>)
+    app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;SQLALCHEMY_TRACK_MODIFICATIONS&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+
+    <span style="color:#f92672">from</span> .database <span style="color:#f92672">import</span> db
+    db<span style="color:#f92672">.</span>init_app(app)
+
+    <span style="color:#f92672">from</span> .cli <span style="color:#f92672">import</span> cli_init_app
+    cli_init_app(app)
+
+    <span style="color:#f92672">from</span> .api_v1 <span style="color:#f92672">import</span> root_blueprint
+    app<span style="color:#f92672">.</span>register_blueprint(root_blueprint)
+
+    <span style="color:#66d9ef">return</span> app
+</code></pre></div><p>We are now <strong>ready</strong> to test our brand new app.</p>
+<h2 id="4---testing">4 - Testing</h2>
+<p>Let&rsquo;s run our new command</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v3 (venv)</span>
+flask reset-db
+</code></pre></div><p>If the command succeeds, a <code>db.sqlite</code> file should appear in the <code>app</code> folder</p>
+<p>To make sure that our databse was correctly created, we can inspect it via a database browser.</p>
+<p>For SQLite, a great tool is <a href="http://sqlitebrowser.org/">sqlite-browser</a>.</p>
+<p><img src="/img/courses/dev/python/flask_part_3/v3_sqlitebrowser.png" alt="v3 sqlitebrowser example"></p>
+<h3 id="41---unit-testing">4.1 - Unit testing</h3>
+<p>Let&rsquo;s update our <code>tests/conftest.py</code> file to add the database:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_basic.py</span>
+
+<span style="color:#f92672">import</span> pytest
+<span style="color:#f92672">from</span> dotenv <span style="color:#f92672">import</span> load_dotenv
+load_dotenv()
+
+<span style="color:#f92672">from</span> app <span style="color:#f92672">import</span> create_app
+<span style="color:#f92672">from</span> app.database <span style="color:#f92672">import</span> db
+<span style="color:#f92672">from</span> app.cli <span style="color:#f92672">import</span> reset_db
+
+<span style="color:#a6e22e">@pytest</span><span style="color:#f92672">.</span>fixture(scope <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;session&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">global_data</span>():
+    <span style="color:#66d9ef">return</span> dict()
+
+<span style="color:#a6e22e">@pytest</span><span style="color:#f92672">.</span>fixture(scope<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;session&#34;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">client</span>():
+    test_app <span style="color:#f92672">=</span> create_app()
+
+    <span style="color:#f92672">from</span> os <span style="color:#f92672">import</span> environ <span style="color:#66d9ef">as</span> env
+    test_app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;SQLALCHEMY_DATABASE_URI&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;sqlite:///test.sqlite&#34;</span>
+    test_app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;TESTING&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+    client <span style="color:#f92672">=</span> test_app<span style="color:#f92672">.</span>test_client()
+
+    <span style="color:#66d9ef">with</span> test_app<span style="color:#f92672">.</span>app_context():
+        reset_db()
+
+    <span style="color:#66d9ef">yield</span> client
+</code></pre></div><p>we run the tests <code>python -m pytest tests/</code> ; <code>test.sqlite</code> was created and the test passed.</p>
+<p>Let&rsquo;s add a file to test the tables in the database <code>test_1_database.py</code> :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_basic.py</span>
+
+<span style="color:#f92672">from</span> app.database <span style="color:#f92672">import</span> db
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_db_tables</span>(client):
+    <span style="color:#66d9ef">assert</span> len(db<span style="color:#f92672">.</span>metadata<span style="color:#f92672">.</span>sorted_tables) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>
+    <span style="color:#66d9ef">assert</span> <span style="color:#e6db74">&#34;users&#34;</span> <span style="color:#f92672">in</span> [table<span style="color:#f92672">.</span>name <span style="color:#66d9ef">for</span> table <span style="color:#f92672">in</span> db<span style="color:#f92672">.</span>metadata<span style="color:#f92672">.</span>sorted_tables]
+</code></pre></div><h2 id="conclusion">Conclusion</h2>
+<p>If you&rsquo;re stuck or don&rsquo;t understand something, feel free to drop <a href="/authors/gmolveau/">me an email / dm on twitter</a> / a comment below. You can also take a look at <code>flask_learning/flask_cybermooc/version_3</code> to see the reference code. And use <code>run.sh</code> to launch it.</p>
+<p>Otherwise, <strong>congratulations</strong> ! You just learned how to connect a database to your app. But our app is quite useless right now, isn&rsquo;t it ?..</p>
+<p>Don&rsquo;t worry, if you understood everything, you&rsquo;re now ready to go to <a href="/courses/dev/python/flask_part_4/">part 4</a> to see how to add a signup, login and roles to your users !</p>
+
+          <hr>
+        </article>
+    </main>
+
+    <div id="gh-comments">
+    <header class="text-center">
+        <h4>COMMENTS</h4>
+    </header>
+    <div id="gh-comments-list"></div>
+</div>
+
+<script type="text/javascript">
+
+function parse_links(headers_link){
+    var links = { };
+    for (var i in headers_link){
+        var entry = headers_link[i];
+        var link = { };
+        link.name = entry.match(/rel=\"([^\"]*)/)[1];
+        link.url = entry.match(/<([^>]*)/)[1];
+        link.page = entry.match(/page=(\d+).*$/)[1];
+        links[link.name] = link;
+    }
+    return links;
+}
+
+function create_comment_btn(issue_id) {
+    let page_comments = document.querySelectorAll('#gh-comments > header')[0];
+    const url_issues = "https://github.com//issues/"+issue_id;
+    var new_comment_btn = document.createElement('a');
+    new_comment_btn.setAttribute('href', url_issues + "#new_comment_field");
+    new_comment_btn.setAttribute('rel', 'nofollow');
+    new_comment_btn.setAttribute('target', '_new');
+    new_comment_btn.setAttribute('class', 'btngithub')
+    new_comment_btn.innerText = 'Post a comment on Github';
+    page_comments.appendChild(new_comment_btn);
+}
+
+function comments_closed() {
+    let comments_list = document.getElementById("gh-comments-list");
+    comments_list.innerHTML += "Comments are not open for this post yet.";
+}
+
+function create_comment_div(comment) {
+    const date_creation = new Date(comment.created_at);
+    const date_creation_string = date_creation.getUTCFullYear() +"/"+ (date_creation.getUTCMonth()+1) +"/"+ date_creation.getUTCDate() + " at " + date_creation.getUTCHours() + ":" + date_creation.getUTCMinutes();
+    let div_gh_comment = document.createElement('div');
+    div_gh_comment.setAttribute("class", "gh-comment");
+    let sub_div = document.createElement('div');
+    let img_avatar = document.createElement("img");
+    img_avatar.setAttribute("src", comment.user.avatar_url);
+    let link_profile = document.createElement('a');
+    link_profile.setAttribute("href", comment.user.html_url);
+    link_profile.innerText = comment.user.login;
+    let date_comment = document.createElement("em");
+    date_comment.innerText = date_creation_string;
+    sub_div.appendChild(img_avatar);
+    sub_div.appendChild(link_profile);
+    sub_div.innerHTML += " posted on ";
+    sub_div.appendChild(date_comment);
+    div_gh_comment.appendChild(sub_div);
+    div_gh_comment.innerHTML += comment['body'];
+    let comments_list = document.getElementById("gh-comments-list");
+    comments_list.appendChild(div_gh_comment);
+}
+
+function get_comments(issues_url, issue_id) {
+    let request = new XMLHttpRequest();
+    request.open('GET', issues_url);
+    request.onload = function() {
+        var data = JSON.parse(request.responseText);
+        if (data.message === 'Not Found') {
+            comments_closed();
+            return;
+        }
+        create_comment_btn(issue_id);
+        for (var index_comment in data) {
+            comment = data[index_comment];
+           create_comment_div(comment);
+        }
+        let more_comments = request.getResponseHeader("Link");
+        if (more_comments !== null) {
+            
+            let links = parse_links(more_comments);
+        }
+    };
+    request.onerror = function() {
+        comments_closed();
+    };
+    request.send();
+}
+
+function load_comments(){
+    document.addEventListener('DOMContentLoaded', function(){
+        const issue_id = "21"; 
+        const issues_url = "https://api.github.com/repos/studentcybermooc\/studentcybermooc.github.io/issues/"+issue_id+"/comments";
+        if (issue_id !== undefined && issue_id > 0) {
+            get_comments(issues_url, issue_id);
+        } else {
+            comments_closed();
+        }
+    });
+}
+
+load_comments();
+</script>
+
+  <script>
+    (function() {
+      var toc = document.getElementById('TableOfContents');
+      if (!toc) return;
+      do {
+        var li, ul = toc.querySelector('ul');
+        if (ul.childElementCount !== 1) break;
+        li = ul.firstElementChild;
+        if (li.tagName !== 'LI') break;
+        
+        ul.outerHTML = li.innerHTML;
+      } while (toc.childElementCount >= 1);
+    })();
+  </script>
+    
+  <link rel="stylesheet" href="/assets/highlight/styles/hopscotch.css">
+  
+
+  <script src="/assets/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

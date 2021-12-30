@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+  <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<meta property="og:title" content="Flask - Part 2">
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2018-09-22">
+    
+	<meta property="og:description" content="Architecture of a Flask app">
+    <meta property="og:url" content="https://studentcybermooc.github.io/courses/dev/python/flask_part_2/">
+	<meta property="og:site_name" content="Cyber MOOC">
+	<meta property="og:description" content="ENSIBS Student Cyber MOOC">
+	
+    <meta property="og:tags" content="flask">
+	
+    <meta property="og:tags" content="python">
+	
+    <meta property="og:tags" content="blueprint">
+	
+
+	
+	<meta property="twitter:card" content="Architecture of a Flask app">
+	<meta property="twitter:card" content="Flask - Part 2">
+	<meta property="twitter:description" content="Architecture of a Flask app">
+	<meta property="twitter:title" content="Flask - Part 2">
+
+	<meta name="generator" content="Hugo 0.89.4" />
+
+	<link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+
+	
+
+    <title>Cyber MOOC</title>
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+
+  <body>
+    <div id="top"></div>
+<nav>
+	<p>
+		<a href="/">Home</a>
+				
+		· <a href="/authors/">Authors</a>
+				
+		· <a href="/courses/">Courses</a>
+				
+		· <a href="/collaborate/">Collaborate</a>
+				
+		· <a href="/about/">About</a>
+				
+		· <a href="/index.xml">RSS</a>
+	</p>
+</nav>
+
+<img id="up" src="/img/to_the_top.png" onclick="document.getElementById('top').scrollIntoView({behavior:'smooth'});">
+
+    <main class="post">
+        <article>
+          <header>
+              <h1>Flask - Part 2</h1>
+              <p class="post_date">22 Sep 2018 · 4 min read</p>
+              
+              <p class="post_tags">
+                
+                  <a href="tags/flask">flask</a>
+                
+                  · <a href="tags/python">python</a>
+                
+                  · <a href="tags/blueprint">blueprint</a>
+                
+              </p>
+              
+              
+              <p class="post_authors">by
+                
+                
+                  <a href="/authors/gmolveau/" target="_new" rel="nofollow">gmolveau</a> ·
+                
+              </p>
+              
+              <section class="post_toc">
+                <input id="toc-toggle" type="checkbox">
+                <label for="toc-toggle" id="toggle">
+                  <p class="toc-title">Jump to section... <span class="dropdown-icon">⚓</span></p>
+                </label>
+                <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#introduction">Introduction</a></li>
+      </ul>
+    </li>
+    <li><a href="#1---how-to-structure-our-app">1 - How to structure our app</a></li>
+    <li><a href="#2---creating-our-app">2 - Creating our app</a>
+      <ul>
+        <li><a href="#21---application-factory">2.1 - Application factory</a></li>
+        <li><a href="#22---our-first-api">2.2 - Our first API</a></li>
+        <li><a href="#23---our-first-route">2.3 - Our first route</a></li>
+        <li><a href="#24---testing-our-app">2.4 - Testing our app</a></li>
+        <li><a href="#25---launching-our-app">2.5 - Launching our app</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+              </section>
+          </header>
+          <hr>
+          <h3 id="introduction">Introduction</h3>
+<p>This <code>version_2</code> will explain how to structure your project to easily integrate your models, templates, ORM &hellip; and of course <strong>unit tests</strong>.</p>
+<p>For this <code>version_2</code>, we will code the same app as <code>version_1</code>, no big deal.</p>
+<h2 id="1---how-to-structure-our-app">1 - How to structure our app</h2>
+<p>To organize our routes, let&rsquo;s start again from scratch :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning</span>
+mkdir my_app_v2
+cd my_app_v2
+mkdir tests
+mkdir app
+</code></pre></div><p>initialize our venv :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v2</span>
+virtualenv venv -p python3
+source venv/bin/activate
+<span style="color:#75715e"># (venv)</span>
+pip install flask pytest
+pip freeze &gt; requirements.txt
+</code></pre></div><p>and now lay down our achitecture :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v2 (venv)</span>
+touch wsgi.py
+touch app/__init__.py
+mkdir app/api_v1
+touch app/api_v1/__init__.py
+touch app/api_v1/hello.py
+</code></pre></div><p>With this architecture, we can easily update our api without breaking backward-compatibility.</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<h2 id="2---creating-our-app">2 - Creating our app</h2>
+<h3 id="21---application-factory">2.1 - Application factory</h3>
+<p><code>application factory</code> is the file that contains the function <code>create_app</code> which returns our app.</p>
+<p>Our application factory is <code>app/__init__.py</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># app/__init__.py</span>
+<span style="color:#75715e"># application factory</span>
+
+<span style="color:#f92672">from</span> flask <span style="color:#f92672">import</span> Flask
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">create_app</span>():
+    app <span style="color:#f92672">=</span> Flask(__name__)
+
+    <span style="color:#f92672">from</span> .api_v1 <span style="color:#f92672">import</span> root_blueprint
+    app<span style="color:#f92672">.</span>register_blueprint(root_blueprint)
+
+    <span style="color:#66d9ef">return</span> app
+</code></pre></div><ul>
+<li>An application factory is mandatory to launch our app via a WSGI server (gunicorn, nginx&hellip;)</li>
+<li>line 9 : we use blueprints to organize our app into components.</li>
+</ul>
+<p>Speaking about WSGI server, to facilitate the launch of our app, we created earlier a <code>wsgi.py</code> file. This file unique goal is to instantiate our app so flask can run it (yes that&rsquo;s 2 lines).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># wsgi.py</span>
+
+<span style="color:#f92672">from</span> app <span style="color:#f92672">import</span> create_app
+
+app <span style="color:#f92672">=</span> create_app()
+</code></pre></div><h3 id="22---our-first-api">2.2 - Our first API</h3>
+<p>Let&rsquo;s create declate our <code>root_blueprint</code> in <code>app/api_v1/__init__.py</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># app/api_v1/__init__.py</span>
+
+<span style="color:#f92672">from</span> flask <span style="color:#f92672">import</span> Blueprint
+
+root_blueprint <span style="color:#f92672">=</span>  Blueprint(<span style="color:#e6db74">&#39;root&#39;</span>, __name__)
+
+<span style="color:#75715e"># Import any endpoints here to make them available</span>
+<span style="color:#f92672">from</span> . <span style="color:#f92672">import</span> hello
+</code></pre></div><ul>
+<li>line 5 : we declare our blueprint that will be composed of multiple routes (endpoints)</li>
+<li>line 8 : we are importing from the current folder <code>.</code> the file <code>hello.py</code> that will contain some endpoints.</li>
+</ul>
+<h3 id="23---our-first-route">2.3 - Our first route</h3>
+<p>Let&rsquo;s code our fiirst route in <code>api_v1/hello.py</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># app/api_v1/hello.py</span>
+
+<span style="color:#f92672">from</span> . <span style="color:#f92672">import</span> root_blueprint
+
+<span style="color:#a6e22e">@root_blueprint</span><span style="color:#f92672">.</span>route(<span style="color:#e6db74">&#39;/&#39;</span>, methods<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;GET&#39;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">hello_world</span>():
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;Hello, World!&#39;</span>
+</code></pre></div><p>As we saw earlier, this route belong to <code>root_blueprint</code>. This route will be accessible at <code>/</code>.</p>
+<h3 id="24---testing-our-app">2.4 - Testing our app</h3>
+<p>It is important (<strong>crucial</strong>) to test your app.</p>
+<p>Testing may seem difficult or boring but if you adopt unit-tests early, it will become a habit to create them.</p>
+<p>First we need to create a client that will be injected in all our tests. Let&rsquo;s create a file named <code>conftest.py</code> :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v2 (venv)</span>
+touch tests/conftest.py
+</code></pre></div><p>and add :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/conftest.py</span>
+
+<span style="color:#f92672">import</span> pytest
+
+<span style="color:#f92672">from</span> app <span style="color:#f92672">import</span> create_app
+
+<span style="color:#a6e22e">@pytest</span><span style="color:#f92672">.</span>fixture(scope<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;session&#34;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">global_data</span>():
+    <span style="color:#66d9ef">return</span> dict()
+
+<span style="color:#a6e22e">@pytest</span><span style="color:#f92672">.</span>fixture(scope<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;session&#34;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">client</span>():
+    test_app <span style="color:#f92672">=</span> create_app()
+    test_app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;TESTING&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+    client <span style="color:#f92672">=</span> test_app<span style="color:#f92672">.</span>test_client()
+    <span style="color:#66d9ef">yield</span> client
+</code></pre></div><p>Those 2 functions will be executed only once and they will inject their data inside every other test cases.</p>
+<p><code>global_data</code> allow us to share data between tests, and <code>client</code> represents the test_client to query our API.</p>
+<h4 id="241---quick-thing-about-pytest-scopes">2.4.1 - Quick thing about pytest scopes</h4>
+<ul>
+<li>&ldquo;scope=function&rdquo; : Run once per test</li>
+<li>&ldquo;scope=class&rdquo; : Run once per class of tests</li>
+<li>&ldquo;scope=module&rdquo; : Run once per module</li>
+<li>&ldquo;scope=session&rdquo; : Run once per session</li>
+</ul>
+<p>and some useful links :</p>
+<ul>
+<li><a href="http://pythontesting.net/framework/pytest/pytest-fixtures-nuts-bolts/">article 1 - pytest-fixtures-nuts-bolts</a></li>
+<li><a href="https://www.patricksoftwareblog.com/testing-a-flask-application-using-pytest/">article 2 - testing-a-flask-application-using-pytest</a></li>
+<li><a href="https://computableverse.com/blog/pytest-sharing-class-fixtures">article 3 - pytest-sharing-class-fixtures</a></li>
+<li><a href="https://docs.pytest.org/en/latest/fixture.html">official doc 1</a></li>
+<li><a href="https://docs.pytest.org/en/latest/fixture.html">official doc 2</a></li>
+</ul>
+<hr>
+<p>Then we create <code>tests/test_root.py</code> file. Every file need to be named <code>test_*.py</code> to be automaticaly discovered.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v2 (venv)</span>
+touch tests/test_root.py
+</code></pre></div><p>In this file we add our test :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_root.py</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_root_endpoint</span>(client):
+    rv <span style="color:#f92672">=</span> client<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;/&#39;</span>)
+    <span style="color:#66d9ef">assert</span> rv<span style="color:#f92672">.</span>status_code <span style="color:#f92672">==</span> <span style="color:#ae81ff">200</span>
+    <span style="color:#66d9ef">assert</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Hello, World!&#39;</span> <span style="color:#f92672">in</span> rv<span style="color:#f92672">.</span>data
+</code></pre></div><p>To run every test at once, we run this command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v2 (venv)</span>
+python -m pytest tests/
+</code></pre></div><p>If everything went great, you should see this :</p>
+<p><img src="/img/courses/dev/python/flask_part_2/v2_unittest.png" alt="v2 unit testing"></p>
+<h3 id="25---launching-our-app">2.5 - Launching our app</h3>
+<p>To launch our app :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v2 (venv)</span>
+FLASK_ENV<span style="color:#f92672">=</span>development FLASK_APP<span style="color:#f92672">=</span>wsgi.py flask run --host<span style="color:#f92672">=</span>0.0.0.0 --port<span style="color:#f92672">=</span><span style="color:#ae81ff">5000</span>
+</code></pre></div><ul>
+<li><code>HTTPie</code> :</li>
+</ul>
+<p><img src="/img/courses/dev/python/flask_part_2/v2_httpie.png" alt="v2 httpie example"></p>
+<ul>
+<li><code>Postman</code> :</li>
+</ul>
+<p><img src="/img/courses/dev/python/flask_part_2/v2_postman.png" alt="v2 postman example"></p>
+<ul>
+<li><code>Browser</code>:</li>
+</ul>
+<p><img src="/img/courses/dev/python/flask_part_2/v2_browser.png" alt="v2 postman example"></p>
+<p>Working great :-)</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>If you&rsquo;re stuck or don&rsquo;t understand something, feel free to drop <a href="/authors/gmolveau/">me an email / dm on twitter</a> / a comment below. You can also take a look at <code>flask_learning/flask_cybermooc/version_2</code> to see the reference code. And use <code>run.sh</code> to launch it.</p>
+<p>Otherwise, <strong>congratulations</strong> ! You just learned <strong>a lot</strong> of things :-)</p>
+<p>Unit testing your app, creating a blueprint&hellip; Your app is now designed to be easily extended in the (near) future.</p>
+<p>You&rsquo;re now ready to go to <a href="/courses/dev/python/flask_part_3/">part 3</a> to learn how to connect your app with a database.</p>
+
+          <hr>
+        </article>
+    </main>
+
+    <div id="gh-comments">
+    <header class="text-center">
+        <h4>COMMENTS</h4>
+    </header>
+    <div id="gh-comments-list"></div>
+</div>
+
+<script type="text/javascript">
+
+function parse_links(headers_link){
+    var links = { };
+    for (var i in headers_link){
+        var entry = headers_link[i];
+        var link = { };
+        link.name = entry.match(/rel=\"([^\"]*)/)[1];
+        link.url = entry.match(/<([^>]*)/)[1];
+        link.page = entry.match(/page=(\d+).*$/)[1];
+        links[link.name] = link;
+    }
+    return links;
+}
+
+function create_comment_btn(issue_id) {
+    let page_comments = document.querySelectorAll('#gh-comments > header')[0];
+    const url_issues = "https://github.com//issues/"+issue_id;
+    var new_comment_btn = document.createElement('a');
+    new_comment_btn.setAttribute('href', url_issues + "#new_comment_field");
+    new_comment_btn.setAttribute('rel', 'nofollow');
+    new_comment_btn.setAttribute('target', '_new');
+    new_comment_btn.setAttribute('class', 'btngithub')
+    new_comment_btn.innerText = 'Post a comment on Github';
+    page_comments.appendChild(new_comment_btn);
+}
+
+function comments_closed() {
+    let comments_list = document.getElementById("gh-comments-list");
+    comments_list.innerHTML += "Comments are not open for this post yet.";
+}
+
+function create_comment_div(comment) {
+    const date_creation = new Date(comment.created_at);
+    const date_creation_string = date_creation.getUTCFullYear() +"/"+ (date_creation.getUTCMonth()+1) +"/"+ date_creation.getUTCDate() + " at " + date_creation.getUTCHours() + ":" + date_creation.getUTCMinutes();
+    let div_gh_comment = document.createElement('div');
+    div_gh_comment.setAttribute("class", "gh-comment");
+    let sub_div = document.createElement('div');
+    let img_avatar = document.createElement("img");
+    img_avatar.setAttribute("src", comment.user.avatar_url);
+    let link_profile = document.createElement('a');
+    link_profile.setAttribute("href", comment.user.html_url);
+    link_profile.innerText = comment.user.login;
+    let date_comment = document.createElement("em");
+    date_comment.innerText = date_creation_string;
+    sub_div.appendChild(img_avatar);
+    sub_div.appendChild(link_profile);
+    sub_div.innerHTML += " posted on ";
+    sub_div.appendChild(date_comment);
+    div_gh_comment.appendChild(sub_div);
+    div_gh_comment.innerHTML += comment['body'];
+    let comments_list = document.getElementById("gh-comments-list");
+    comments_list.appendChild(div_gh_comment);
+}
+
+function get_comments(issues_url, issue_id) {
+    let request = new XMLHttpRequest();
+    request.open('GET', issues_url);
+    request.onload = function() {
+        var data = JSON.parse(request.responseText);
+        if (data.message === 'Not Found') {
+            comments_closed();
+            return;
+        }
+        create_comment_btn(issue_id);
+        for (var index_comment in data) {
+            comment = data[index_comment];
+           create_comment_div(comment);
+        }
+        let more_comments = request.getResponseHeader("Link");
+        if (more_comments !== null) {
+            
+            let links = parse_links(more_comments);
+        }
+    };
+    request.onerror = function() {
+        comments_closed();
+    };
+    request.send();
+}
+
+function load_comments(){
+    document.addEventListener('DOMContentLoaded', function(){
+        const issue_id = "20"; 
+        const issues_url = "https://api.github.com/repos/studentcybermooc\/studentcybermooc.github.io/issues/"+issue_id+"/comments";
+        if (issue_id !== undefined && issue_id > 0) {
+            get_comments(issues_url, issue_id);
+        } else {
+            comments_closed();
+        }
+    });
+}
+
+load_comments();
+</script>
+
+  <script>
+    (function() {
+      var toc = document.getElementById('TableOfContents');
+      if (!toc) return;
+      do {
+        var li, ul = toc.querySelector('ul');
+        if (ul.childElementCount !== 1) break;
+        li = ul.firstElementChild;
+        if (li.tagName !== 'LI') break;
+        
+        ul.outerHTML = li.innerHTML;
+      } while (toc.childElementCount >= 1);
+    })();
+  </script>
+    
+  <link rel="stylesheet" href="/assets/highlight/styles/hopscotch.css">
+  
+
+  <script src="/assets/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

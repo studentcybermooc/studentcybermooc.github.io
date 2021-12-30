@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+  <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<meta property="og:title" content="Flask - Part 5">
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2018-09-25">
+    
+	<meta property="og:description" content="User authentication with Json Web Token">
+    <meta property="og:url" content="https://studentcybermooc.github.io/courses/dev/python/flask_part_5/">
+	<meta property="og:site_name" content="Cyber MOOC">
+	<meta property="og:description" content="ENSIBS Student Cyber MOOC">
+	
+    <meta property="og:tags" content="flask">
+	
+    <meta property="og:tags" content="jwt">
+	
+
+	
+	<meta property="twitter:card" content="User authentication with Json Web Token">
+	<meta property="twitter:card" content="Flask - Part 5">
+	<meta property="twitter:description" content="User authentication with Json Web Token">
+	<meta property="twitter:title" content="Flask - Part 5">
+
+	<meta name="generator" content="Hugo 0.89.4" />
+
+	<link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+
+	
+
+    <title>Cyber MOOC</title>
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+
+  <body>
+    <div id="top"></div>
+<nav>
+	<p>
+		<a href="/">Home</a>
+				
+		· <a href="/authors/">Authors</a>
+				
+		· <a href="/courses/">Courses</a>
+				
+		· <a href="/collaborate/">Collaborate</a>
+				
+		· <a href="/about/">About</a>
+				
+		· <a href="/index.xml">RSS</a>
+	</p>
+</nav>
+
+<img id="up" src="/img/to_the_top.png" onclick="document.getElementById('top').scrollIntoView({behavior:'smooth'});">
+
+    <main class="post">
+        <article>
+          <header>
+              <h1>Flask - Part 5</h1>
+              <p class="post_date">25 Sep 2018 · 6 min read</p>
+              
+              <p class="post_tags">
+                
+                  <a href="tags/flask">flask</a>
+                
+                  · <a href="tags/jwt">jwt</a>
+                
+              </p>
+              
+              
+              <p class="post_authors">by
+                
+                
+                  <a href="/authors/gmolveau/" target="_new" rel="nofollow">gmolveau</a> ·
+                
+              </p>
+              
+              <section class="post_toc">
+                <input id="toc-toggle" type="checkbox">
+                <label for="toc-toggle" id="toggle">
+                  <p class="toc-title">Jump to section... <span class="dropdown-icon">⚓</span></p>
+                </label>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a>
+      <ul>
+        <li><a href="#setting-up">Setting up</a></li>
+      </ul>
+    </li>
+    <li><a href="#1---jwt">1 - JWT</a>
+      <ul>
+        <li><a href="#11---installing-jwt">1.1 - Installing JWT</a></li>
+        <li><a href="#12---adding-jwt-to-our-app">1.2 - Adding JWT to our app</a></li>
+        <li><a href="#13---updating-our-unit-test">1.3 - Updating our unit test</a></li>
+        <li><a href="#14---testing-with-postman-and-httpie">1.4 - Testing with Postman and HTTPie</a></li>
+      </ul>
+    </li>
+    <li><a href="#2---route-decoration-with-login-required">2 - Route decoration with login required</a>
+      <ul>
+        <li><a href="#21---creating-the-decorator">2.1 - Creating the decorator</a></li>
+        <li><a href="#22---decorating-a-route">2.2 - Decorating a route</a></li>
+        <li><a href="#23---unit-test">2.3 - Unit test</a></li>
+        <li><a href="#24---testing-with-postman">2.4 - Testing with Postman</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+              </section>
+          </header>
+          <hr>
+          <h2 id="introduction">Introduction</h2>
+<p>This <code>version_5</code> will show you how to manage the authentication of the users. I choose to show how to use <code>JWT</code>, you can also use <a href="https://flask-login.readthedocs.io/en/latest/">flask_login</a> but this course won&rsquo;t cover it.</p>
+<h3 id="setting-up">Setting up</h3>
+<p>To begin we will start from our previous version_4 app. If you don&rsquo;t have it anymore, no worries, simply copy the reference code.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning</span>
+cp -R flask_cybermooc/version_4 my_app_v5
+cd my_app_v5
+</code></pre></div><p>and initialize our venv :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v5</span>
+virtualenv venv -p python3
+source venv/bin/activate
+<span style="color:#75715e"># (venv)</span>
+pip install -r requirements.txt
+</code></pre></div><p>All set up ? let&rsquo;s begin.</p>
+<h2 id="1---jwt">1 - JWT</h2>
+<p>JWT (JSON Web Token)(<a href="https://jwt.io/introduction/">more details here</a>) is a JSON Object digitaly signed that carries data and is used to authentify users and services. The JWT is issued by the server and the client send it everytime it requests the server. The JWT is placed inside the <code>headers</code> of the request in the <code>Authorization</code> field.</p>
+<h3 id="11---installing-jwt">1.1 - Installing JWT</h3>
+<p>Flask is shipped with a module named <code>itsdangerous</code> which has a JWT module.</p>
+<ul>
+<li>Why using a JWT instead of Session ?
+<ul>
+<li><a href="https://ponyfoo.com/articles/json-web-tokens-vs-session-cookies">link 1 - json-web-tokens-vs-session-cookies</a></li>
+<li><a href="https://stackoverflow.com/a/45214431">link 2 - SO</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="12---adding-jwt-to-our-app">1.2 - Adding JWT to our app</h3>
+<p>So basically a JWT keeps data, and is signed by the server. The data stored inside the JWT is called <code>claims</code>.</p>
+<p>To sign the JWT, we first need to create a <code>SECRET_KEY</code>.</p>
+<p>We will store this <code>SECRET_KEY</code> inside the <code>.env</code> file. A good way to generate this <code>SECRET_KEY</code> is to use a unique uuid. The following command will generate a random uuid.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">python3 <span style="color:#f92672">-</span>c <span style="color:#e6db74">&#39;from uuid import uuid4; print(uuid4())&#39;</span>
+</code></pre></div><p>So let&rsquo;s change <code>.env</code> to add our <code>SECRET_KEY</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">DATABASE_URL<span style="color:#f92672">=</span>sqlite:///db.sqlite
+SECRET_KEY<span style="color:#f92672">=</span>ad132b10-fa43-4048-ae5b-ab5b0a782c5c
+</code></pre></div><p>Let&rsquo;s create a file <code>jwt.py</code> for our JWT factory:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v5 (venv)</span>
+touch app/jwt.py
+</code></pre></div><p>and add some code :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># app/jwt.py</span>
+
+<span style="color:#f92672">from</span> os <span style="color:#f92672">import</span> environ <span style="color:#66d9ef">as</span> env
+<span style="color:#f92672">from</span> itsdangerous <span style="color:#f92672">import</span> (
+    TimedJSONWebSignatureSerializer
+    <span style="color:#66d9ef">as</span> Serializer, BadSignature, SignatureExpired
+)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_jwt</span>(claims, expiration <span style="color:#f92672">=</span> <span style="color:#ae81ff">172800</span>):
+    s <span style="color:#f92672">=</span> Serializer(env<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;SECRET_KEY&#39;</span>), expires_in <span style="color:#f92672">=</span> expiration)
+    <span style="color:#66d9ef">return</span> s<span style="color:#f92672">.</span>dumps(claims)<span style="color:#f92672">.</span>decode(<span style="color:#e6db74">&#39;utf-8&#39;</span>)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">load_jwt</span>(token):
+    s <span style="color:#f92672">=</span> Serializer(env<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;SECRET_KEY&#39;</span>))
+    <span style="color:#66d9ef">try</span>:
+        data <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>loads(token)
+    <span style="color:#66d9ef">except</span> SignatureExpired <span style="color:#66d9ef">as</span> err:
+        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">Exception</span>(str(err))
+    <span style="color:#66d9ef">except</span> BadSignature <span style="color:#66d9ef">as</span> err:
+        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">Exception</span>(str(err))
+    <span style="color:#66d9ef">return</span> data
+
+</code></pre></div><p>We can now simply return the token if the login route is requested.</p>
+<p>Let&rsquo;s modify the <code>api_v1/user.py</code> file :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># app/api_v1/user.py</span>
+
+<span style="color:#f92672">from</span> flask <span style="color:#f92672">import</span> (
+    jsonify, request
+)
+<span style="color:#f92672">from</span> . <span style="color:#f92672">import</span> api_v1_blueprint
+<span style="color:#f92672">from</span> ..bcrypt <span style="color:#f92672">import</span> bc
+<span style="color:#f92672">from</span> ..database <span style="color:#f92672">import</span> db
+<span style="color:#f92672">from</span> ..jwt <span style="color:#f92672">import</span> generate_jwt
+<span style="color:#f92672">from</span> ..models.user <span style="color:#f92672">import</span> User
+
+[<span style="color:#f92672">...</span>] signup route
+
+<span style="color:#a6e22e">@api_v1_blueprint</span><span style="color:#f92672">.</span>route(<span style="color:#e6db74">&#39;/login&#39;</span>, methods<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;POST&#39;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">login</span>():
+    datas <span style="color:#f92672">=</span> request<span style="color:#f92672">.</span>get_json()
+    username <span style="color:#f92672">=</span> datas<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;username&#39;</span>,<span style="color:#e6db74">&#39;&#39;</span>)
+    <span style="color:#66d9ef">if</span> username <span style="color:#f92672">is</span> <span style="color:#e6db74">&#39;&#39;</span>:
+        <span style="color:#66d9ef">return</span> jsonify(error<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;username is empty&#34;</span>),<span style="color:#ae81ff">422</span>
+    password <span style="color:#f92672">=</span> datas<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;password&#39;</span>,<span style="color:#e6db74">&#39;&#39;</span>)
+    <span style="color:#66d9ef">if</span> password <span style="color:#f92672">is</span> <span style="color:#e6db74">&#39;&#39;</span>:
+        <span style="color:#66d9ef">return</span> jsonify(error<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;password is empty&#34;</span>),<span style="color:#ae81ff">422</span>
+    current_user <span style="color:#f92672">=</span> User<span style="color:#f92672">.</span>query<span style="color:#f92672">.</span>filter(User<span style="color:#f92672">.</span>username <span style="color:#f92672">==</span> username)<span style="color:#f92672">.</span>first()
+    <span style="color:#66d9ef">if</span> current_user <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
+        <span style="color:#66d9ef">if</span> current_user<span style="color:#f92672">.</span>verify_password(password):
+            claims <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;user_id&#39;</span> : current_user<span style="color:#f92672">.</span>id}
+            jwt <span style="color:#f92672">=</span> generate_jwt(claims)
+            <span style="color:#66d9ef">return</span> jsonify(token<span style="color:#f92672">=</span>jwt),<span style="color:#ae81ff">200</span>
+        <span style="color:#66d9ef">return</span> jsonify(err<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;password incorrect&#34;</span>), <span style="color:#ae81ff">401</span>
+    <span style="color:#66d9ef">return</span> jsonify(err<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;username incorrect&#34;</span>), <span style="color:#ae81ff">404</span>
+</code></pre></div><p>Here we imported our JWT file and changed the login route, to modify the return when the login is successful.</p>
+<h3 id="13---updating-our-unit-test">1.3 - Updating our unit test</h3>
+<p>Now that we change our <code>login</code> route, we need to update the corresponding unit test in <code>tests/test_3_login_route.py</code> :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_3_login_route.py</span>
+
+[<span style="color:#f92672">...</span>]
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_login_correct</span>(client, global_data):
+    correct <span style="color:#f92672">=</span> client<span style="color:#f92672">.</span>post(<span style="color:#e6db74">&#34;/api/v1/login&#34;</span>, json<span style="color:#f92672">=</span>{
+        <span style="color:#e6db74">&#39;username&#39;</span>: <span style="color:#e6db74">&#39;testuser&#39;</span>, <span style="color:#e6db74">&#39;password&#39;</span>: <span style="color:#e6db74">&#39;test_user&#39;</span>
+    })
+    <span style="color:#66d9ef">assert</span> correct<span style="color:#f92672">.</span>status_code <span style="color:#f92672">==</span> <span style="color:#ae81ff">200</span>
+    json_data <span style="color:#f92672">=</span> correct<span style="color:#f92672">.</span>get_json()
+    <span style="color:#66d9ef">assert</span> <span style="color:#e6db74">&#34;token&#34;</span> <span style="color:#f92672">in</span> json_data
+    global_data[<span style="color:#e6db74">&#39;token&#39;</span>] <span style="color:#f92672">=</span> json_data[<span style="color:#e6db74">&#39;token&#39;</span>]
+
+[<span style="color:#f92672">...</span>]
+</code></pre></div><h3 id="14---testing-with-postman-and-httpie">1.4 - Testing with Postman and HTTPie</h3>
+<p>Let&rsquo;s run our app :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v5 (venv)</span>
+flask reset-db
+flask run 
+</code></pre></div><p>Don&rsquo;t forget to signup again then we test our fresh new login route.</p>
+<ul>
+<li><code>Postman</code> :</li>
+</ul>
+<p><img src="/img/courses/dev/python/flask_part_5/v5_postman.png" alt="v5 postman login example"></p>
+<ul>
+<li><code>HTTPie</code> :</li>
+</ul>
+<p><img src="/img/courses/dev/python/flask_part_5/v5_httpie.png" alt="v5 httpie login example"></p>
+<p>We can see that we got a token in return. So, we can now use this <strong>token</strong> to authenticate ourselves with the API :-)</p>
+<p>Now that the user can be authenticated by the token, let&rsquo;s see how to implement JWT verification.</p>
+<h2 id="2---route-decoration-with-login-required">2 - Route decoration with login required</h2>
+<p>A decorator is a function that is executed before the next function and can add context and data to this next function.</p>
+<h3 id="21---creating-the-decorator">2.1 - Creating the decorator</h3>
+<p>Let&rsquo;s create a file with all our decorators in <code>api_v1/decorators.py</code> :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v5 (venv)</span>
+touch api_v1/decorators.py
+</code></pre></div><p>This decorator is called a <code>middleware</code>. When a route is decorated, all the decorators will be executed before the route. It allows us to add context to the route.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># api_v1/decorators.py</span>
+
+<span style="color:#f92672">from</span> functools <span style="color:#f92672">import</span> wraps
+<span style="color:#f92672">from</span> flask <span style="color:#f92672">import</span> (
+    jsonify, request
+)
+<span style="color:#f92672">from</span> ..jwt <span style="color:#f92672">import</span> load_jwt
+<span style="color:#f92672">from</span> ..models.user <span style="color:#f92672">import</span> User
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">login_required</span>(fn):
+    <span style="color:#a6e22e">@wraps</span>(fn)
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">wrapped</span>(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
+        <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;Authorization&#39;</span> <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> request<span style="color:#f92672">.</span>headers:
+            <span style="color:#66d9ef">return</span> jsonify(err<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;no Authorization header found&#34;</span>),<span style="color:#ae81ff">400</span>
+        <span style="color:#66d9ef">try</span>:
+            jwt <span style="color:#f92672">=</span> request<span style="color:#f92672">.</span>headers[<span style="color:#e6db74">&#39;Authorization&#39;</span>]
+            claims <span style="color:#f92672">=</span> load_jwt(jwt)
+        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> err:
+            <span style="color:#66d9ef">return</span> jsonify(err<span style="color:#f92672">=</span>str(err)),<span style="color:#ae81ff">401</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;user_id&#39;</span> <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> claims:
+            <span style="color:#66d9ef">return</span> jsonify(err<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;token is not valid&#34;</span>),<span style="color:#ae81ff">400</span>
+        current_user <span style="color:#f92672">=</span> User<span style="color:#f92672">.</span>query<span style="color:#f92672">.</span>get(claims[<span style="color:#e6db74">&#39;user_id&#39;</span>])
+        <span style="color:#66d9ef">if</span> current_user <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+            <span style="color:#66d9ef">return</span> jsonify(err<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;404 User not found&#34;</span>),<span style="color:#ae81ff">400</span>
+        <span style="color:#66d9ef">return</span> fn(current_user<span style="color:#f92672">=</span>current_user, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs)
+    <span style="color:#66d9ef">return</span> wrapped
+</code></pre></div><p>Here we get the User via the <code>user_id</code> stored in the token. So our route now has a new parameter <code>current_user</code>. Pretty handy :-) (a french explanation about python decorators <a href="http://gillesfabio.com/blog/2010/12/16/python-et-les-decorateurs/">here</a>)</p>
+<h3 id="22---decorating-a-route">2.2 - Decorating a route</h3>
+<p>Let&rsquo;s now use this decorator to create a <code>login_required</code> route in <code>api_v1/hello.py</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># api_v1/hello.py</span>
+
+<span style="color:#f92672">from</span> . <span style="color:#f92672">import</span> root_blueprint
+<span style="color:#f92672">from</span> .decorators <span style="color:#f92672">import</span> login_required
+
+
+<span style="color:#a6e22e">@root_blueprint</span><span style="color:#f92672">.</span>route(<span style="color:#e6db74">&#39;/&#39;</span>, methods<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;GET&#39;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">hello_world</span>():
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;Hello, World!&#39;</span>
+
+
+<span style="color:#a6e22e">@root_blueprint</span><span style="color:#f92672">.</span>route(<span style="color:#e6db74">&#39;/need_login&#39;</span>, methods<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;GET&#39;</span>])
+<span style="color:#a6e22e">@login_required</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">route_need_login</span>(current_user):
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;if you see this, that means your token is valid&#34;</span>
+</code></pre></div><p>The route <code>/api/v1/need_login</code> is accessible only if <code>login_required</code> succeeds, so if the user provides a valid token.</p>
+<h3 id="23---unit-test">2.3 - Unit test</h3>
+<p>Let&rsquo;s create the file <code>tests/test_4_login_required.py</code> to add our unit test :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_4_login_required.py</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_login_required</span>(client, global_data):
+    rv <span style="color:#f92672">=</span> client<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;/need_login&#39;</span>,
+        headers<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;Authorization&#39;</span>: global_data[<span style="color:#e6db74">&#39;token&#39;</span>]}
+    )
+    <span style="color:#66d9ef">assert</span> rv<span style="color:#f92672">.</span>status_code <span style="color:#f92672">==</span> <span style="color:#ae81ff">200</span>
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_login_required_missing_token</span>(client):
+    rv <span style="color:#f92672">=</span> client<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;/need_login&#39;</span>)
+    <span style="color:#66d9ef">assert</span> rv<span style="color:#f92672">.</span>status_code <span style="color:#f92672">==</span> <span style="color:#ae81ff">400</span>
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_login_required_invalid_token</span>(client):
+    rv <span style="color:#f92672">=</span> client<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;/need_login&#39;</span>,
+        headers<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;Authorization&#39;</span>: <span style="color:#e6db74">&#34;test.test.test&#34;</span>}
+    )
+    <span style="color:#66d9ef">assert</span> rv<span style="color:#f92672">.</span>status_code <span style="color:#f92672">==</span> <span style="color:#ae81ff">401</span>
+</code></pre></div><p><img src="/img/courses/dev/python/flask_part_5/v5_unittest.png" alt="v5 unittest"></p>
+<h3 id="24---testing-with-postman">2.4 - Testing with Postman</h3>
+<p>Let&rsquo;s run our app :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you&#39;re in flask_learning/my_app_v5 (venv )</span>
+flask run
+</code></pre></div><p>After signing-up, we login to get the token. We will then include this token in <code>Authorization</code> header.</p>
+<ul>
+<li>If we don&rsquo;t provide an Authorization header</li>
+</ul>
+<p><img src="/img/courses/dev/python/flask_part_5/v5_no_token.png" alt="v5 jwt no auth"></p>
+<ul>
+<li>If the token is not valid</li>
+</ul>
+<p><img src="/img/courses/dev/python/flask_part_5/v5_token_invalid.png" alt="v5 jwt invalid"></p>
+<ul>
+<li>If the token is valid :-)</li>
+</ul>
+<p><img src="/img/courses/dev/python/flask_part_5/v5_token_valid.png" alt="v5 jwt valid"></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>If you&rsquo;re stuck or don&rsquo;t understand something, feel free to drop <a href="/authors/gmolveau/">me an email / dm on twitter</a> / a comment below. You can also take a look at <code>flask_learning/flask_cybermooc/version_5</code> to see the reference code. And use <code>run.sh</code> to launch it.</p>
+<p>Otherwise, <strong>congratulations</strong> ! You just learned about JWT and how to generate and use them :-)</p>
+<p>In the next part, we will add roles to our users (like admin), and use our JWT to authenticate ourselves and create some routes that require certain roles to access.</p>
+<p>You&rsquo;re now ready to begin <a href="/courses/dev/python/flask_part_6/">part 6</a> to learn how to add roles to the users.</p>
+
+          <hr>
+        </article>
+    </main>
+
+    <div id="gh-comments">
+    <header class="text-center">
+        <h4>COMMENTS</h4>
+    </header>
+    <div id="gh-comments-list"></div>
+</div>
+
+<script type="text/javascript">
+
+function parse_links(headers_link){
+    var links = { };
+    for (var i in headers_link){
+        var entry = headers_link[i];
+        var link = { };
+        link.name = entry.match(/rel=\"([^\"]*)/)[1];
+        link.url = entry.match(/<([^>]*)/)[1];
+        link.page = entry.match(/page=(\d+).*$/)[1];
+        links[link.name] = link;
+    }
+    return links;
+}
+
+function create_comment_btn(issue_id) {
+    let page_comments = document.querySelectorAll('#gh-comments > header')[0];
+    const url_issues = "https://github.com//issues/"+issue_id;
+    var new_comment_btn = document.createElement('a');
+    new_comment_btn.setAttribute('href', url_issues + "#new_comment_field");
+    new_comment_btn.setAttribute('rel', 'nofollow');
+    new_comment_btn.setAttribute('target', '_new');
+    new_comment_btn.setAttribute('class', 'btngithub')
+    new_comment_btn.innerText = 'Post a comment on Github';
+    page_comments.appendChild(new_comment_btn);
+}
+
+function comments_closed() {
+    let comments_list = document.getElementById("gh-comments-list");
+    comments_list.innerHTML += "Comments are not open for this post yet.";
+}
+
+function create_comment_div(comment) {
+    const date_creation = new Date(comment.created_at);
+    const date_creation_string = date_creation.getUTCFullYear() +"/"+ (date_creation.getUTCMonth()+1) +"/"+ date_creation.getUTCDate() + " at " + date_creation.getUTCHours() + ":" + date_creation.getUTCMinutes();
+    let div_gh_comment = document.createElement('div');
+    div_gh_comment.setAttribute("class", "gh-comment");
+    let sub_div = document.createElement('div');
+    let img_avatar = document.createElement("img");
+    img_avatar.setAttribute("src", comment.user.avatar_url);
+    let link_profile = document.createElement('a');
+    link_profile.setAttribute("href", comment.user.html_url);
+    link_profile.innerText = comment.user.login;
+    let date_comment = document.createElement("em");
+    date_comment.innerText = date_creation_string;
+    sub_div.appendChild(img_avatar);
+    sub_div.appendChild(link_profile);
+    sub_div.innerHTML += " posted on ";
+    sub_div.appendChild(date_comment);
+    div_gh_comment.appendChild(sub_div);
+    div_gh_comment.innerHTML += comment['body'];
+    let comments_list = document.getElementById("gh-comments-list");
+    comments_list.appendChild(div_gh_comment);
+}
+
+function get_comments(issues_url, issue_id) {
+    let request = new XMLHttpRequest();
+    request.open('GET', issues_url);
+    request.onload = function() {
+        var data = JSON.parse(request.responseText);
+        if (data.message === 'Not Found') {
+            comments_closed();
+            return;
+        }
+        create_comment_btn(issue_id);
+        for (var index_comment in data) {
+            comment = data[index_comment];
+           create_comment_div(comment);
+        }
+        let more_comments = request.getResponseHeader("Link");
+        if (more_comments !== null) {
+            
+            let links = parse_links(more_comments);
+        }
+    };
+    request.onerror = function() {
+        comments_closed();
+    };
+    request.send();
+}
+
+function load_comments(){
+    document.addEventListener('DOMContentLoaded', function(){
+        const issue_id = "23"; 
+        const issues_url = "https://api.github.com/repos/studentcybermooc\/studentcybermooc.github.io/issues/"+issue_id+"/comments";
+        if (issue_id !== undefined && issue_id > 0) {
+            get_comments(issues_url, issue_id);
+        } else {
+            comments_closed();
+        }
+    });
+}
+
+load_comments();
+</script>
+
+  <script>
+    (function() {
+      var toc = document.getElementById('TableOfContents');
+      if (!toc) return;
+      do {
+        var li, ul = toc.querySelector('ul');
+        if (ul.childElementCount !== 1) break;
+        li = ul.firstElementChild;
+        if (li.tagName !== 'LI') break;
+        
+        ul.outerHTML = li.innerHTML;
+      } while (toc.childElementCount >= 1);
+    })();
+  </script>
+    
+  <link rel="stylesheet" href="/assets/highlight/styles/hopscotch.css">
+  
+
+  <script src="/assets/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

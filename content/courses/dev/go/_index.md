@@ -1,4 +1,0 @@
----
-title: "go"
-draft: true
----

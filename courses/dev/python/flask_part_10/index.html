@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+  <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<meta property="og:title" content="Flask - Part 10">
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2018-10-22">
+    
+	<meta property="og:description" content="Example of a (complete) Flask app &#43; Docker">
+    <meta property="og:url" content="https://studentcybermooc.github.io/courses/dev/python/flask_part_10/">
+	<meta property="og:site_name" content="Cyber MOOC">
+	<meta property="og:description" content="ENSIBS Student Cyber MOOC">
+	
+    <meta property="og:tags" content="flask">
+	
+
+	
+	<meta property="twitter:card" content="Example of a (complete) Flask app &#43; Docker">
+	<meta property="twitter:card" content="Flask - Part 10">
+	<meta property="twitter:description" content="Example of a (complete) Flask app &#43; Docker">
+	<meta property="twitter:title" content="Flask - Part 10">
+
+	<meta name="generator" content="Hugo 0.89.4" />
+
+	<link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+
+	
+
+    <title>Cyber MOOC</title>
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+
+  <body>
+    <div id="top"></div>
+<nav>
+	<p>
+		<a href="/">Home</a>
+				
+		· <a href="/authors/">Authors</a>
+				
+		· <a href="/courses/">Courses</a>
+				
+		· <a href="/collaborate/">Collaborate</a>
+				
+		· <a href="/about/">About</a>
+				
+		· <a href="/index.xml">RSS</a>
+	</p>
+</nav>
+
+<img id="up" src="/img/to_the_top.png" onclick="document.getElementById('top').scrollIntoView({behavior:'smooth'});">
+
+    <main class="post">
+        <article>
+          <header>
+              <h1>Flask - Part 10</h1>
+              <p class="post_date">22 Oct 2018 · 3 min read</p>
+              
+              <p class="post_tags">
+                
+                  <a href="tags/flask">flask</a>
+                
+              </p>
+              
+              
+              <p class="post_authors">by
+                
+                
+                  <a href="/authors/gmolveau/" target="_new" rel="nofollow">gmolveau</a> ·
+                
+              </p>
+              
+              <section class="post_toc">
+                <input id="toc-toggle" type="checkbox">
+                <label for="toc-toggle" id="toggle">
+                  <p class="toc-title">Jump to section... <span class="dropdown-icon">⚓</span></p>
+                </label>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#docker">Docker</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+              </section>
+          </header>
+          <hr>
+          <h2 id="introduction">Introduction</h2>
+<p>This <code>version_10</code> is the last part of this course. There won&rsquo;t be a lot of explanations here.</p>
+<p>I simply added some features that I will list below. This app is here to be examined and for you to learn on your own.</p>
+<p>This page may change as I add more features (like alembic for DB migrations for example).</p>
+<h2 id="features">Features</h2>
+<ul>
+<li>UUID primary keys
+<ul>
+<li>I wanted to change the type of the primary keys of the different tables. Choosing UUID over auto-increment integers has a lot of benefits and not a lot of drawbacks.</li>
+<li><a href="https://www.clever-cloud.com/blog/engineering/2015/05/20/why-auto-increment-is-a-terrible-idea/">article</a></li>
+</ul>
+</li>
+<li>Username regex validation
+<ul>
+<li>quick example on how to parse a username (remember, you need to validate data both in the front-end AND in the back-end). This regex is here to avoid users to choose hard-to-parse username so their username can be use as a parameter in a route.</li>
+<li>you should rather use the UUID of the user instead of its username (if you allow your users to change their username then the bookmarked routes won&rsquo;t work etc etc&hellip;)</li>
+</ul>
+</li>
+<li>Role management</li>
+<li>a front-end route
+<ul>
+<li>to show you how to serve a front-end (like an angularjs app)</li>
+</ul>
+</li>
+<li>an upload route
+<ul>
+<li>because</li>
+</ul>
+</li>
+</ul>
+<h2 id="docker">Docker</h2>
+<p>Quick explanation about how to dockerize your app.</p>
+<ol start="0">
+<li>
+<p>Make sure you have <code>gunicorn</code> in your <code>requirements.txt</code>.</p>
+</li>
+<li>
+<p>Create a file named <code>Dockerfile</code> and add those lines : (yes, that&rsquo;s a lot of comment)</p>
+</li>
+</ol>
+<pre tabindex="0"><code># this dockerfile inherit from https://github.com/docker-library/python/blob/38dcdb4320c8668416205e044ee50489c059da18/3.7/stretch/slim/Dockerfile
+FROM python:3-slim
+
+# we add a user that will run our app so it's not run by root
+RUN groupadd -g 999 flaskou &amp;&amp; useradd -r -u 999 -g flaskou flaskou
+
+WORKDIR /home/flaskou
+
+# we copy our app inside the container, the folder will be created
+# we chown the folder to the user flaskou
+COPY --chown=flaskou:flaskou . ./
+
+# we install the dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# we switch user to the one we created earlier
+USER flaskou
+
+# we run some useful commands like creating the database and creating the first admin
+RUN flask reset-db &amp;&amp; \
+	flask create-admin &quot;root&quot; &quot;root@mail.com&quot; &quot;toor&quot;
+
+# we share this folder with the host
+VOLUME /home/flaskou
+
+# finally we run our app
+CMD [ &quot;gunicorn&quot;, &quot;-b :5000&quot;, &quot;wsgi:app&quot; ]
+
+# we expose the port 5000 so the host can access it
+EXPOSE 5000
+</code></pre><ol start="2">
+<li>Build the image :</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># &#34; . &#34; represents the current folder, where Dockerfile is</span>
+docker build -t flaskou .
+</code></pre></div><p>(if you encounter errors like <code>Temporary failure in name resolution [Errno -3]</code>, please check out <a href="https://gist.github.com/gmolveau/6fa0ddb4546ec5bd073d0037370be31e">this article</a>).</p>
+<ol start="3">
+<li>Run your app</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run -p 5000:5000 flaskou
+</code></pre></div><h2 id="conclusion">Conclusion</h2>
+<p>I <strong>hope</strong> that you found this big flask course cool and helpful !</p>
+<p>Feel free to drop <a href="/authors/gmolveau/">me an email / dm on twitter</a> / a comment below if you have any question about Flask or web-development in general.</p>
+
+          <hr>
+        </article>
+    </main>
+
+    <div id="gh-comments">
+    <header class="text-center">
+        <h4>COMMENTS</h4>
+    </header>
+    <div id="gh-comments-list"></div>
+</div>
+
+<script type="text/javascript">
+
+function parse_links(headers_link){
+    var links = { };
+    for (var i in headers_link){
+        var entry = headers_link[i];
+        var link = { };
+        link.name = entry.match(/rel=\"([^\"]*)/)[1];
+        link.url = entry.match(/<([^>]*)/)[1];
+        link.page = entry.match(/page=(\d+).*$/)[1];
+        links[link.name] = link;
+    }
+    return links;
+}
+
+function create_comment_btn(issue_id) {
+    let page_comments = document.querySelectorAll('#gh-comments > header')[0];
+    const url_issues = "https://github.com//issues/"+issue_id;
+    var new_comment_btn = document.createElement('a');
+    new_comment_btn.setAttribute('href', url_issues + "#new_comment_field");
+    new_comment_btn.setAttribute('rel', 'nofollow');
+    new_comment_btn.setAttribute('target', '_new');
+    new_comment_btn.setAttribute('class', 'btngithub')
+    new_comment_btn.innerText = 'Post a comment on Github';
+    page_comments.appendChild(new_comment_btn);
+}
+
+function comments_closed() {
+    let comments_list = document.getElementById("gh-comments-list");
+    comments_list.innerHTML += "Comments are not open for this post yet.";
+}
+
+function create_comment_div(comment) {
+    const date_creation = new Date(comment.created_at);
+    const date_creation_string = date_creation.getUTCFullYear() +"/"+ (date_creation.getUTCMonth()+1) +"/"+ date_creation.getUTCDate() + " at " + date_creation.getUTCHours() + ":" + date_creation.getUTCMinutes();
+    let div_gh_comment = document.createElement('div');
+    div_gh_comment.setAttribute("class", "gh-comment");
+    let sub_div = document.createElement('div');
+    let img_avatar = document.createElement("img");
+    img_avatar.setAttribute("src", comment.user.avatar_url);
+    let link_profile = document.createElement('a');
+    link_profile.setAttribute("href", comment.user.html_url);
+    link_profile.innerText = comment.user.login;
+    let date_comment = document.createElement("em");
+    date_comment.innerText = date_creation_string;
+    sub_div.appendChild(img_avatar);
+    sub_div.appendChild(link_profile);
+    sub_div.innerHTML += " posted on ";
+    sub_div.appendChild(date_comment);
+    div_gh_comment.appendChild(sub_div);
+    div_gh_comment.innerHTML += comment['body'];
+    let comments_list = document.getElementById("gh-comments-list");
+    comments_list.appendChild(div_gh_comment);
+}
+
+function get_comments(issues_url, issue_id) {
+    let request = new XMLHttpRequest();
+    request.open('GET', issues_url);
+    request.onload = function() {
+        var data = JSON.parse(request.responseText);
+        if (data.message === 'Not Found') {
+            comments_closed();
+            return;
+        }
+        create_comment_btn(issue_id);
+        for (var index_comment in data) {
+            comment = data[index_comment];
+           create_comment_div(comment);
+        }
+        let more_comments = request.getResponseHeader("Link");
+        if (more_comments !== null) {
+            
+            let links = parse_links(more_comments);
+        }
+    };
+    request.onerror = function() {
+        comments_closed();
+    };
+    request.send();
+}
+
+function load_comments(){
+    document.addEventListener('DOMContentLoaded', function(){
+        const issue_id = "28"; 
+        const issues_url = "https://api.github.com/repos/studentcybermooc\/studentcybermooc.github.io/issues/"+issue_id+"/comments";
+        if (issue_id !== undefined && issue_id > 0) {
+            get_comments(issues_url, issue_id);
+        } else {
+            comments_closed();
+        }
+    });
+}
+
+load_comments();
+</script>
+
+  <script>
+    (function() {
+      var toc = document.getElementById('TableOfContents');
+      if (!toc) return;
+      do {
+        var li, ul = toc.querySelector('ul');
+        if (ul.childElementCount !== 1) break;
+        li = ul.firstElementChild;
+        if (li.tagName !== 'LI') break;
+        
+        ul.outerHTML = li.innerHTML;
+      } while (toc.childElementCount >= 1);
+    })();
+  </script>
+    
+  <link rel="stylesheet" href="/assets/highlight/styles/hopscotch.css">
+  
+
+  <script src="/assets/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

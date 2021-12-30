@@ -1,0 +1,136 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cyber MOOC</title>
+    <link>https://studentcybermooc.github.io/about/</link>
+    <description>Recent content on Cyber MOOC</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <managingEditor>Cyber MOOC</managingEditor>
+    <copyright>MIT</copyright>
+    
+        <atom:link href="https://studentcybermooc.github.io/about/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+      <item>
+        <title>Flask - Part 10</title>
+        <link>https://studentcybermooc.github.io/courses/dev/python/flask_part_10/</link>
+        <pubDate>Mon, 22 Oct 2018</pubDate>
+        <author>Cyber MOOC</author>
+        <guid>https://studentcybermooc.github.io/courses/dev/python/flask_part_10/</guid>
+        <description>Example of a (complete) Flask app + Docker</description>
+      </item>
+      
+      <item>
+        <title>Flask - Part 9</title>
+        <link>https://studentcybermooc.github.io/courses/dev/python/flask_part_9/</link>
+        <pubDate>Sat, 29 Sep 2018</pubDate>
+        <author>Cyber MOOC</author>
+        <guid>https://studentcybermooc.github.io/courses/dev/python/flask_part_9/</guid>
+        <description>Revoking JWT</description>
+      </item>
+      
+      <item>
+        <title>Flask - Part 8</title>
+        <link>https://studentcybermooc.github.io/courses/dev/python/flask_part_8/</link>
+        <pubDate>Fri, 28 Sep 2018</pubDate>
+        <author>Cyber MOOC</author>
+        <guid>https://studentcybermooc.github.io/courses/dev/python/flask_part_8/</guid>
+        <description>Implementing JWT whitelisting</description>
+      </item>
+      
+      <item>
+        <title>Flask - Part 7</title>
+        <link>https://studentcybermooc.github.io/courses/dev/python/flask_part_7/</link>
+        <pubDate>Thu, 27 Sep 2018</pubDate>
+        <author>Cyber MOOC</author>
+        <guid>https://studentcybermooc.github.io/courses/dev/python/flask_part_7/</guid>
+        <description>Restricting access with role verification</description>
+      </item>
+      
+      <item>
+        <title>Flask - Part 6</title>
+        <link>https://studentcybermooc.github.io/courses/dev/python/flask_part_6/</link>
+        <pubDate>Wed, 26 Sep 2018</pubDate>
+        <author>Cyber MOOC</author>
+        <guid>https://studentcybermooc.github.io/courses/dev/python/flask_part_6/</guid>
+        <description>Roles management</description>
+      </item>
+      
+      <item>
+        <title>Flask - Part 5</title>
+        <link>https://studentcybermooc.github.io/courses/dev/python/flask_part_5/</link>
+        <pubDate>Tue, 25 Sep 2018</pubDate>
+        <author>Cyber MOOC</author>
+        <guid>https://studentcybermooc.github.io/courses/dev/python/flask_part_5/</guid>
+        <description>User authentication with Json Web Token</description>
+      </item>
+      
+      <item>
+        <title>Flask - Part 4</title>
+        <link>https://studentcybermooc.github.io/courses/dev/python/flask_part_4/</link>
+        <pubDate>Mon, 24 Sep 2018</pubDate>
+        <author>Cyber MOOC</author>
+        <guid>https://studentcybermooc.github.io/courses/dev/python/flask_part_4/</guid>
+        <description>Adding users and login/signup routes</description>
+      </item>
+      
+      <item>
+        <title>Flask - Part 3</title>
+        <link>https://studentcybermooc.github.io/courses/dev/python/flask_part_3/</link>
+        <pubDate>Sun, 23 Sep 2018</pubDate>
+        <author>Cyber MOOC</author>
+        <guid>https://studentcybermooc.github.io/courses/dev/python/flask_part_3/</guid>
+        <description>Connecting Flask with a database</description>
+      </item>
+      
+      <item>
+        <title>Flask - Part 2</title>
+        <link>https://studentcybermooc.github.io/courses/dev/python/flask_part_2/</link>
+        <pubDate>Sat, 22 Sep 2018</pubDate>
+        <author>Cyber MOOC</author>
+        <guid>https://studentcybermooc.github.io/courses/dev/python/flask_part_2/</guid>
+        <description>Architecture of a Flask app</description>
+      </item>
+      
+      <item>
+        <title>Flask - Part 1</title>
+        <link>https://studentcybermooc.github.io/courses/dev/python/flask_part_1/</link>
+        <pubDate>Fri, 21 Sep 2018</pubDate>
+        <author>Cyber MOOC</author>
+        <guid>https://studentcybermooc.github.io/courses/dev/python/flask_part_1/</guid>
+        <description>Super Basic Flask app</description>
+      </item>
+      
+      <item>
+        <title>Flask - Part 0 - Intro</title>
+        <link>https://studentcybermooc.github.io/courses/dev/python/flask_part_0/</link>
+        <pubDate>Thu, 20 Sep 2018</pubDate>
+        <author>Cyber MOOC</author>
+        <guid>https://studentcybermooc.github.io/courses/dev/python/flask_part_0/</guid>
+        <description>Introduction to Flask</description>
+      </item>
+      
+      <item>
+        <title>Staying informed</title>
+        <link>https://studentcybermooc.github.io/courses/misc/staying_informed/</link>
+        <pubDate>Wed, 19 Sep 2018</pubDate>
+        <author>Cyber MOOC</author>
+        <guid>https://studentcybermooc.github.io/courses/misc/staying_informed/</guid>
+        <description>tips and tricks to stay informed</description>
+      </item>
+      
+      <item>
+        <title>Setting up your python environment</title>
+        <link>https://studentcybermooc.github.io/courses/dev/python/set_up_python_env/</link>
+        <pubDate>Wed, 19 Sep 2018</pubDate>
+        <author>Cyber MOOC</author>
+        <guid>https://studentcybermooc.github.io/courses/dev/python/set_up_python_env/</guid>
+        <description>Learn how to set up a clean python environment</description>
+      </item>
+      
+    
+      
+    
+  </channel>
+</rss>

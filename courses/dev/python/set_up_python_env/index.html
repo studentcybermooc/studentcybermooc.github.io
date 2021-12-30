@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+  <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<meta property="og:title" content="Setting up your python environment">
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2018-09-19">
+    
+	<meta property="og:description" content="Learn how to set up a clean python environment">
+    <meta property="og:url" content="https://studentcybermooc.github.io/courses/dev/python/set_up_python_env/">
+	<meta property="og:site_name" content="Cyber MOOC">
+	<meta property="og:description" content="ENSIBS Student Cyber MOOC">
+	
+    <meta property="og:tags" content="python">
+	
+    <meta property="og:tags" content="environment">
+	
+
+	
+	<meta property="twitter:card" content="Learn how to set up a clean python environment">
+	<meta property="twitter:card" content="Setting up your python environment">
+	<meta property="twitter:description" content="Learn how to set up a clean python environment">
+	<meta property="twitter:title" content="Setting up your python environment">
+
+	<meta name="generator" content="Hugo 0.89.4" />
+
+	<link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+
+	
+
+    <title>Cyber MOOC</title>
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+
+  <body>
+    <div id="top"></div>
+<nav>
+	<p>
+		<a href="/">Home</a>
+				
+		· <a href="/authors/">Authors</a>
+				
+		· <a href="/courses/">Courses</a>
+				
+		· <a href="/collaborate/">Collaborate</a>
+				
+		· <a href="/about/">About</a>
+				
+		· <a href="/index.xml">RSS</a>
+	</p>
+</nav>
+
+<img id="up" src="/img/to_the_top.png" onclick="document.getElementById('top').scrollIntoView({behavior:'smooth'});">
+
+    <main class="post">
+        <article>
+          <header>
+              <h1>Setting up your python environment</h1>
+              <p class="post_date">19 Sep 2018 · 8 min read</p>
+              
+              <p class="post_tags">
+                
+                  <a href="tags/python">python</a>
+                
+                  · <a href="tags/environment">environment</a>
+                
+              </p>
+              
+              
+              <p class="post_authors">by
+                
+                
+                  <a href="/authors/gmolveau/" target="_new" rel="nofollow">gmolveau</a> ·
+                
+              </p>
+              
+              <section class="post_toc">
+                <input id="toc-toggle" type="checkbox">
+                <label for="toc-toggle" id="toggle">
+                  <p class="toc-title">Jump to section... <span class="dropdown-icon">⚓</span></p>
+                </label>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a>
+      <ul>
+        <li><a href="#concepts">Concepts</a></li>
+      </ul>
+    </li>
+    <li><a href="#1-requirements">1. Requirements</a>
+      <ul>
+        <li><a href="#11-installing-python3">1.1 Installing Python3</a></li>
+        <li><a href="#12-using-pip">1.2 Using pip</a></li>
+        <li><a href="#13-using-virtualenv">1.3 Using virtualenv</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-lets-do-this">2. Let&rsquo;s do this</a>
+      <ul>
+        <li><a href="#21-setting-up-a-venv">2.1 Setting up a venv</a></li>
+        <li><a href="#22-experimenting-with-pip-and-venv">2.2 Experimenting with pip and venv</a></li>
+        <li><a href="#23-listing-your-dependencies">2.3 Listing your dependencies</a></li>
+        <li><a href="#24-editorconfig">2.4 .editorconfig</a></li>
+        <li><a href="#25-versioning">2.5 Versioning</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-choosing-your-ide">3. Choosing your IDE</a></li>
+    <li><a href="#conclusion">Conclusion</a>
+      <ul>
+        <li><a href="#summary">Summary</a></li>
+        <li><a href="#going-further">Going further</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+              </section>
+          </header>
+          <hr>
+          <h2 id="introduction">Introduction</h2>
+<p>This course will teach you how to set-up a clean python environment for all your projects</p>
+<h3 id="concepts">Concepts</h3>
+<ul>
+<li>python3</li>
+<li>virtual environment</li>
+<li>dependency management</li>
+</ul>
+<hr>
+<h2 id="1-requirements">1. Requirements</h2>
+<h3 id="11-installing-python3">1.1 Installing Python3</h3>
+<p>Make sure you&rsquo;ve got <code>python3</code> and <code>pip3</code> installed on your system.
+To check if you have it installed try running :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python3 --version
+</code></pre></div><p>Same thing for <code>pip</code> with :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ pip --version
+</code></pre></div><p>If you encounter <code>command not found</code> then you need to install it :</p>
+<ul>
+<li>
+<p>for windows, <a href="https://www.python.org/downloads/">download this executable</a> and make sure to check &ldquo;Add python to PATH &ldquo;.</p>
+</li>
+<li>
+<p>for mac, run :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ brew install python3
+</code></pre></div><pre tabindex="0"><code>f you don't have brew installed, [go there](https://brew.sh/index_fr))
+
+</code></pre></li>
+<li>
+<p>for linux, run :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo apt-get install python3-pip python3-dev
+</code></pre></div><pre tabindex="0"><code>
+</code></pre></li>
+</ul>
+<hr>
+<h3 id="12-using-pip">1.2 Using pip</h3>
+<p>Pip is the dependency manager for python (like npm for nodejs, cargo for rust, composer for php [&hellip;]). It allows you to download framework and libraries. When you install a dependency with <code>pip install XXX --user</code>, it installs it only for the current user.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ pip3 install gimgurpython --user
+Collecting gimgurpython
+  Using cached https://files.pythonhosted.org/packages/7a/e9/7bf364691f3a16de4b161765282c8cde4ac9924542bddea7d0c2a8aa0351/gimgurpython-0.0.4-py2.py3-none-any.whl
+Requirement already satisfied: requests in /usr/lib/python3/dist-packages <span style="color:#f92672">(</span>from gimgurpython<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>2.18.4<span style="color:#f92672">)</span>
+Installing collected packages: gimgurpython
+Successfully installed gimgurpython-0.0.4
+</code></pre></div><p>To see where a certain dependency is installed, try <code>pip show ...</code> and look at the Location line.
+For example : <code>Location: /home/gmolveau/.local/lib/python3.6/site-packages</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ pip3 show gimgurpython          
+Name: gimgurpython
+Version: 0.0.4
+Summary: A fork of Official Imgur python library with OAuth2 and samples, modified as it seems not maintained anymore
+Home-page: https://github.com/gmolveau/imgurpython
+Author: Imgur Inc. <span style="color:#f92672">(</span>+ gmolveau<span style="color:#f92672">)</span>
+Author-email: api@imgur.com
+License: MIT
+Location: /home/gmolveau/.local/lib/python3.XXX/site-packages
+Requires: requests
+Required-by: 
+</code></pre></div><p>But sometimes for a project, you will have to download a specific version of a dependency, and if this dependency is already installed for another project in another version, you gonna have a bad time.</p>
+<p>That&rsquo;s why we will use <code>virtualenv</code>.</p>
+<hr>
+<h3 id="13-using-virtualenv">1.3 Using virtualenv</h3>
+<p>Virtualenv is a tool to create isolated Python environments. (if you want to learn more about it <a href="https://virtualenv.pypa.io/en/stable/">go there</a>).</p>
+<p>This tool will allow us to create a virtual environment for each project. It means no more dependency correlation. This also means that you will be able to share your project with every dependencies easily via a file called <code>requirements.txt</code> (more on this later).</p>
+<p>To install virtualenv, simply run :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ pip install virtualenv
+</code></pre></div><p>You can now create virtual environments, called a <code>venv</code>.</p>
+<hr>
+<h2 id="2-lets-do-this">2. Let&rsquo;s do this</h2>
+<h3 id="21-setting-up-a-venv">2.1 Setting up a venv</h3>
+<p>Now that we have everything we need :</p>
+<ul>
+<li>
+<p>let&rsquo;s create a project :</p>
+<ul>
+<li>
+<p>linux/osx</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mkdir /tmp/project
+$ cd /tmp/project
+</code></pre></div><pre tabindex="0"><code>
+</code></pre></li>
+<li>
+<p>windows</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mkdir %TMP%<span style="color:#ae81ff">\p</span>roject
+cd %TMP%<span style="color:#ae81ff">\p</span>roject
+</code></pre></div><pre tabindex="0"><code>
+</code></pre></li>
+</ul>
+</li>
+<li>
+<p>create a venv</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ virtualenv venv -p python3
+</code></pre></div><pre tabindex="0"><code>
+is command tells virtualenv to create a virtual environment, to create a folder `venv` where the virtual environment will be located, and to use python3.
+
+</code></pre></li>
+<li>
+<p>now that the venv is created, we need to enter into this venv</p>
+<ul>
+<li>
+<p>linux/osx</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ source venv/bin/activate
+</code></pre></div><pre tabindex="0"><code>
+</code></pre></li>
+<li>
+<p>windows</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">venv<span style="color:#ae81ff">\S</span>cripts<span style="color:#ae81ff">\a</span>ctivate.bat
+</code></pre></div><pre tabindex="0"><code>
+</code></pre></li>
+</ul>
+<p>you should now see <code>(venv)</code> at the beginning of your shell</p>
+<p><img src="/img/courses/dev/python/set_up_python_env/virtualenv.png" alt="virtualenv example"></p>
+</li>
+</ul>
+<hr>
+<h3 id="22-experimenting-with-pip-and-venv">2.2 Experimenting with pip and venv</h3>
+<p>Let&rsquo;s now install a library</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">(</span>venv<span style="color:#f92672">)</span> $ pip install flask
+</code></pre></div><p>now if you look at where flask was installed with <code>pip show flask</code> you&rsquo;ll see that its directly into our venv. more specifically in <code>venv/lib/python3.X/site-packages</code>. So our venv is working well :-)</p>
+<p><img src="/img/courses/dev/python/set_up_python_env/venv_flask.png" alt="venv flask example"></p>
+<p>Now let&rsquo;s try to run :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">(</span>venv<span style="color:#f92672">)</span> $ flask --version
+</code></pre></div><p>It should return <code>Flask 1.x.x [...]</code>.</p>
+<p>Now open another terminal and try to run :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ flask --version
+</code></pre></div><p>You should have a <code>command not found</code> in return. Flask is available <strong>only</strong> inside your venv. No more pollution of your entire machine now :-)</p>
+<p>If you wan&rsquo;t to quit your venv, simply run :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">(</span>venv<span style="color:#f92672">)</span> $ deactivate
+</code></pre></div><hr>
+<h3 id="23-listing-your-dependencies">2.3 Listing your dependencies</h3>
+<p>If you want to share your project, and list all the dependencies necessary to build it, pip is going to help you.</p>
+<p>In your venv, run :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">(</span>venv<span style="color:#f92672">)</span> $ pip freeze
+</code></pre></div><p>You should see all the dependencies and versions.</p>
+<p><img src="/img/courses/dev/python/set_up_python_env/pip_freeze.png" alt="pip freeze example"></p>
+<p>Now if you want to export this list, simply run</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">(</span>venv<span style="color:#f92672">)</span> $ pip freeze &gt; requirements.txt
+</code></pre></div><p>You now have a practical way of sharing your dependencies :-)</p>
+<p>Remember, you should <strong>never</strong> commit your <code>venv</code>. Only commit your <code>requirements.txt</code>. More about git_and_stuff in a moment.</p>
+<hr>
+<h3 id="24-editorconfig">2.4 .editorconfig</h3>
+<p>This file, <code>.editorconfig</code> was made to tell your code-editor some presets about your code.
+For example in sublime text, if you write python, you&rsquo;ll often encounter bugs due to the use of &lsquo;tab&rsquo; instead of &lsquo;spaces&rsquo;. This file is here to fix this.</p>
+<ul>
+<li>.editorconfig
+<pre tabindex="0"><code># .editorconfig
+# http://editorconfig.org
+root = true
+
+[*]
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.py]
+indent_size = 4
+indent_style = space
+
+[*.md]
+trim_trailing_whitespace = false
+</code></pre><pre tabindex="0"><code>
+is configuration is pretty explicit. For example, it tells your code-editor that for python files, 'space' should be used as indentation, and that a tabulation is equal to 4 spaces.
+
+
+</code></pre></li>
+</ul>
+<p>You can <a href="http://lmgtfy.com/?q=.editorconfig+springboot">find</a> examples of <code>.editorconfig</code> files for many kinds of project.</p>
+<p>If you use <code>sublime text</code> as an IDE, you will need to install a plugin. If you never installed a plugin before on <code>sublime text</code> here&rsquo;s a quick walkthrough.</p>
+<p>With sublime text open, press <code>Control + Shift + P</code> (or <code>Command + Shift + P</code> on mac) : a window will popup. Type <code>install</code> and a field called <code>Install Package Control</code> will appear. Select it with the arrow keys of your keyboard and hit <code>Enter</code>.<br>
+You might need to restart <code>sublime text</code> after the installation is finished. You can now easily manage your plugins !</p>
+<p>To install <code>editorconfig</code> plugin, press <code>Control + Shift + P</code> (or <code>Command + Shift + P</code> on mac) then type <code>install</code> and select <code>Package Control: Install Package</code>.</p>
+<p>Sublime will then download the list of available packages.<br>
+Then type <code>editorconfig</code>, select the package and hit <code>enter</code>. The plugin is now installed.</p>
+<p>Now every time you open a folder in sublime text, it will search for a <code>.editorconfig</code> file to automaticaly adapt itself. Handy :-)</p>
+<hr>
+<h3 id="25-versioning">2.5 Versioning</h3>
+<p>First here&rsquo;s an example of a <code>.gitignore</code> file for a python project :</p>
+<ul>
+<li>.gitignore (yes, it&rsquo;s huge)
+<pre tabindex="0"><code>venv/
+# Byte-compiled / optimized / DLL files
+__pycache__/
+.pytest_cache/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+.cache/
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# IPython Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# dotenv
+.env
+
+# virtualenv
+venv/
+ENV/
+env/
+.flaskenv
+
+# Spyder project settings
+.spyderproject
+
+# Rope project settings
+.ropeproject
+
+# Mac OSX
+**/.DS_Store
+
+
+# JetBrains products
+.idea/
+
+# Misc
+_mailinglist
+</code></pre><pre tabindex="0"><code>
+
+</code></pre></li>
+</ul>
+<p>This .gitignore will prevent you of commiting some useless/dangerous files (temporary, compiled, credentials [&hellip;]).</p>
+<p>Also, a course will be soon available about git workflows to work effectively in team. (but if you <a href="https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow">can&rsquo;t wait</a>).</p>
+<hr>
+<h2 id="3-choosing-your-ide">3. Choosing your IDE</h2>
+<p>There&rsquo;s no good/bad/worst/attrocious IDE; choose the one you&rsquo;re the most effective with and that won&rsquo;t go into your way when you wan&rsquo;t to work.</p>
+<p>BUT if you don&rsquo;t have an IDE yet or if you want to try a new one, I&rsquo;m currently using two products :</p>
+<ul>
+<li><a href="https://www.sublimetext.com/">sublime text</a> + lots of additional packages (via package control)</li>
+<li><a href="https://www.jetbrains.com/pycharm/">pycharm</a></li>
+</ul>
+<p>Sublime Text is not really (natively) an IDE but with the help of additional packages, it can be.</p>
+<p>Pycharm <strong>is</strong> an IDE and helps you in a <strong>lot</strong> of ways. You&rsquo;ll have to learn some shortcuts and stuff, but for professional python programming, <a href="https://www.dictionary.com/browse/imho">imho</a> it&rsquo;s the best one.</p>
+<hr>
+<h2 id="conclusion">Conclusion</h2>
+<p>OKkkkkay so now you should know how to easily set-up your python environment :-)</p>
+<p>We&rsquo;ve seen how pip and virtualenv works and how to make a clean place when working on a new project.</p>
+<hr>
+<h3 id="summary">Summary</h3>
+<p><a href="https://en.wikipedia.org/wiki/TL;DR">TL;DR</a> ?</p>
+<p>So a quick workflow for every new project is :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mkdir project; cd project
+$ touch .editorconfig <span style="color:#f92672">(</span><span style="color:#66d9ef">then</span> paste the config<span style="color:#f92672">)</span>
+$ touch .gitignore <span style="color:#f92672">(</span><span style="color:#66d9ef">then</span> paste the config<span style="color:#f92672">)</span>
+$ touch README.md$
+
+$ virtualenv venv -p python3
+$ source venv/bin/activate <span style="color:#f92672">(</span>enter the venv<span style="color:#f92672">)</span>
+<span style="color:#f92672">(</span>venv<span style="color:#f92672">)</span> $ pip install XXX
+<span style="color:#f92672">(</span>venv<span style="color:#f92672">)</span> $ pip freeze &gt; requirements.txt
+<span style="color:#f92672">(</span>venv<span style="color:#f92672">)</span> $ pip install YYZZ
+<span style="color:#f92672">(</span>venv<span style="color:#f92672">)</span> $ pip freeze &gt; requirements.txt
+
+<span style="color:#f92672">(</span>venv<span style="color:#f92672">)</span> $ git init
+<span style="color:#f92672">(</span>venv<span style="color:#f92672">)</span> $ git add .gitignore .editorconfig requirements.txt README.md
+<span style="color:#f92672">(</span>venv<span style="color:#f92672">)</span> $ git commit -m <span style="color:#e6db74">&#34;init project&#34;</span>
+
+<span style="color:#f92672">(</span>venv<span style="color:#f92672">)</span> $ deactivate <span style="color:#f92672">(</span>quit the venv<span style="color:#f92672">)</span>
+</code></pre></div><hr>
+<h3 id="going-further">Going further</h3>
+<ul>
+<li>
+<p>If you don&rsquo;t like managing your venv, requirements.txt etc&hellip; :</p>
+<p>a tool was created <strong>just for you</strong> then and it&rsquo;s called <a href="https://pipenv.readthedocs.io/en/latest/">pipenv</a>. Here&rsquo;s a <a href="http://sametmax.com/pipenv-solution-moderne-pour-remplacer-pip-et-virtualenv/">french explanation</a> of this tool.</p>
+</li>
+<li>
+<p>If you want to learn more about how python really works :</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=7lmCu8wz8ro">watch this conference by James POWELL</a></li>
+<li><a href="https://www.youtube.com/watch?v=F6u5rhUQ6dU">watch this other conference by Nina Zakharenko</a></li>
+<li><a href="https://www.youtube.com/watch?v=wf-BqAjZb8M">and this one by Raymond HETTINGER</a></li>
+<li><a href="https://docs.python.org/3/tutorial/datastructures.html">RTFM#1</a></li>
+</ul>
+</li>
+<li>
+<p>and more globaly : <a href="http://shop.oreilly.com/product/9780596809492.do">read this book by Kevlin HENNEY</a></p>
+</li>
+<li>
+<p>If you want to apply your newly acquired knowledge on something useful, please follow our course on how to build an API with Flask.</p>
+</li>
+</ul>
+
+          <hr>
+        </article>
+    </main>
+
+    <div id="gh-comments">
+    <header class="text-center">
+        <h4>COMMENTS</h4>
+    </header>
+    <div id="gh-comments-list"></div>
+</div>
+
+<script type="text/javascript">
+
+function parse_links(headers_link){
+    var links = { };
+    for (var i in headers_link){
+        var entry = headers_link[i];
+        var link = { };
+        link.name = entry.match(/rel=\"([^\"]*)/)[1];
+        link.url = entry.match(/<([^>]*)/)[1];
+        link.page = entry.match(/page=(\d+).*$/)[1];
+        links[link.name] = link;
+    }
+    return links;
+}
+
+function create_comment_btn(issue_id) {
+    let page_comments = document.querySelectorAll('#gh-comments > header')[0];
+    const url_issues = "https://github.com//issues/"+issue_id;
+    var new_comment_btn = document.createElement('a');
+    new_comment_btn.setAttribute('href', url_issues + "#new_comment_field");
+    new_comment_btn.setAttribute('rel', 'nofollow');
+    new_comment_btn.setAttribute('target', '_new');
+    new_comment_btn.setAttribute('class', 'btngithub')
+    new_comment_btn.innerText = 'Post a comment on Github';
+    page_comments.appendChild(new_comment_btn);
+}
+
+function comments_closed() {
+    let comments_list = document.getElementById("gh-comments-list");
+    comments_list.innerHTML += "Comments are not open for this post yet.";
+}
+
+function create_comment_div(comment) {
+    const date_creation = new Date(comment.created_at);
+    const date_creation_string = date_creation.getUTCFullYear() +"/"+ (date_creation.getUTCMonth()+1) +"/"+ date_creation.getUTCDate() + " at " + date_creation.getUTCHours() + ":" + date_creation.getUTCMinutes();
+    let div_gh_comment = document.createElement('div');
+    div_gh_comment.setAttribute("class", "gh-comment");
+    let sub_div = document.createElement('div');
+    let img_avatar = document.createElement("img");
+    img_avatar.setAttribute("src", comment.user.avatar_url);
+    let link_profile = document.createElement('a');
+    link_profile.setAttribute("href", comment.user.html_url);
+    link_profile.innerText = comment.user.login;
+    let date_comment = document.createElement("em");
+    date_comment.innerText = date_creation_string;
+    sub_div.appendChild(img_avatar);
+    sub_div.appendChild(link_profile);
+    sub_div.innerHTML += " posted on ";
+    sub_div.appendChild(date_comment);
+    div_gh_comment.appendChild(sub_div);
+    div_gh_comment.innerHTML += comment['body'];
+    let comments_list = document.getElementById("gh-comments-list");
+    comments_list.appendChild(div_gh_comment);
+}
+
+function get_comments(issues_url, issue_id) {
+    let request = new XMLHttpRequest();
+    request.open('GET', issues_url);
+    request.onload = function() {
+        var data = JSON.parse(request.responseText);
+        if (data.message === 'Not Found') {
+            comments_closed();
+            return;
+        }
+        create_comment_btn(issue_id);
+        for (var index_comment in data) {
+            comment = data[index_comment];
+           create_comment_div(comment);
+        }
+        let more_comments = request.getResponseHeader("Link");
+        if (more_comments !== null) {
+            
+            let links = parse_links(more_comments);
+        }
+    };
+    request.onerror = function() {
+        comments_closed();
+    };
+    request.send();
+}
+
+function load_comments(){
+    document.addEventListener('DOMContentLoaded', function(){
+        const issue_id = "15"; 
+        const issues_url = "https://api.github.com/repos/studentcybermooc\/studentcybermooc.github.io/issues/"+issue_id+"/comments";
+        if (issue_id !== undefined && issue_id > 0) {
+            get_comments(issues_url, issue_id);
+        } else {
+            comments_closed();
+        }
+    });
+}
+
+load_comments();
+</script>
+
+  <script>
+    (function() {
+      var toc = document.getElementById('TableOfContents');
+      if (!toc) return;
+      do {
+        var li, ul = toc.querySelector('ul');
+        if (ul.childElementCount !== 1) break;
+        li = ul.firstElementChild;
+        if (li.tagName !== 'LI') break;
+        
+        ul.outerHTML = li.innerHTML;
+      } while (toc.childElementCount >= 1);
+    })();
+  </script>
+    
+  <link rel="stylesheet" href="/assets/highlight/styles/hopscotch.css">
+  
+
+  <script src="/assets/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

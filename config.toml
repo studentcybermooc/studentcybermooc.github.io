@@ -1,7 +1,0 @@
-baseURL = "https://studentcybermooc.github.io/"
-title = "Cyber MOOC"
-theme = "cybermooc_theme"
-
-[params]
-    description = "ENSIBS Student Cyber MOOC"
-    githubRepo = "studentcybermooc/studentcybermooc.github.io"

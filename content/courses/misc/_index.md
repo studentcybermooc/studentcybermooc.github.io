@@ -1,4 +1,0 @@
----
-title: "misc"
-draft: false
----

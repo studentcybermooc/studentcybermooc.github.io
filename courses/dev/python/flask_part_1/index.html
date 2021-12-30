@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+  <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<meta property="og:title" content="Flask - Part 1">
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2018-09-21">
+    
+	<meta property="og:description" content="Super Basic Flask app">
+    <meta property="og:url" content="https://studentcybermooc.github.io/courses/dev/python/flask_part_1/">
+	<meta property="og:site_name" content="Cyber MOOC">
+	<meta property="og:description" content="ENSIBS Student Cyber MOOC">
+	
+    <meta property="og:tags" content="flask">
+	
+    <meta property="og:tags" content="python">
+	
+
+	
+	<meta property="twitter:card" content="Super Basic Flask app">
+	<meta property="twitter:card" content="Flask - Part 1">
+	<meta property="twitter:description" content="Super Basic Flask app">
+	<meta property="twitter:title" content="Flask - Part 1">
+
+	<meta name="generator" content="Hugo 0.89.4" />
+
+	<link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+
+	
+
+    <title>Cyber MOOC</title>
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+
+  <body>
+    <div id="top"></div>
+<nav>
+	<p>
+		<a href="/">Home</a>
+				
+		· <a href="/authors/">Authors</a>
+				
+		· <a href="/courses/">Courses</a>
+				
+		· <a href="/collaborate/">Collaborate</a>
+				
+		· <a href="/about/">About</a>
+				
+		· <a href="/index.xml">RSS</a>
+	</p>
+</nav>
+
+<img id="up" src="/img/to_the_top.png" onclick="document.getElementById('top').scrollIntoView({behavior:'smooth'});">
+
+    <main class="post">
+        <article>
+          <header>
+              <h1>Flask - Part 1</h1>
+              <p class="post_date">21 Sep 2018 · 3 min read</p>
+              
+              <p class="post_tags">
+                
+                  <a href="tags/flask">flask</a>
+                
+                  · <a href="tags/python">python</a>
+                
+              </p>
+              
+              
+              <p class="post_authors">by
+                
+                
+                  <a href="/authors/gmolveau/" target="_new" rel="nofollow">gmolveau</a> ·
+                
+              </p>
+              
+              <section class="post_toc">
+                <input id="toc-toggle" type="checkbox">
+                <label for="toc-toggle" id="toggle">
+                  <p class="toc-title">Jump to section... <span class="dropdown-icon">⚓</span></p>
+                </label>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#1---creating-our-environment">1 - Creating our environment</a></li>
+    <li><a href="#2---discovering-flask">2 - Discovering Flask</a>
+      <ul>
+        <li><a href="#21---coding-our-first-app">2.1 - Coding our first app</a></li>
+        <li><a href="#22---running-our-first-app">2.2 - Running our first app</a></li>
+        <li><a href="#23---testing-our-app">2.3 - Testing our app</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+              </section>
+          </header>
+          <hr>
+          <h2 id="introduction">Introduction</h2>
+<p>Welcome to the first part of my <em>flask</em> course.</p>
+<p>In this part we&rsquo;ll build a super simple flask app.</p>
+<h2 id="1---creating-our-environment">1 - Creating our environment</h2>
+<p>Let&rsquo;s create a dedicated folder for our app.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you are in flask_learning</span>
+mkdir my_app_v1
+cd my_app_v1
+</code></pre></div><!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<h2 id="2---discovering-flask">2 - Discovering Flask</h2>
+<p><a href="http://flask.pocoo.org/">Flask</a> is a python web micro-framework. What can Flask help you with ? Quickly building a web-app.</p>
+<h3 id="21---coding-our-first-app">2.1 - Coding our first app</h3>
+<p>Let&rsquo;s build this dead-simple flask app.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you are in flask_learning/my_app_v1</span>
+virtualenv venv -p python3 <span style="color:#75715e">#create the venv</span>
+source venv/bin/activate <span style="color:#75715e"># enter the venv</span>
+pip install flask 
+pip freeze &gt; requirements.txt <span style="color:#75715e"># save the list of dependencies into requirements.txt</span>
+<span style="color:#75715e"># (venv)</span>
+touch app.py
+</code></pre></div><p>Let&rsquo;s code in app.py :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># app.py</span>
+
+<span style="color:#f92672">from</span> flask <span style="color:#f92672">import</span> Flask
+app <span style="color:#f92672">=</span> Flask(__name__)
+
+
+<span style="color:#a6e22e">@app</span><span style="color:#f92672">.</span>route(<span style="color:#e6db74">&#39;/&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">hello_world</span>():
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;Hello, World!&#39;</span>
+</code></pre></div><p>Nothing fancy here, we just created a <code>route</code> accessible at &lsquo;/&rsquo; and told flask to return &lsquo;Hello, World!&rsquo; if someone requests this route.</p>
+<h3 id="22---running-our-first-app">2.2 - Running our first app</h3>
+<p>Let&rsquo;s launch this app :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># assuming you are in flask_learning/my_app_v1</span>
+<span style="color:#75715e"># (venv)</span>
+FLASK_ENV<span style="color:#f92672">=</span>development FLASK_APP<span style="color:#f92672">=</span>app.py flask run --host<span style="color:#f92672">=</span>0.0.0.0 --port<span style="color:#f92672">=</span><span style="color:#ae81ff">5000</span>
+</code></pre></div><p><img src="/img/courses/dev/python/flask_part_1/v1_flask_run.png" alt="v1 flask run example"></p>
+<p>So what&rsquo;s going on here ?</p>
+<p>We told flask:</p>
+<ul>
+<li>to run our app in development mode → <code>FLASK_ENV=development</code>
+<ul>
+<li>development mode enables auto-reload if you modify your source code, you also have access to the flask debugger</li>
+</ul>
+</li>
+<li>that our app was located in <code>app.py</code> → <code>FLASK_APP=app.py</code></li>
+<li>to bind the server to every network interface → <code>--host=0.0.0.0</code></li>
+<li>and to use the port number <code>5000</code> (it&rsquo;s the default port but this is to show how to change the port if needed) → <code>--port=5000</code></li>
+</ul>
+<h3 id="23---testing-our-app">2.3 - Testing our app</h3>
+<p>To try and test your first route, many tools are available.</p>
+<p>I personnaly use these two :</p>
+<ul>
+<li><a href="https://www.getpostman.com/apps">postman</a> : GUI tool, awesome app, lots of options and ways to use it
+<ul>
+<li>you can create &ldquo;collections&rdquo; of requests to test your app</li>
+</ul>
+</li>
+<li><a href="https://httpie.org/#installation">httpie</a> : command-line tool, kinda more user-friendly curl
+<ul>
+<li>install it with : <code>pip install httpie --user</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="231---testing-with-postman">2.3.1 - Testing with postman</h4>
+<ul>
+<li>when you first launch postman, you don&rsquo;t need to create an account, just click on the very-well-hidden link &ldquo;skip signing in and take me straight to the app&rdquo; at the bottom.</li>
+<li>then close the inner window that just appeared.</li>
+</ul>
+<p><img src="/img/courses/dev/python/flask_part_1/v1_postman.png" alt="v1 postman example"></p>
+<p>Our request worked and we received &ldquo;Hello, World!&rdquo; so all good.</p>
+<h4 id="232---testing-with-httpie">2.3.2 - Testing with httpie</h4>
+<p><img src="/img/courses/dev/python/flask_part_1/v1_httpie.png" alt="v1 httpie example"></p>
+<p>Everything is working great :-)</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>We just saw how to create a route, how to launch our server and how to test this route with postman and httpie.</p>
+<p>If you&rsquo;re stuck or don&rsquo;t understand something, feel free to drop <a href="/authors/gmolveau/">me an email / dm on twitter</a> / a comment below. You can also take a look at <code>flask_learning/flask_cybermooc/version_1</code> to see the reference code. And use <code>run.sh</code> to launch it.</p>
+<p>If you understood everything, you&rsquo;re now ready to go to <a href="/courses/dev/python/flask_part_2/">part 2</a> where you will learn how to connect a database to your app.</p>
+
+          <hr>
+        </article>
+    </main>
+
+    <div id="gh-comments">
+    <header class="text-center">
+        <h4>COMMENTS</h4>
+    </header>
+    <div id="gh-comments-list"></div>
+</div>
+
+<script type="text/javascript">
+
+function parse_links(headers_link){
+    var links = { };
+    for (var i in headers_link){
+        var entry = headers_link[i];
+        var link = { };
+        link.name = entry.match(/rel=\"([^\"]*)/)[1];
+        link.url = entry.match(/<([^>]*)/)[1];
+        link.page = entry.match(/page=(\d+).*$/)[1];
+        links[link.name] = link;
+    }
+    return links;
+}
+
+function create_comment_btn(issue_id) {
+    let page_comments = document.querySelectorAll('#gh-comments > header')[0];
+    const url_issues = "https://github.com//issues/"+issue_id;
+    var new_comment_btn = document.createElement('a');
+    new_comment_btn.setAttribute('href', url_issues + "#new_comment_field");
+    new_comment_btn.setAttribute('rel', 'nofollow');
+    new_comment_btn.setAttribute('target', '_new');
+    new_comment_btn.setAttribute('class', 'btngithub')
+    new_comment_btn.innerText = 'Post a comment on Github';
+    page_comments.appendChild(new_comment_btn);
+}
+
+function comments_closed() {
+    let comments_list = document.getElementById("gh-comments-list");
+    comments_list.innerHTML += "Comments are not open for this post yet.";
+}
+
+function create_comment_div(comment) {
+    const date_creation = new Date(comment.created_at);
+    const date_creation_string = date_creation.getUTCFullYear() +"/"+ (date_creation.getUTCMonth()+1) +"/"+ date_creation.getUTCDate() + " at " + date_creation.getUTCHours() + ":" + date_creation.getUTCMinutes();
+    let div_gh_comment = document.createElement('div');
+    div_gh_comment.setAttribute("class", "gh-comment");
+    let sub_div = document.createElement('div');
+    let img_avatar = document.createElement("img");
+    img_avatar.setAttribute("src", comment.user.avatar_url);
+    let link_profile = document.createElement('a');
+    link_profile.setAttribute("href", comment.user.html_url);
+    link_profile.innerText = comment.user.login;
+    let date_comment = document.createElement("em");
+    date_comment.innerText = date_creation_string;
+    sub_div.appendChild(img_avatar);
+    sub_div.appendChild(link_profile);
+    sub_div.innerHTML += " posted on ";
+    sub_div.appendChild(date_comment);
+    div_gh_comment.appendChild(sub_div);
+    div_gh_comment.innerHTML += comment['body'];
+    let comments_list = document.getElementById("gh-comments-list");
+    comments_list.appendChild(div_gh_comment);
+}
+
+function get_comments(issues_url, issue_id) {
+    let request = new XMLHttpRequest();
+    request.open('GET', issues_url);
+    request.onload = function() {
+        var data = JSON.parse(request.responseText);
+        if (data.message === 'Not Found') {
+            comments_closed();
+            return;
+        }
+        create_comment_btn(issue_id);
+        for (var index_comment in data) {
+            comment = data[index_comment];
+           create_comment_div(comment);
+        }
+        let more_comments = request.getResponseHeader("Link");
+        if (more_comments !== null) {
+            
+            let links = parse_links(more_comments);
+        }
+    };
+    request.onerror = function() {
+        comments_closed();
+    };
+    request.send();
+}
+
+function load_comments(){
+    document.addEventListener('DOMContentLoaded', function(){
+        const issue_id = "19"; 
+        const issues_url = "https://api.github.com/repos/studentcybermooc\/studentcybermooc.github.io/issues/"+issue_id+"/comments";
+        if (issue_id !== undefined && issue_id > 0) {
+            get_comments(issues_url, issue_id);
+        } else {
+            comments_closed();
+        }
+    });
+}
+
+load_comments();
+</script>
+
+  <script>
+    (function() {
+      var toc = document.getElementById('TableOfContents');
+      if (!toc) return;
+      do {
+        var li, ul = toc.querySelector('ul');
+        if (ul.childElementCount !== 1) break;
+        li = ul.firstElementChild;
+        if (li.tagName !== 'LI') break;
+        
+        ul.outerHTML = li.innerHTML;
+      } while (toc.childElementCount >= 1);
+    })();
+  </script>
+    
+  <link rel="stylesheet" href="/assets/highlight/styles/hopscotch.css">
+  
+
+  <script src="/assets/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>
